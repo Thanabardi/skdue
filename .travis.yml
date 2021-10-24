@@ -7,7 +7,7 @@ git:
   depth: 1
 
 env:
-  -SECRET_KEY='TEST' DEBUG=False SECRET_KEY=th#i%s-i9s)-m(y-t=est-s^ec14ret-ke54y ALLOWED_HOSTS=127.0.0.1 CORS_ALLOWED_ORIGINS=http://localhost:8080
+  -SECRET_KEY='TEST' DEBUG=False ALLOWED_HOSTS=127.0.0.1 CORS_ALLOWED_ORIGINS=http://localhost:8080
  
 install:
   - pip3 install -r requirements.txt
