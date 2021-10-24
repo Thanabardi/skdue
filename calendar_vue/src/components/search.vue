@@ -1,18 +1,23 @@
 <template>
   <div class="dropdown">
-    <input v-if="Object.keys(selectedItem).length === 0" ref="dropdowninput" v-model.trim="inputValue" class="dropdown-input" type="text" placeholder="Search Calendar..." />
+    <input v-if="Object.keys(selectedItem).length === 0" ref="dropdowninput"
+      v-model.trim="inputValue" class="dropdown-input"
+      type="text" placeholder="Search Skdue" />
     <div v-else @click="resetSelection" class="dropdown-selected">
-      {{ selectedItem.name }}
-    </div>
+      {{ selectedItem.name }}</div>
     <div v-show="inputValue && apiLoaded" class="dropdown-list">
-      <div @click="selectItem(item)" v-show="itemVisible(item)" v-for="item in itemList.calendar" :key="item.name" class="dropdown-item">
+      <div @click="selectItem(item)" v-show="itemVisible(item)" 
+        v-for="item in itemList.calendar" :key="item.name" class="dropdown-item">
         <div style="display:flex; justify-content:space-between">
-        <div>{{ item.name }}</div><div>Calendars</div>
+          <div>{{ item.name }}</div>
+          <div>Calendars</div>
         </div>
       </div>
-      <div @click="selectItemEvents(item)" v-show="itemVisible(item)" v-for="item in itemList.event" :key="item.name" class="dropdown-item">
+      <div @click="selectItemEvents(item)" v-show="itemVisible(item)" 
+        v-for="item in itemList.event" :key="item.name" class="dropdown-item">
         <div style="display:flex; justify-content:space-between">
-        <div>{{ item.name }}</div><div>Events</div>
+          <div>{{ item.name }}</div>
+          <div>Events</div>
         </div>
       </div>
     </div>
@@ -87,23 +92,26 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss' scoped>
+
+@import './../assets/style.css';
+
 .dropdown{
   position: relative;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  width: 40%;
+  padding-top: 11px;
+  /* max-width: 400px; */
+  /* margin: 0 auto; */
 }
-.dropdown-input, .dropdown-selected{
-  width: 100%;
-  padding: 10px 16px;
-  border: 1px solid transparent;
-  background: #edf2f7;
-  line-height: 1.5em;
-  outline: none;
-  border-radius: 8px;
+.dropdown-input {
+	background: var(--gray-light);
+	font-size: 20px;
+	padding: 8px 20px;
+	width: 700px;
+	border: none;
+	border-radius: 4px;
 }
-.dropdown-input:focus, .dropdown-selected:hover{
+/* .dropdown-input:focus, .dropdown-selected:hover{
   background: #fff;
   border-color: #e2e8f0;
 }
@@ -113,24 +121,26 @@ export default {
 .dropdown-selected{
   font-weight: bold;
   cursor: pointer;
-}
+} */
 .dropdown-list{
+  background: var(--white);
   position: absolute;
-  width: 100%;
+  width: 96%;
   max-height: 500px;
   margin-top: 4px;
   overflow-y: auto;
-  background: #ffffff;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px var(--black-op-1), 0 4px 6px -2px var(--black-op-2);
   border-radius: 8px;
+  font-size: 20px;
+  color: var(--black);
 }
 .dropdown-item{
-  padding: 11px 16px;
+  padding: 15px 16px;
   width: 94%;
   cursor: pointer;
 }
 .dropdown-item:hover{
-  background: #edf2f7;
+  background: var(--green-op);
 }
 .dropdown-item-flag{
   max-width: 24px;

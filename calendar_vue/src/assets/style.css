@@ -1,0 +1,59 @@
+@import 'color.css';
+
+* {
+    font-family: Calibri, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.app-details {
+    color: var(--white-op);
+    font-size: 20px;
+}
+
+.app-button-main {
+    background-color: var(--main-green);
+    border: 0;
+    padding: 10px 20px;
+    margin-top: 20px;
+    color: var(--white);
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.app-button-main:active {
+    background-color: var(--main-green-dark);
+}
+
+.app-button-gray {
+    background-color: var(--gray);
+    border: 0;
+    padding: 10px 20px;
+    margin-top: 20px;
+    color: var(--white);
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.app-button-gray:active {
+    background-color: var(--gray-dark);
+}
+
+.app-button-tp {
+    background: none;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.app-button-tp:active {
+    color: var(--white-dark);
+}
+
+@keyframes fade {
+    from {opacity: 0}
+    to {opacity: 1}
+}

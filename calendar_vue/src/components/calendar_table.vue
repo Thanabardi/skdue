@@ -129,7 +129,7 @@ export default {
 
 
 <style lang='css'>
-h2 {
+/* h2 {
   margin: 0;
   font-size: 16px;
 }
@@ -141,7 +141,7 @@ li {
   margin: 1.5em 0;
   padding: 0;
 }
-b { /* used for event dates/times */
+b {
   margin-right: 3px;
 }
 .demo-app {
@@ -154,8 +154,8 @@ b { /* used for event dates/times */
   flex-grow: 1;
   padding: 3em;
 }
-.fc { /* the calendar root */
+.fc {
   max-width: 1100px;
   margin: 0 auto;
-}
+} */
 </style>

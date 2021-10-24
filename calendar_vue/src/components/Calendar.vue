@@ -3,12 +3,16 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import EventCreate from './EventCreate'
+import Search from './search'
 import EventDetails from './EventDetails'
 import {ref} from 'vue'
 import axios from 'axios'
 export default {
   components: {
     FullCalendar, // make the <FullCalendar> tag available
+    Search,
+    EventCreate
   },
   data: function () {
     return {
@@ -107,8 +111,10 @@ export default {
       this.calendar_events.forEach(elements => {
         if (elements.id == clickInfo.event.id){
           this.modalActive = true;
-          let  start_date = elements.start_date.split("T").reverse().join(" on ")
-          let  end_date = elements.end_date.split("T").reverse().join(" on ")
+          let  start_date = elements.start_date.substring(11, 16) +
+            ", " + elements.start_date.substring(0, 10)
+          let  end_date = elements.end_date.substring(11, 16) +
+            ", " + elements.start_date.substring(0, 10)
           this.event_details = [
             elements.name,
             start_date,
@@ -125,118 +131,92 @@ export default {
   },
 };
 </script>
+
+
 <template>
-
-<div class="ALL">
-  <!--Details-->
-
-
-  <div class="demo-app">
-    <div class="demo-app-main">
-  <div class='demo-app-sidebar-section'>
-
-
-  <EventDetails v-show:modalActive="modalActive">
-      <div class="modal-content">
-
-        <!-- waiting for fix--- -->
-        <h1>          </h1>
-        <h1>----------------------</h1>
-        <!-- waiting for fix--- -->
-
+  <div>
+    <header class="calendar-header">
+      <h2><router-link class="app-button-tp" style="text-decoration: none;"
+        to=/about>Skdue</router-link></h2>
+      <Search />
+      <EventCreate />
+    </header>
+    <div class='calendar-sidebar'>
+      <EventDetails v-show="modalActive">
         <h1>{{ event_details[0] }}</h1>
-        <h2>start date:</h2>
-          <p>{{ event_details[1] }}</p>
-          <h2>end date:</h2>
-          <p>{{ event_details[2] }}</p>
-            <h2>description:</h2>
-            <p>{{ event_details[3] }}</p>
-          <button @click="this.modalActive = !this.modalActive"  type="button" name="button">X</button>
-      </div>
-  </EventDetails>
-
-  </div>
-
-      <FullCalendar class="demo-app-calendar" :options="calendarOptions">
-        <template v-slot:eventContent="arg">
-          <b>{{ arg.timeText }}</b>
-          <i>{{ arg.event.title }}</i>
-        </template>
-      </FullCalendar>
+        <div class="app-details">
+          <p>from {{ event_details[1] }}</p>
+          <p>to {{ event_details[2] }}</p>
+        </div>
+        <div v-if="event_details[3] != ''">
+          <h3>Description</h3>
+          <p class="app-details">{{ event_details[3] }}</p>
+        </div>
+        <div class="calendar-sidebar-footer">
+          <button class="app-button-main" @click="this.modalActive = !this.modalActive"
+            type="button" name="button">Done</button>
+        </div>
+      </EventDetails>
     </div>
+
+    <FullCalendar class="calendar-app-main" :options="calendarOptions">
+      <template v-slot:eventContent="arg">
+        <b>{{ arg.timeText }}</b>
+        <i>{{ arg.event.title }}</i>
+      </template>
+    </FullCalendar>
   </div>
-</div >
-
-
 </template>
 
 
+<style lang='scss' scoped>
 
-<style lang='scss'>
-h1,p {
-   margin-bottom: 16px;
- }
- h1 {
-  font-size: 32px;
-    }
- h2 {
-  font-size: 24px;
-    }
-p {
-  font-size: 18px;
-  }
-button {
-  padding: 7px 15px;
-  border: none;
-  font-size: 16px;
-  background-color: crimson;
-  color: #fff;
-  cursor: pointer;
+@import './../assets/style.css';
+
+.calendar-header {
+  background: var(--main-green);
+  color: var(--main-green);
+  font-size: 25px;
+  font-weight: 500px;
+  line-height: 0px;
+  height: 65px;
+  display: flex;
+  justify-content: space-evenly;  
+  z-index: 5;
+  position: fixed !important;
+  top: 0px;
+  left: 0px;
+  right: 0px;
 }
-.demo-app-sidebar-section {
-  line-height: 1.5;
-  background: #eaf9ff;
-  border-right: 1px solid #d3e2e8;
-  padding: 2em;
+.calendar-sidebar {
+  background: var(--main-green-light);
+  color: var(--white);
   height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 270px; /* Set the width of the sidebar */
+  width: 20%; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
   overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 20px;
+  margin-top: 65px;
+  padding: 10px 40px 10px 40px;
+  font-size: 20px;
 }
-h2 {
-  margin: 0;
-  font-size: 16px;
+.calendar-sidebar-footer {
+  position: fixed;
+  bottom: 5%;
+  left: 10%;
 }
-ul {
-  margin: 0;
-  padding: 0 0 0 1.5em;
-}
-li {
-  margin: 1.5em 0;
-  padding: 0;
-}
-b {
-  /* used for event dates/times */
+b { /* used for event dates/times */
   margin-right: 3px;
 }
-.demo-app {
-  display: flex;
-  min-height: 100%;
-  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-  font-size: 14px;
+.calendar-app-main {
+  padding: 10px;
+  font-size: 18px;
+  overflow: hidden;
 }
-.demo-app-main {
-  flex-grow: 1;
-  padding: 3em;
-}
-.fc {
-  /* the calendar root */
-  max-width: 1100px;
-  margin-left: 300px; /* Same as the width of the sidebar */
-  padding: 0px 10px;
+.fc { /* the calendar root */
+  margin: 3% 2% 0% 26%; /* Same as the sidebar width and nav bar heigh*/
+  max-height: 85vh;
 }
 </style>

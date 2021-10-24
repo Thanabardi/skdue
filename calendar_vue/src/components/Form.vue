@@ -1,18 +1,22 @@
 <template>
-    <form>     
-    <label>Name:</label>
-    <input type="text" v-model="dataForm.name" required> <br>
-    <button v-on:click="getData">Create</button>
-
-
-    </form>
+    <div>
+        <header class="form-header">
+            <h1>Skdue</h1>
+            <h3 style="font-size: 30px; color: var(--gray)">Create your own Skdue!</h3>
+        </header>
+        <form @submit.prevent="getData" class="form-form">
+            <p>Your calendar Name</p>
+            <input class="form-input" type="text" v-model="dataForm.name" required ><br>
+            <button class="app-button-main">Create</button>
+        </form>
+    </div>
 </template>
 
 <script>
 import axios from 'axios'
 
 export default {
-    name: "Form",
+    name: "CalendarCreate",
     data(){
         return {
             dataForm:{
@@ -33,8 +37,7 @@ export default {
             console.log(this.dataForm);
 
 
-            axios
-                .post(`/api/calendar/`, this.dataForm)
+            axios.post(`/api/calendar/`, this.dataForm)
                 .then(response => {
                 this.setData(response.data);
                 // console.log(response.data);
@@ -42,72 +45,43 @@ export default {
                 })
                 .catch(error => {
                 console.log(error)
-                })
+            })
         },
         
     }
 };
 </script>
 
-<style>
-    form {
-        max-width: 420px;
-        margin: 30px auto;
-        background: #E2FFF5;
-        text-align: left;
-        padding: 40px;
-        border-radius: 10px;
-    }
-    label {
-        color: rgb(170, 170, 170);
-        display: inline-block;
-        margin: 25px 0 15px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: bold;
-    }
-    input {
-        display: block;
-        padding: 10px 6px;
-        width: 100%;
-        box-sizing: none;
-        border-bottom: 1px solid #ddd;
-        color: #555;
-    }
-    button {
-        position: relative;
-        background-color: #73c6b6;
-        border: none;
-        font-size: 15px;
-        color: #FFFFFF;
-        padding: 20px;
-        width: 100px;
-        text-align: center;
-        transition-duration: 0.4s;
-        text-decoration: none;
-        overflow: hidden;
-        cursor: pointer;
-        border-radius: 10px;
-    }
-    button:after {
-        content: "";
-        border-radius: 10px;
-        background: #f1f1f1;
-        display: block;
-        position: absolute;
-        padding-top: 300%;
-        padding-left: 350%;
-        margin-left: -20px !important;
-        margin-top: -120%;
-        opacity: 0;
-        transition: all 0.8s
-        
-    }
-    button:active:after {
-        padding: 0;
-        margin: 0;
-        opacity: 1;
-        border-radius: 10px;
-        transition: 0s
-    }
+<style lang='scss' scoped>
+
+@import './../assets/style.css';
+
+.form-header {
+    color: var(--main-green);
+    font-size: 60px;
+    font-weight: 500px;
+    text-align: center;
+    line-height: 0px;
+}
+.form-form {
+    background: var(--gray-light);
+	color: var(--black);
+	text-align: center;
+    position: absolute;
+	font-size: 26px;
+	padding: 20px;
+    border-radius: 8px;
+    top: 200%;
+    left: 50%;
+    line-height: 0px;
+    transform: translate(-50%, -50%);
+}
+.form-input {
+	background: var(--white);
+	font-size: 20px;
+	padding: 10px;
+	width: 300px;
+	border: none;
+	border-radius: 8px;
+}
 </style>
