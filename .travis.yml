@@ -1,0 +1,21 @@
+language : python
+
+python:
+  - "3.7"
+
+git:
+  depth: 1
+
+env:
+  -SECRET_KEY='TEST' DEBUG=False
+
+install:
+  - pip3 install -r requirements.txt
+  - cd calendar_vue && npm install
+
+# script to run tests. Script can have many commands, one per line.
+script:
+  - cd ../ && coverage run --source='.' manage.py test
+  - cd calendar_vue && npm run test:unit
+after_script:
+  - bash <(curl -s https://codecov.io/bash)

@@ -1,0 +1,10 @@
+[run]
+# measure branch coverage
+branch = True
+# don't test the Python standard library
+cover_pylib = False
+# omit uninteresting files
+omit =
+    skdue_calendar/migrations/*
+    mysite/asgi.py
+    mysite/wsgi.py
