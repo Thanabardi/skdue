@@ -137,7 +137,7 @@ export default {
   <div>
     <header class="calendar-header">
       <h2><router-link class="app-button-tp" style="text-decoration: none;"
-        to=/about>Skdue</router-link></h2>
+        to=/>Skdue</router-link></h2>
       <Search />
       <EventCreate />
     </header>
