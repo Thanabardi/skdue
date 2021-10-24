@@ -53,11 +53,12 @@ export default {
       this.$nextTick( () => this.$refs.dropdowninput.focus() )
       this.$emit('on-item-reset')
     },
-    selectItem (theItem) {
+    async selectItem (theItem) {
       this.selectedItem = theItem 
       this.inputValue = ''
       this.$emit('on-item-selected', theItem)
-      this.$router.push({ path: `/calendar/${theItem.slug}` })
+      await this.$router.push({ path: `/calendar/${theItem.slug}` })
+      this.$router.go()
     },
     slice_slug(slug){
       var str = slug;
@@ -74,7 +75,8 @@ export default {
       this.selectedItemEvent = theItem 
       this.inputValue = ''
       this.$emit('on-item-selected', theItem)
-      await this.$router.push({ path: `/calendar/${this.slice_slug(theItem.get_absolute_url)}` })
+      await this.$router.push({ path: `/search` })
+      await this.$router.replace({ path: `/calendar/${this.slice_slug(theItem.get_absolute_url)}` })
       Calendar.components.FullCalendar.calendar.currentData.calendarApi.gotoDate(theItem.start_date)
     },
     itemVisible (item) {
