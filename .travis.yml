@@ -7,8 +7,8 @@ git:
   depth: 1
 
 env:
-  -SECRET_KEY='TEST' DEBUG=False
-
+  -SECRET_KEY='TEST' DEBUG=False ALLOWED_HOSTS='*' CORS_ALLOWED_ORIGINS='https://*'
+ 
 install:
   - pip3 install -r requirements.txt
   - cd calendar_vue && npm install

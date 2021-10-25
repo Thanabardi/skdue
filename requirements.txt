@@ -5,3 +5,4 @@ djoser
 pillow
 stripe
 coverage
+python-decouple
