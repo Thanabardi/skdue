@@ -5,6 +5,7 @@ from skdue_calendar.utils import generate_slug
 class Calendar(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
+    # TODO: add user as ForeignKey of User model
 
     class Meta:
         ordering = ('name',)
