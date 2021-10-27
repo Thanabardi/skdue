@@ -1,11 +1,12 @@
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.db import models
 from .calendar import Calendar
 from skdue_calendar.utils import generate_tag
 
 
 class CalendarTag(models.Model):
-    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
     tag = models.CharField(max_length=15)
     # tag_text = models.ForeignKey(CalendarEvent, on_delete=models.CASCADE)
     

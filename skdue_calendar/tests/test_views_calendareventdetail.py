@@ -1,8 +1,9 @@
 import json
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-from skdue_calendar.models import Calendar, CalendarEvent
+from skdue_calendar.models import Calendar, CalendarEvent, CalendarTag
 
 def convert_response(data):
     """Convert data to the same JSON format"""
@@ -16,6 +17,10 @@ class CalendarEventDetailViewTests(TestCase):
         self.end_date = self.start_date + timedelta(days=1)
         calendar = Calendar(name="calendar", slug="calendar")
         calendar.save()
+        user = User(username="tester")
+        user.save()
+        tag = CalendarTag(user=user, tag="event")
+        tag.save()
         for i in range(3):
             event = CalendarEvent(
                 calendar = calendar,
@@ -23,7 +28,8 @@ class CalendarEventDetailViewTests(TestCase):
                 slug = f"event-{i}",
                 description = f"desc for event {i}",
                 start_date = self.start_date,
-                end_date = self.end_date
+                end_date = self.end_date,
+                tag = tag
             )
             event.save()
 

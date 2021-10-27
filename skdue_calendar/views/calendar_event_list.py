@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from skdue_calendar.models import Calendar, CalendarEvent
+from skdue_calendar.models.calendar_tag import CalendarTag
 from skdue_calendar.serializers import CalendarEventSerializer
 from skdue_calendar.utils import generate_slug
 
@@ -40,13 +41,15 @@ class CalendarEventList(APIView):
         if CalendarEvent.is_valid(event_data, calendar_slug):
             calendar = Calendar.objects.get(slug=calendar_slug)
             slug = generate_slug(event_data["name"]) 
+            tag = CalendarTag.objects.get(tag=event_data["tag"])
             new_event = CalendarEvent(
                 calendar = calendar,
                 name = event_data["name"],
                 slug = slug,
                 description = event_data["description"],
                 start_date = event_data["start_date"],
-                end_date = event_data["end_date"]
+                end_date = event_data["end_date"],
+                tag = tag
             )
             # When testing, this event will not included in database
             if "is_test" not in event_data.keys() or event_data["is_test"].lower() != "true":
