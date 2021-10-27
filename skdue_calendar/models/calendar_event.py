@@ -11,6 +11,7 @@ class CalendarEvent(models.Model):
     description = models.TextField(blank=True, null=False)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+    # TODO: add tag field as a ForeignKey of tag model
 
     class Meta:
         ordering = ('-start_date',)
@@ -20,6 +21,11 @@ class CalendarEvent(models.Model):
 
     def get_absolute_url(self):
         return f'/{self.calendar.slug}/{self.slug}'
+
+    @property
+    def tag_text(self):
+        # TODO: change this function to return tag_text from tag field
+        return "event"
 
     @classmethod
     def is_valid(self, event_data: str, calendar_slug) -> bool:

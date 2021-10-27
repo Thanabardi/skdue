@@ -36,12 +36,15 @@ class SearchViewTests(TestCase):
     def event_data(self, i):
         return {
             "id": i+1,
+            "calendar": i+1,
             "name": f"event {i}",
             "slug": f"event-{i}",
             "get_absolute_url": f"/calendar-{i}/event-{i}",
             "description": f"desc event {i}",
             "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ')
+            "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            # TODO: change this line after create tag models
+            "tag_text": "event" 
         }
 
     def calendar_data(self, i):

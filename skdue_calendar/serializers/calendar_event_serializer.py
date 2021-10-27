@@ -7,10 +7,12 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         model = CalendarEvent
         fields = (
             "id",
+            "calendar",
             "name",
             "slug",
             "get_absolute_url",
             "description",
             "start_date",
-            "end_date"
+            "end_date",
+            "tag_text"
         )

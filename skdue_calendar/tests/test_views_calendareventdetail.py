@@ -49,11 +49,14 @@ class CalendarEventDetailViewTests(TestCase):
         response_data = convert_response(response.content)
         expect = json.dumps({
             "id": 1,
+            "calendar": 1,
             "name": "event 0",
             "slug": "event-0",
             "get_absolute_url": "/calendar/event-0",
             "description": "desc for event 0",
             "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
             "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            # TODO: change tag_text value after create Tag model and edit CalendarEvent model
+            "tag_text": "event"
         })
         self.assertJSONEqual(expect, response_data)

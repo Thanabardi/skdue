@@ -44,12 +44,15 @@ class CalendarEventListTests(TestCase):
         for i in range(3):
             expects.append({
                 "id": i+1,
+                "calendar": 1,
                 "name": f"event {i}",
                 "slug": f"event-{i}",
                 "get_absolute_url": f"/calendar/event-{i}",
                 "description": f"desc event {i}",
                 "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ')
+                "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                # TODO: change tag_text value after create Tag model and edit CalendarEvent model
+                "tag_text": "event"
             })
         expects = json.dumps(expects)
         self.assertJSONEqual(expects, response_data)
@@ -89,12 +92,15 @@ class CalendarEventListTests(TestCase):
         response_data = convert_response(response.content)
         expect = json.dumps({
             "id": 4,
+            "calendar": 1,
             "name": "valid event",
             "slug": "valid-event",
             "get_absolute_url": "/calendar/valid-event",
             "description": "desc for valid event",
             "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
             "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            # TODO: change tag_text value after create Tag model and edit CalendarEvent model
+            "tag_text": "event",
             "status": "success",
             "msg": "calendar event created"
         })
