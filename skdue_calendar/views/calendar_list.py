@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -29,9 +30,11 @@ class CalendarList(APIView):
         calendar_data = request.data
         if Calendar.is_valid(calendar_data):
             slug = generate_slug(calendar_data["name"])
+            user = User.objects.get(id=calendar_data["user"])
             new_calendar = Calendar(
                 name = calendar_data["name"],
-                slug = slug
+                slug = slug,
+                user = user
             )
             if  "is_test" not in calendar_data.keys() or calendar_data["is_test"].lower() != "true":
                 new_calendar.save()

@@ -1,12 +1,15 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from skdue_calendar.models import Calendar
 
 
 class CalendarModelTests(TestCase):
     def setUp(self):
         self.calendars = []
-        self.calendars.append(Calendar(name="calendar 1", slug="calendar-1"))
-        self.calendars.append(Calendar(name="calendar 2", slug="calendar-2"))
+        self.user = User(username="tester")
+        self.user.save()
+        self.calendars.append(Calendar(name="calendar 1", slug="calendar-1", user=self.user))
+        self.calendars.append(Calendar(name="calendar 2", slug="calendar-2", user=self.user))
         # save in TestCase does not apply to real database
         for calendar in self.calendars:
             calendar.save()
@@ -16,11 +19,13 @@ class CalendarModelTests(TestCase):
         expects = [
             {
                 "name": "calendar 1",
-                "slug": "calendar-1"
+                "slug": "calendar-1",
+                "user": 1
             },
             {
                 "name": "calendar 2",
-                "slug": "calendar-2"
+                "slug": "calendar-2",
+                "user": 1
             }
         ]
         for expect, calendar in zip(expects, Calendar.objects.all()):
