@@ -7,5 +7,6 @@ class CalendarTagSerializer(serializers.ModelSerializer):
         model = CalendarTag
         fields = (
             "id",
-            "tag"
+            "tag",
+            "user"
         )

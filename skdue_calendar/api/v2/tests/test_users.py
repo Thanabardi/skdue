@@ -28,5 +28,4 @@ class UserListTests(TestCase):
         expected = json.dumps([ user_data(i) for i in range(1, self.user_number) ])
         response = self.client.get(reverse('api_v2:user_list'))
         response_data = convert_response(response.content)
-        print(response_data)
         self.assertJSONEqual(expected, response_data)
