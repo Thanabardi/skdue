@@ -5,7 +5,7 @@ from skdue_calendar.models import Calendar, CalendarEvent, CalendarTag
 from skdue_calendar.serializers import CalendarSerializer, CalendarEventSerializer, CalendarTagSerializer
 
 
-class Search(APIView):
+class SearchView(APIView):
     """Request for not private detail."""
 
     def get(self, request):

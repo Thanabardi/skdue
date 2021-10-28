@@ -6,7 +6,7 @@ from skdue_calendar.models import CalendarEvent
 from skdue_calendar.serializers import CalendarEventSerializer
 
 
-class EventDetail(APIView):
+class EventDetailView(APIView):
     """Request for detail of specific event in an specific calendar."""
 
     def get_object(self, calendar_slug, event_slug=None):
