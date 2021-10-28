@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 
 from django.test import TestCase
-from django.test.utils import tag
 from skdue_calendar.models import Calendar, CalendarEvent
 from skdue_calendar.models.calendar_tag import CalendarTag
 from skdue_calendar.utils import generate_slug
@@ -18,7 +17,7 @@ class CalendarEventModelTests(TestCase):
         for i in range(3):
             name = f"calendar {i}"
             slug = generate_slug(name)
-            calendar = Calendar(name=name, slug=slug)
+            calendar = Calendar(name=name, slug=slug, user=user)
             calendar.save()
 
     def test_invalid_event_when_calendar_not_found(self):

@@ -15,10 +15,10 @@ class CalendarEventDetailViewTests(TestCase):
     def setUp(self):
         self.start_date = datetime.now().replace(microsecond=0)
         self.end_date = self.start_date + timedelta(days=1)
-        calendar = Calendar(name="calendar", slug="calendar")
-        calendar.save()
         user = User(username="tester")
         user.save()
+        calendar = Calendar(name="calendar", slug="calendar", user=user)
+        calendar.save()
         tag = CalendarTag(user=user, tag="event")
         tag.save()
         for i in range(3):

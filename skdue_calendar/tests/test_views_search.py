@@ -24,7 +24,8 @@ class SearchViewTests(TestCase):
         for i in range(3):
             calendar = Calendar(
                 name = f"calendar {i}",
-                slug = f"calendar-{i}"
+                slug = f"calendar-{i}",
+                user = user
             )
             calendar.save()
         for i in range(3):
@@ -49,7 +50,6 @@ class SearchViewTests(TestCase):
             "description": f"desc event {i}",
             "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
             "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            # TODO: change this line after create tag models
             "tag_text": "event" 
         }
 
@@ -58,13 +58,14 @@ class SearchViewTests(TestCase):
             "id": i+1,
             "name": f"calendar {i}",
             "slug": f"calendar-{i}",
-            "get_absolute_url": f"/calendar-{i}"
+            "get_absolute_url": f"/calendar-{i}",
+            "user": 1
         }
 
     def test_get(self):
         expect = json.dumps({
             "calendar": [self.calendar_data(i) for i in range(3)],
-            "event": [self.event_data(i) for i in range(3)]
+            "event": [self.event_data(i) for i in range(3)],
         })
         response = self.client.get(reverse('skdue_calendar:search'))
         response_data = json.dumps(response.data)
