@@ -2,8 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class FollowStatus(models.Model):
-    """ USER are follow the FOLLOWED user """
-
+    """USER has followed the FOLLOWED."""
     user = models.ForeignKey(
             User,
             null=False,
@@ -35,7 +34,7 @@ class FollowStatus(models.Model):
         print(f'{self.user.username} has UNFOLLOWED {self.followed.username}')
 
     @classmethod
-    def is_valid(self, user, follower):
+    def is_valid(self, user, followed):
         # print(FollowStatus.objects.filter(user=user, follower=follower))
         if user == followed:
             return False

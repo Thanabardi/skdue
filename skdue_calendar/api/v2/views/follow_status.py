@@ -6,6 +6,7 @@ from skdue_calendar.serializers import FollowStatusSerializer
 
 
 class FollowStatusView(APIView):
+    """Request for list of follow_status or add the new one."""
 
     def get(self, request, format=None):
         fs = FollowStatus.objects.all()
@@ -13,17 +14,22 @@ class FollowStatusView(APIView):
         return Response(serializers.data)
 
     def post(self, request):
-        fs_data = request.data
+        """Create new follow_status
 
-        print(fs_data)
+        Args:
+            fs_data: a dict consist of,
+                - user: user model
+                - followed: user model
+
+        Returns:
+            dict: response data
+        """
+        fs_data = request.data
         if FollowStatus.is_valid(fs_data["user"], fs_data["followed"]):
             fs = FollowStatus(
                 user = fs_data["user"],
                 follower = fs_data["followed"],
             )
-            #   hacve no clue about this stuff
-            # if  "is_test" not in calendar_data.keys() or calendar_data["is_test"].lower() != "true":
-            #     new_calendar.save()
             fs.save()
             serializers = FollowStatusSerializer(fs)
             data = serializers.data
