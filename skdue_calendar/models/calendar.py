@@ -1,10 +1,12 @@
 from django.db import models
+from django.contrib.auth.models import User
 from skdue_calendar.utils import generate_slug
 
 
 class Calendar(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('name',)

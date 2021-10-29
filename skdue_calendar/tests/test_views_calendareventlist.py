@@ -2,7 +2,8 @@ import json
 from datetime import datetime, timedelta
 from django.test import TestCase
 from django.urls import reverse
-from skdue_calendar.models import Calendar, CalendarEvent
+from django.contrib.auth.models import User
+from skdue_calendar.models import Calendar, CalendarEvent, CalendarTag
 
 def convert_response(data):
     """Convert data to the same JSON format"""
@@ -14,11 +15,16 @@ class CalendarEventListTests(TestCase):
     def setUp(self):
         self.start_date = datetime.now().replace(microsecond=0)
         self.end_date = self.start_date + timedelta(days=1)
+        user = User(username="tester")
+        user.save()
         calendar = Calendar(
             name = "calendar",
-            slug = "calendar"
+            slug = "calendar",
+            user = user
         )
         calendar.save()
+        tag = CalendarTag(user=user, tag="event")
+        tag.save()
         for i in range(3):
             event = CalendarEvent(
                 calendar = calendar,
@@ -26,7 +32,8 @@ class CalendarEventListTests(TestCase):
                 slug = f"event-{i}",
                 description = f"desc event {i}",
                 start_date = self.start_date,
-                end_date = self.end_date
+                end_date = self.end_date,
+                tag = tag
             )
             event.save()
 
@@ -44,12 +51,15 @@ class CalendarEventListTests(TestCase):
         for i in range(3):
             expects.append({
                 "id": i+1,
+                "calendar": 1,
                 "name": f"event {i}",
                 "slug": f"event-{i}",
                 "get_absolute_url": f"/calendar/event-{i}",
                 "description": f"desc event {i}",
                 "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ')
+                "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                # TODO: change tag_text value after create Tag model and edit CalendarEvent model
+                "tag_text": "event"
             })
         expects = json.dumps(expects)
         self.assertJSONEqual(expects, response_data)
@@ -83,18 +93,22 @@ class CalendarEventListTests(TestCase):
             "name": "valid event",
             "description": "desc for valid event",
             "start_date": str(self.start_date),
-            "end_date": str(self.end_date)
+            "end_date": str(self.end_date),
+            "tag": "event"
         }
         response = self.client.post(reverse('skdue_calendar:event_list', args=[calendar_slug]), data)
         response_data = convert_response(response.content)
         expect = json.dumps({
             "id": 4,
+            "calendar": 1,
             "name": "valid event",
             "slug": "valid-event",
             "get_absolute_url": "/calendar/valid-event",
             "description": "desc for valid event",
             "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
             "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            # TODO: change tag_text value after create Tag model and edit CalendarEvent model
+            "tag_text": "event",
             "status": "success",
             "msg": "calendar event created"
         })

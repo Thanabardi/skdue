@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db import models
 from skdue_calendar.utils import generate_slug
 from .calendar import Calendar
+from .calendar_tag import CalendarTag
 
 
 class CalendarEvent(models.Model):
@@ -11,6 +12,8 @@ class CalendarEvent(models.Model):
     description = models.TextField(blank=True, null=False)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+    # TODO: add tag field as a ForeignKey of tag model
+    tag = models.ForeignKey(CalendarTag, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('-start_date',)
@@ -20,6 +23,11 @@ class CalendarEvent(models.Model):
 
     def get_absolute_url(self):
         return f'/{self.calendar.slug}/{self.slug}'
+
+    @property
+    def tag_text(self):
+        # TODO: change this function to return tag_text from tag field
+        return str(self.tag)
 
     @classmethod
     def is_valid(self, event_data: str, calendar_slug) -> bool:
@@ -32,6 +40,8 @@ class CalendarEvent(models.Model):
         Returns:
             bool: False, if calendar_slug does not exist or start_date < end_date, True otherwise.
         """
+        # TODO: add condtion that events are invalid, when tag is not exist or 
+        # tag is not default tag or creator does not own this tag 
         slug = generate_slug(event_data["name"])
         is_same = False
         try:

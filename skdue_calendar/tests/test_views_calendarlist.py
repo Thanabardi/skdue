@@ -1,6 +1,7 @@
 import json
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth.models import User
 from skdue_calendar.models import Calendar
 
 def convert_response(data):
@@ -11,10 +12,13 @@ def convert_response(data):
 
 class CalendarListViewTests(TestCase):
     def setUp(self):
+        user = User(username="tester")
+        user.save()
         for i in range(3):
             calendar = Calendar(
                 name = f"calendar {i}",
-                slug = f"calendar-{i}"
+                slug = f"calendar-{i}",
+                user = user
             )
             calendar.save()
 
@@ -26,7 +30,8 @@ class CalendarListViewTests(TestCase):
                 "id": calendar.id,
                 "name": calendar.name,
                 "slug": calendar.slug,
-                "get_absolute_url": calendar.get_absolute_url()
+                "get_absolute_url": calendar.get_absolute_url(),
+                "user": 1
             }
             expect_data.append(data)
         expect_data = json.dumps(expect_data)
@@ -50,7 +55,7 @@ class CalendarListViewTests(TestCase):
 
     def test_post_with_valid_calendar_data(self):
         """Response is the new calendar data with success status"""
-        data = {"name": "calendar 3"}
+        data = {"name": "calendar 3", "user": 1}
         response = self.client.post(reverse('skdue_calendar:list'), data)
         response_data = convert_response(response.content)
         expect = json.dumps({
@@ -59,6 +64,7 @@ class CalendarListViewTests(TestCase):
             "slug": "calendar-3",
             "get_absolute_url": "/calendar-3",
             "status": "success",
+            "user": 1,
             "msg": "calendar created"
         })
         with self.subTest():

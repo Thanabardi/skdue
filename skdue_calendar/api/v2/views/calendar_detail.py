@@ -8,7 +8,7 @@ from skdue_calendar.serializers import CalendarEventSerializer
 from skdue_calendar.utils import generate_slug
 
 
-class CalendarEventList(APIView):
+class CalendarDetailView(APIView):
     """Request for list of events in an calendar or create new events in that calendar."""
     def get_object(self, calendar_slug):
         try:
@@ -31,6 +31,7 @@ class CalendarEventList(APIView):
                 - description: description of event
                 - start_date: format (YYYY-MM-DD hh:mm:ss)
                 - end_date: same format as start_date
+                - tag: name of event tag
                 - optional:
                     - is_test: True for testing, False otherwise
 
