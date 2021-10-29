@@ -3,6 +3,10 @@ from .calendar_list import CalendarListView
 from .event_detail import EventDetailView
 from .search import SearchView
 from .user_list import UserListView
+<<<<<<< HEAD
 from .calendar_login import Login
 from .calendar_logout import Logout
 from .calendar_register import Register
+=======
+from .follow_status import FollowStatusView
+>>>>>>> origin/follow-model-v2
