@@ -8,4 +8,5 @@ urlpatterns = [
     path('calendar/<calendar_slug>/<event_slug>', EventDetailView.as_view(), name="event_detail"),
     path('search', SearchView.as_view(), name="search"),
     path('users', UserListView.as_view(), name="user_list"),
+    path('fs/', FollowStatusView.as_view(), name="follow_status"),
 ]

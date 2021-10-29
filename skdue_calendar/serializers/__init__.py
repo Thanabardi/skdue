@@ -2,3 +2,4 @@ from .calendar_serializer import CalendarSerializer
 from .calendar_event_serializer import CalendarEventSerializer
 from .calendar_tag_serializer import CalendarTagSerializer
 from .user_serializer import UserSerializer
+from .follow_status_serializer import FollowStatusSerializer
