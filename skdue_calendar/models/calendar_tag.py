@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from .calendar import Calendar
+from .calendar_tag_type import CalendarTagType
 from skdue_calendar.utils import generate_tag
 
 
@@ -9,6 +10,7 @@ class CalendarTag(models.Model):
     # calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
     tag = models.CharField(max_length=15)
     # tag_text = models.ForeignKey(CalendarEvent, on_delete=models.CASCADE)
+    tag_type = models.ForeignKey(CalendarTagType, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.tag
