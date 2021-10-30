@@ -12,7 +12,6 @@ class CalendarEvent(models.Model):
     description = models.TextField(blank=True, null=False)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    # TODO: add tag field as a ForeignKey of tag model
     tag = models.ForeignKey(CalendarTag, on_delete=models.CASCADE)
 
     class Meta:
