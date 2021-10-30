@@ -4,7 +4,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from skdue_calendar.models import CalendarEvent
-from skdue_calendar.models.calendar_tag_type import PRIVATE_TAG_TYPE
 from skdue_calendar.serializers import CalendarEventSerializer
 
 
@@ -21,7 +20,7 @@ class EventDetailView(APIView):
 
     def get(self, request, calendar_slug, event_slug, format=None):
         events = self.get_object(calendar_slug, event_slug)
-        if events.tag.tag_type == PRIVATE_TAG_TYPE:
+        if str(events.tag.tag_type) == "private":
             return Response({"msg": "This is private event"}, 403)
         serializers = CalendarEventSerializer(events)
         return Response(serializers.data)

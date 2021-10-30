@@ -18,8 +18,8 @@ class CalendarDetailView(APIView):
             raise Http404
 
     def get_public_tag(self, user):
-        default_tag = CalendarTag.objects.filter(tag_type=DEFAULT_TAG_TYPE)
-        custom_tag = CalendarTag.objects.filter(user=user).filter(tag_type=CUSTOM_TAG_TYPE)
+        default_tag = CalendarTag.objects.filter(tag_type__tag_type="default")
+        custom_tag = CalendarTag.objects.filter(user=user).filter(tag_type__tag_type="custom")
         return chain(default_tag, custom_tag)
 
     def get(self, request, calendar_slug, format=None):
