@@ -7,27 +7,6 @@ from django.contrib.auth.models import User
 from skdue_calendar.serializers import *
 from skdue_calendar.models import *
 
-try:
-    DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
-except CalendarTagType.DoesNotExist:
-    tag = CalendarTagType(tag_type="default")
-    tag.save()
-    DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
-
-try:
-    PRIVATE_TAG_TYPE = CalendarTagType.objects.get(tag_type="private")
-except CalendarTagType.DoesNotExist:
-    tag = CalendarTagType(tag_type="private")
-    tag.save()
-    PRIVATE_TAG_TYPE = CalendarTagType.objects.get(tag_type="private")
-
-try:
-    CUSTOM_TAG_TYPE = CalendarTagType.objects.get(tag_type="custom")
-except CalendarTagType.DoesNotExist:
-    tag = CalendarTagType(tag_type="custom")
-    tag.save()
-    CUSTOM_TAG_TYPE = CalendarTagType.objects.get(tag_type="custom")
-
 
 def get_available_tag(user, is_private=False):
     # default tags are available for all user
@@ -63,7 +42,7 @@ class UserMeView(APIView):
 
 class UserMeCalendarView(APIView):
     def get(self, request, calendar_slug):
-        """User calendar detail with public and private events"""
+        """User calendar detail with public, private, and followed events"""
         if request.user.id:
             user = request.user
             # load follow status
@@ -79,16 +58,11 @@ class UserMeCalendarView(APIView):
                 "user": UserSerializer(user).data,
                 "calendar": CalendarSerializer(calendar).data,
                 "event": {
-                    "my_event": {
-                        "private": CalendarEventSerializer(private_event, many=True).data,
-                    },
-                    "followed_event": {
-
-                    }
+                    "private": CalendarEventSerializer(private_event, many=True).data,
                 }
             }
             # load my event
-            data_event = data["event"]["my_event"]
+            data_event = data["event"]
             for tag in get_available_tag(user):
                 events = CalendarEvent.objects.filter(calendar=calendar).filter(tag=tag)
                 try:
@@ -97,7 +71,6 @@ class UserMeCalendarView(APIView):
                     data_event[tag.tag] = CalendarEventSerializer(events, many=True).data
             # load follwed people event
             calendar_load_user = followed_user
-            data_event = data["event"]["followed_event"]
             for u in calendar_load_user:
                 # admin has multiple calendar
                 for c in Calendar.objects.filter(user=u):
@@ -108,12 +81,27 @@ class UserMeCalendarView(APIView):
                             data_event[tag.tag] += CalendarEventSerializer(events, many=True).data
                         except:
                             data_event[tag.tag] = CalendarEventSerializer(events, many=True).data
+            data["tag"] = data_event.keys()
             return Response(data)
         return Response({"msg": "login required"}, 403)
         
 
     def post(self, request, calendar_slug):
-        """User can create new event from here by using tag name"""
+        """Create new calendar event
+        
+        Args:
+            event_data: a dict consist of,
+                - name: calendar event name
+                - description: description of event
+                - start_date: format (YYYY-MM-DD hh:mm:ss)
+                - end_date: same format as start_date
+                - tag: name of event tag
+                - optional:
+                    - is_test: True for testing, False otherwise
+
+        Returns:
+            dict: response data
+        """
         pass
 
 
@@ -128,7 +116,14 @@ class UserMeFollowedView(APIView):
 
     def post(self, request):
         """User can follow another user here"""
-        pass
+        follow_id = request.data["follow_id"]
+        followed_user = User.objects.get(id=follow_id)
+        if FollowStatus.is_valid(request.user, followed_user):
+            fs = FollowStatus(user=request.user, followed=followed_user)
+            fs.save()
+            return Response({"msg": "followed"}, 201)
+        return Response({"msg": "error"})
+
 
 class UserMeAddTagView(APIView):
     def post(self, request):
