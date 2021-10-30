@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from skdue_calendar.serializers import *
 from skdue_calendar.models import *
+from skdue_calendar.utils import generate_slug
 
 
 def get_available_tag(user, is_private=False):
@@ -43,7 +44,7 @@ class UserMeView(APIView):
 class UserMeCalendarView(APIView):
     def get(self, request, calendar_slug):
         """User calendar detail with public, private, and followed events"""
-        if request.user.id:
+        if request.user.id == Calendar.objects.get(slug=calendar_slug).user.id:
             user = request.user
             # load follow status
             follow_status = FollowStatus.objects.filter(user=user)
@@ -102,7 +103,34 @@ class UserMeCalendarView(APIView):
         Returns:
             dict: response data
         """
-        pass
+        if request.user.id == Calendar.objects.get(slug=calendar_slug).user.id:
+            event_data = request.data
+            if CalendarEvent.is_valid(event_data, calendar_slug) and CalendarEvent.is_usable_tag(event_data["tag"], user_id=request.user.id):
+                calendar = Calendar.objects.get(slug=calendar_slug)
+                slug = generate_slug(event_data["name"]) 
+                tag = CalendarTag.objects.get(tag=event_data["tag"])
+                new_event = CalendarEvent(
+                    calendar = calendar,
+                    name = event_data["name"],
+                    slug = slug,
+                    description = event_data["description"],
+                    start_date = event_data["start_date"],
+                    end_date = event_data["end_date"],
+                    tag = tag
+                )
+                # When testing, this event will not included in database
+                if "is_test" not in event_data.keys() or event_data["is_test"].lower() != "true":
+                    new_event.save()
+                new_event = CalendarEvent.objects.get(calendar__slug=calendar_slug, slug=slug)
+                serializers = CalendarEventSerializer(new_event)
+                data = serializers.data
+                data["status"] = "success"
+                data["msg"] = "calendar event created"
+                # id of event will be null when `is_test` == true
+                return Response(data)
+            else:
+                return Response({"msg": "invalid event data"}, 400)
+        return Response({"msg": "login required"}, 403) 
 
 
 class UserMeFollowedView(APIView):
@@ -130,11 +158,14 @@ class UserMeAddTagView(APIView):
         """User can add new custom tag from here"""
         if request.user.id:
             user = request.user
-            new_custom_tag = CalendarTag(
-                user = user,
-                tag = request.data["tag"],
-                tag_type = CalendarTagType.objects.get(tag_type="custom")
-            )
-            new_custom_tag.save()
-            return Response(CalendarTagSerializer(new_custom_tag).data)
+            if len(CalendarTag.objects.filter(tag=request.data["tag"])) == 0:
+                new_custom_tag = CalendarTag(
+                    user = user,
+                    tag = request.data["tag"],
+                    tag_type = CalendarTagType.objects.get(tag_type="custom")
+                )
+                new_custom_tag.save()
+                return Response(CalendarTagSerializer(new_custom_tag).data)
+            else:
+                return Response({"msg": f"tag: {request.data['tag']} is already exist"}, 400)
         return Response({"msg": "login required"}, 403)
