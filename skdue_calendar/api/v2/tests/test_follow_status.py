@@ -24,7 +24,7 @@ class CalendarListTests(TestCase):
         self.user2.first_name = "Harry"
         self.user2.save()
         #follow
-        FollowStatus.objects.create(user=user1, followed=user2)
+        FollowStatus.objects.create(user=self.user1, followed=self.user2)
 
     def test_get(self):
         """Response is the list of all follow_status in JSON form"""
