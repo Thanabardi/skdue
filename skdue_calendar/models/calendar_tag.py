@@ -15,6 +15,10 @@ class CalendarTag(models.Model):
     def __str__(self):
         return self.tag
 
+    @property
+    def tag_type_text(self):
+        return str(self.tag_type)
+
     @classmethod
     def is_valid(self, tag: str, calendar_slug) -> bool:
         tag = generate_tag(tag["tag"])
