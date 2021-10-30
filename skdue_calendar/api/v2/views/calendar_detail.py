@@ -32,10 +32,7 @@ class CalendarDetailView(APIView):
             "event": {},
         }
         for t in tag:
-            i = 0
             tagged_event = self.get_tagged_event(calendar_slug, t)
             data["event"][t.tag] = CalendarEventSerializer(tagged_event, many=True).data
-            print(i, t.tag)
-            i += 1
         data["tag"] = data["event"].keys()
         return Response(data)
