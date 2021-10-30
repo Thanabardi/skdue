@@ -78,6 +78,4 @@ class CalendarDetailTests(TestCase):
             },
             "tag": [self.public_tag.tag]
         })
-        print(response_data)
-        print(expect)
         self.assertJSONEqual(expect, response_data)

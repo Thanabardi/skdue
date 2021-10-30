@@ -10,18 +10,18 @@ from skdue_calendar.models import *
 
 def get_available_tag(user, is_private=False):
     # default tags are available for all user
-    defalut_tags = CalendarTag.objects.filter(tag_type=DEFAULT_TAG_TYPE)
+    defalut_tags = CalendarTag.objects.filter(tag_type__tag_type="default")
     # custom tags are available for creator
-    my_tags = CalendarTag.objects.filter(user=user).filter(tag_type=CUSTOM_TAG_TYPE)
+    my_tags = CalendarTag.objects.filter(user=user).filter(tag_type__tag_type="custom")
     # private tag is private tag
     if is_private:
-        private_tag = CalendarTag.objects.filter(tag_type=PRIVATE_TAG_TYPE)
+        private_tag = CalendarTag.objects.filter(tag_type__tag_type="private")
         return chain(private_tag, defalut_tags, my_tags)
     return chain(defalut_tags, my_tags)
 
 def get_custom_tag(user):
     tags = CalendarTag.objects.filter(user=user)
-    custom_tag = tags.filter(tag_type=CUSTOM_TAG_TYPE)
+    custom_tag = tags.filter(tag_type__tag_type="custom")
     return custom_tag
 
 
@@ -52,7 +52,7 @@ class UserMeCalendarView(APIView):
             calendar = Calendar.objects.get(slug=calendar_slug)
             # load my private event
             private_event = CalendarEvent.objects.filter(calendar=calendar)
-            private_event = private_event.filter(tag__tag_type=PRIVATE_TAG_TYPE)
+            private_event = private_event.filter(tag__tag_type__tag_type="private")
             # set up data field
             data = {
                 "user": UserSerializer(user).data,
@@ -133,7 +133,7 @@ class UserMeAddTagView(APIView):
             new_custom_tag = CalendarTag(
                 user = user,
                 tag = request.data["tag"],
-                tag_type = CUSTOM_TAG_TYPE
+                tag_type = CalendarTagType.objects.get(tag_type="custom")
             )
             new_custom_tag.save()
             return Response(CalendarTagSerializer(new_custom_tag).data)
