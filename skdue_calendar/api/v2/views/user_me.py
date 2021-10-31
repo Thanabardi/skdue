@@ -127,7 +127,7 @@ class UserMeCalendarView(APIView):
                 data["status"] = "success"
                 data["msg"] = "calendar event created"
                 # id of event will be null when `is_test` == true
-                return Response(data)
+                return Response(data, 201)
             else:
                 return Response({"msg": "invalid event data"}, 400)
         return Response({"msg": "login required"}, 403) 

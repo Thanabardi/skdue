@@ -5,7 +5,6 @@ from django.http import response
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from skdue_calendar.models import *
 from skdue_calendar.serializers import *
 from skdue_calendar.utils import generate_slug
@@ -84,19 +83,118 @@ class UserMeTests(TestCase):
         self.assertEqual(403, response.status_code)
 
     def test_me_calendar_get_with_unlogin(self):
-        pass
+        calendar_slug = generate_slug(self.user.username)
+        response = self.client.get(reverse('api_v2:me_calendar', args=[calendar_slug]))
+        self.assertEqual(403, response.status_code)
 
     def test_me_calendar_get_with_not_owner_user(self):
-        pass
+        not_owner_user = User(username="not-owner", password="not-owner")
+        not_owner_user.save()
+        self.client.force_login(not_owner_user)
+        calendar_slug = generate_slug(self.user.username)
+        response = self.client.get(reverse('api_v2:me_calendar', args=[calendar_slug]))
+        self.assertEqual(403, response.status_code)
 
     def test_me_calendar_get_with_user(self):
-        pass
+        self.client.force_login(self.user)
+        calendar_slug = generate_slug(self.user.username)
+        response = self.client.get(reverse('api_v2:me_calendar', args=[calendar_slug]))
+        response_data = convert_response(response.content)
+        expect = json.dumps({
+            "user": UserSerializer(self.user).data,
+            "calendar": CalendarSerializer(Calendar.objects.get(slug=calendar_slug)).data,
+            "event": {
+                "private": CalendarEventSerializer([self.private_event], many=True).data,
+                "public": CalendarEventSerializer([self.public_event], many=True).data,
+            },
+            "tag": ["private", "public"]
+        })
+        self.assertEqual(expect, response_data)
 
     def test_me_calendar_get_with_a_follow_calendar(self):
-        pass
+        """Test that api also return followed calendar but not their private events"""
+        self.client.force_login(User.objects.get(username="tester"))
+        followed = User(username="followed", password="followed")
+        followed.save()
+        f_calendar = Calendar(
+            user=followed,
+            name=followed.username,
+            slug=generate_slug(followed.username)   
+        )
+        f_calendar.save()
+        f_public_event = CalendarEvent(
+            calendar=f_calendar,
+            name="f public event",
+            slug="f-public-event",
+            tag=self.public_tag,
+            start_date = self.start_date,
+            end_date = self.end_date
+        )
+        f_public_event.save()
+        f_private_event = CalendarEvent(
+            calendar=f_calendar,
+            name="f private event",
+            slug="f-private-event",
+            tag=self.private_tag,
+            start_date = self.start_date,
+            end_date = self.end_date
+        )
+        f_private_event.save()
+        fs = FollowStatus(user=self.user, followed=followed)
+        fs.save()
+        calendar_slug = generate_slug(self.user.username)
+        response = self.client.get(reverse('api_v2:me_calendar', args=[calendar_slug]))
+        response_data = convert_response(response.content)
+        expect = json.dumps({
+            "user": UserSerializer(self.user).data,
+            "calendar": CalendarSerializer(Calendar.objects.get(slug=calendar_slug)).data,
+            "event": {
+                "private": CalendarEventSerializer([self.private_event], many=True).data,
+                "public": CalendarEventSerializer([self.public_event, f_public_event], many=True).data,
+            },
+            "tag": ["private", "public"]
+        })
+        self.assertEqual(expect, response_data)
 
-    def test_me_calendar_post(self):
-        pass
+    def test_me_calendar_post_with_unlogin(self):
+        event_data = {
+            "name": self.calendar.name,
+            "description": "test event",
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "tag": self.private_tag.tag
+        }
+        calendar_slug = self.calendar.slug
+        response = self.client.post(reverse('api_v2:me_calendar', args=[calendar_slug]), event_data)
+        self.assertEqual(403, response.status_code)
+
+    def test_me_calendar_post_with_a_new_public_event(self):
+        self.client.force_login(self.user)
+        event_data = {
+            "name": "new public test event",
+            "description": "test event",
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "tag": self.public_tag.tag
+        }
+        calendar_slug = self.calendar.slug
+        response = self.client.post(reverse('api_v2:me_calendar', args=[calendar_slug]), data=event_data)
+        self.assertEqual(201, response.status_code)
+        self.assertIsNotNone(CalendarEvent.objects.get(name="new public test event"))
+
+    def test_me_calendar_post_with_a_new_private_event(self):
+        self.client.force_login(self.user)
+        event_data = {
+            "name": "new private test event",
+            "description": "test event",
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "tag": self.private_tag.tag
+        }
+        calendar_slug = self.calendar.slug
+        response = self.client.post(reverse('api_v2:me_calendar', args=[calendar_slug]), data=event_data)
+        self.assertEqual(201, response.status_code)
+        self.assertIsNotNone(CalendarEvent.objects.get(name="new private test event"))
 
     def test_me_followed_get(self):
         self.client.force_login(User.objects.get(username="tester"))

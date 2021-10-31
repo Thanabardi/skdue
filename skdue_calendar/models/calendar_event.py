@@ -1,3 +1,4 @@
+from itertools import chain
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
@@ -61,7 +62,8 @@ class CalendarEvent(models.Model):
     def is_usable_tag(self, tag_name, user_id):
         # try to get default tag
         try:
-            _ = CalendarTag.objects.filter(tag_type__tag_type="default").get(tag=tag_name)
+            queryset = CalendarTag.objects.filter(tag_type__tag_type="default") | CalendarTag.objects.filter(tag_type__tag_type="private")
+            _ = queryset.get(tag=tag_name)
             return True
         except CalendarTag.DoesNotExist:
             try:
