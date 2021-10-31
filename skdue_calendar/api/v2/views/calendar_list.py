@@ -14,33 +14,3 @@ class CalendarListView(APIView):
         calendars = Calendar.objects.all()
         serializers = CalendarSerializer(calendars, many=True)
         return Response(serializers.data)
-
-    def post(self, request):
-        """Create new calendar
-        
-        Args:
-            calendar_data: a dict consist of,
-                - name: calendar name
-                - optional:
-                    - is_test: True for testing, False otherwise
-
-        Returns:
-            dict: response data
-        """
-        calendar_data = request.data
-        if Calendar.is_valid(calendar_data):
-            slug = generate_slug(calendar_data["name"])
-            user = User.objects.get(id=calendar_data["user"])
-            new_calendar = Calendar(
-                name = calendar_data["name"],
-                slug = slug,
-                user = user
-            )
-            if  "is_test" not in calendar_data.keys() or calendar_data["is_test"].lower() != "true":
-                new_calendar.save()
-            serializers = CalendarSerializer(new_calendar)
-            data = serializers.data
-            data["status"] = "success" # add created status
-            data["msg"] = "calendar created"
-            return Response(data)
-        return Response({"status": "failed", "msg": "invalid calendar"})

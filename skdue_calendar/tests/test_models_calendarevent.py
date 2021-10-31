@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 
 from django.test import TestCase
-from skdue_calendar.models import Calendar, CalendarEvent
+from skdue_calendar.models import Calendar, CalendarEvent, CalendarTagType
 from skdue_calendar.models.calendar_tag import CalendarTag
 from skdue_calendar.utils import generate_slug
 
@@ -12,7 +12,9 @@ class CalendarEventModelTests(TestCase):
         self.start_date = datetime.now().replace(microsecond=0)
         user = User(username="tester")
         user.save()
-        self.tag = CalendarTag(user=user, tag="event")
+        tag_type = CalendarTagType(tag_type="default")
+        tag_type.save()
+        self.tag = CalendarTag(user=user, tag="event", tag_type=tag_type)
         self.tag.save()
         for i in range(3):
             name = f"calendar {i}"

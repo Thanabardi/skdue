@@ -1,7 +1,11 @@
 from django.contrib import admin
 
-from .models import Calendar, CalendarEvent, CalendarTag
+from skdue_calendar.models.calendar_tag_type import CalendarTagType
+
+from .models import Calendar, CalendarEvent, CalendarTag, FollowStatus
 
 admin.site.register(Calendar)
 admin.site.register(CalendarEvent)
 admin.site.register(CalendarTag)
+admin.site.register(CalendarTagType)
+admin.site.register(FollowStatus)

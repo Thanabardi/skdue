@@ -1,5 +1,7 @@
+from itertools import chain
 from datetime import datetime
 from django.db import models
+from django.contrib.auth.models import User
 from skdue_calendar.utils import generate_slug
 from .calendar import Calendar
 from .calendar_tag import CalendarTag
@@ -12,7 +14,6 @@ class CalendarEvent(models.Model):
     description = models.TextField(blank=True, null=False)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    # TODO: add tag field as a ForeignKey of tag model
     tag = models.ForeignKey(CalendarTag, on_delete=models.CASCADE)
 
     class Meta:
@@ -56,3 +57,19 @@ class CalendarEvent(models.Model):
         start_date = datetime.strptime(event_data["start_date"], "%Y-%m-%d %H:%M:%S")
         end_date = datetime.strptime(event_data["end_date"], "%Y-%m-%d %H:%M:%S")
         return start_date < end_date and not is_same
+
+    @classmethod
+    def is_usable_tag(self, tag_name, user_id):
+        # try to get default tag
+        try:
+            queryset = CalendarTag.objects.filter(tag_type__tag_type="default") | CalendarTag.objects.filter(tag_type__tag_type="private")
+            _ = queryset.get(tag=tag_name)
+            return True
+        except CalendarTag.DoesNotExist:
+            try:
+                user = User.objects.get(id=user_id)
+                _ = CalendarTag.objects.filter(user=user).filter(tag_type__tag_type="custom").get(tag=tag_name)
+                return True
+            except CalendarTag.DoesNotExist:
+                return False
+        return False

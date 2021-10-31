@@ -1,8 +1,7 @@
 from django.urls import path
 from skdue_calendar.api.v2.views import *
-from skdue_calendar.api.v2.views.calendar_login import Login
-from skdue_calendar.api.v2.views.calendar_logout import Logout
-from skdue_calendar.api.v2.views.calendar_register import Register
+from skdue_calendar.api.v2.views.user_me import UserMeAddTagView, UserMeCalendarView, UserMeFollowedView
+
 
 app_name = "api_v2"
 urlpatterns = [
@@ -14,4 +13,9 @@ urlpatterns = [
     path('login', Login.as_view(), name="login"),
     path('logout', Logout.as_view(), name="logout"),
     path('register', Register.as_view(), name="register"),
+    path('fs/', FollowStatusView.as_view(), name="follow_status"),
+    path('me', UserMeView.as_view(), name="me"),
+    path('me/followed', UserMeFollowedView.as_view(), name="me_followed"),
+    path('me/add_new_tag', UserMeAddTagView.as_view(), name="me_add_new_tag"),
+    path('me/<calendar_slug>', UserMeCalendarView.as_view(), name="me_calendar"),
 ]

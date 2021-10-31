@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from skdue_calendar.models import Calendar, CalendarEvent, CalendarTag
+from skdue_calendar.models.calendar_tag_type import CalendarTagType
 
 def convert_response(data):
     """Convert data to the same JSON format"""
@@ -23,7 +24,9 @@ class CalendarEventListTests(TestCase):
             user = user
         )
         calendar.save()
-        tag = CalendarTag(user=user, tag="event")
+        tag_type = CalendarTagType(tag_type="default")
+        tag_type.save()
+        tag = CalendarTag(user=user, tag="event", tag_type=tag_type)
         tag.save()
         for i in range(3):
             event = CalendarEvent(

@@ -7,6 +7,9 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils.translation import deactivate_all
 from skdue_calendar.models import *
+from skdue_calendar.serializers.calendar_event_serializer import CalendarEventSerializer
+from skdue_calendar.serializers.calendar_serializer import CalendarSerializer
+from skdue_calendar.serializers.calendar_tag_serializer import CalendarTagSerializer
 from skdue_calendar.utils import generate_slug
 from .utils import convert_response
 import json
@@ -14,69 +17,63 @@ import json
 
 class SearchTests(TestCase):
     def setUp(self):
-        self.user_num = 5
         self.start_date = datetime.now().replace(microsecond=0)
         self.end_date = self.start_date + timedelta(days=1)
-        for i in range(1, self.user_num):
-            user = User(
-                username = f"user-{i}",
-                email = f"user-{i}@test.com"
-            )
-            user.save()
-            calendar = Calendar(
-                name = user.username,
-                slug = generate_slug(user.username),
-                user = user
-            )
-            tag = CalendarTag(user=user, tag=f"tag-{i}")
-            tag.save()
-            calendar.save()
-            event = CalendarEvent(
-                calendar = calendar,
-                name = f"event {i}",
-                slug = f"event-{i}",
-                description = f"desc event {i}",
-                start_date = self.start_date,
-                end_date = self.end_date,
-                tag = tag
-            )
-            event.save()
 
-    def tag_data(self, i):
-        return {
-            "id": i,
-            "tag": f"tag-{i}",
-            "user": i
-        }
+        tag = CalendarTagType(tag_type="default")
+        tag.save()
+        self.DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
 
-    def calendar_data(self, i):
-            return {
-                "id": i,
-                "name": f"user-{i}",
-                "slug": f"user-{i}",
-                "get_absolute_url": f"/user-{i}",
-                "user": i
-            }
+        tag = CalendarTagType(tag_type="private")
+        tag.save()
+        self.PRIVATE_TAG_TYPE = CalendarTagType.objects.get(tag_type="private")
 
-    def event_data(self, i):
-            return {
-                "id": i,
-                "calendar": i,
-                "name": f"event {i}",
-                "slug": f"event-{i}",
-                "get_absolute_url": f"/user-{i}/event-{i}",
-                "description": f"desc event {i}",
-                "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                "tag_text": f"tag-{i}" 
-            }
+        tag = CalendarTagType(tag_type="custom")
+        tag.save()
+        self.CUSTOM_TAG_TYPE = CalendarTagType.objects.get(tag_type="custom")
+        
+        self.user = User(username="tester")
+        self.user.save()
+        self.calendar = Calendar(
+            user=self.user,
+            name=self.user.username,
+            slug=generate_slug(self.user.username)    
+        )
+        self.calendar.save()
+        self.public_tag = CalendarTag(
+            user=self.user,
+            tag="public",
+            tag_type=self.DEFAULT_TAG_TYPE,
+        )
+        self.public_tag.save()
+        self.public_event = CalendarEvent(
+            calendar=self.calendar,
+            tag=self.public_tag,
+            start_date = self.start_date,
+            end_date = self.end_date
+        )
+        self.public_event.save()
+        self.private_tag = CalendarTag(
+            user=self.user,
+            tag="private",
+            tag_type=self.PRIVATE_TAG_TYPE
+        )
+        self.private_tag.save()
+        self.private_event = CalendarEvent(
+            calendar=self.calendar,
+            tag=self.private_tag,
+            start_date = self.start_date,
+            end_date = self.end_date
+        )
+        self.private_event.save()
 
     def test_get(self):
-        expect = json.dumps({
-            "calendar": [ self.calendar_data(i) for i in range(1, self.user_num) ],
-            "event": [ self.event_data(i) for i in range(1, self.user_num) ],
-            "tag": [ self.tag_data(i) for i in range(1, self.user_num)]
-        })
+        """Test that search returns all public data"""
         response = self.client.get(reverse('api_v2:search'))
         response_data = convert_response(response.content)
+        expect = json.dumps({
+            "calendar": CalendarSerializer([self.calendar], many=True).data,
+            "event": CalendarEventSerializer([self.public_event], many=True).data,
+            "tag": CalendarTagSerializer([self.public_tag], many=True).data
+        })
         self.assertJSONEqual(expect, response_data)

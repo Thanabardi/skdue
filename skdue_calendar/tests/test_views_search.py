@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from django.test import TestCase
 from django.urls.base import reverse
 from django.contrib.auth.models import User
-from skdue_calendar.models import Calendar, CalendarEvent, CalendarTag
+from skdue_calendar.models import Calendar, CalendarEvent, CalendarTag, CalendarTagType
 
 
 def convert_response(data):
@@ -19,7 +19,9 @@ class SearchViewTests(TestCase):
         self.end_date = self.start_date + timedelta(days=1)
         user = User(username="tester")
         user.save()
-        tag = CalendarTag(user=user, tag="event")
+        tag_type = CalendarTagType(tag_type="default")
+        tag_type.save()
+        tag = CalendarTag(user=user, tag="event", tag_type=tag_type)
         tag.save()
         for i in range(3):
             calendar = Calendar(
