@@ -26,8 +26,8 @@ class CalendarEventListTests(TestCase):
         calendar.save()
         tag_type = CalendarTagType(tag_type="default")
         tag_type.save()
-        tag = CalendarTag(user=user, tag="event", tag_type=tag_type)
-        tag.save()
+        self.tag = CalendarTag(user=user, tag="event", tag_type=tag_type)
+        self.tag.save()
         for i in range(3):
             event = CalendarEvent(
                 calendar = calendar,
@@ -36,7 +36,7 @@ class CalendarEventListTests(TestCase):
                 description = f"desc event {i}",
                 start_date = self.start_date,
                 end_date = self.end_date,
-                tag = tag
+                tag = self.tag
             )
             event.save()
 
@@ -62,7 +62,7 @@ class CalendarEventListTests(TestCase):
                 "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
                 "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
                 # TODO: change tag_text value after create Tag model and edit CalendarEvent model
-                "tag_text": "event"
+                "tag_text": str(self.tag)
             })
         expects = json.dumps(expects)
         self.assertJSONEqual(expects, response_data)
@@ -111,7 +111,7 @@ class CalendarEventListTests(TestCase):
             "start_date": self.start_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
             "end_date": self.end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
             # TODO: change tag_text value after create Tag model and edit CalendarEvent model
-            "tag_text": "event",
+            "tag_text": str(self.tag),
             "status": "success",
             "msg": "calendar event created"
         })

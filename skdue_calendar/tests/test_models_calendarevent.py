@@ -28,7 +28,8 @@ class CalendarEventModelTests(TestCase):
         new_event_data = {
             "name": "old event",
             "start_date": str(self.start_date),
-            "end_date": str(self.start_date + timedelta(days=1))
+            "end_date": str(self.start_date + timedelta(days=1)),
+            "tag_text": str(self.tag)
         }
         # validate with same name but different calendar
         self.assertFalse(CalendarEvent.is_valid(new_event_data, "calendar"))
@@ -41,7 +42,8 @@ class CalendarEventModelTests(TestCase):
             new_event = {
                 "name": "test event",
                 "start_date": str(self.start_date),
-                "end_date": str(self.start_date - interval)
+                "end_date": str(self.start_date - interval),
+                "tag_text": str(self.tag)
             }
             with self.subTest():
                 self.assertFalse(CalendarEvent.is_valid(new_event, "calendar-0"), interval)
@@ -65,7 +67,8 @@ class CalendarEventModelTests(TestCase):
         new_event_data = {
             "name": "old event",
             "start_date": str(self.start_date),
-            "end_date": str(self.start_date + timedelta(days=1))
+            "end_date": str(self.start_date + timedelta(days=1)),
+            "tag_text": str(self.tag)
         }
         # validate with same name but different calendar
         self.assertFalse(CalendarEvent.is_valid(new_event_data, "calendar-1"))
@@ -78,7 +81,8 @@ class CalendarEventModelTests(TestCase):
             new_event = {
                 "name": "test event",
                 "start_date": str(self.start_date),
-                "end_date": str(self.start_date + interval)
+                "end_date": str(self.start_date + interval),
+                "tag_text": str(self.tag)
             }
             with self.subTest():
                 self.assertTrue(CalendarEvent.is_valid(new_event, "calendar-0"), interval)
@@ -101,7 +105,8 @@ class CalendarEventModelTests(TestCase):
         new_event_data = {
             "name": "old event",
             "start_date": str(self.start_date),
-            "end_date": str(self.start_date + timedelta(days=1))
+            "end_date": str(self.start_date + timedelta(days=1)),
+            "tag_text": str(self.tag)
         }
         # validate with same name but different calendar
         self.assertTrue(CalendarEvent.is_valid(new_event_data, "calendar-2"))
