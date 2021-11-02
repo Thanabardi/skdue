@@ -5,3 +5,4 @@ from .test_event_detail import *
 from .test_search import *
 from .test_users import *
 from .test_me import *
+from .test_logout import *
