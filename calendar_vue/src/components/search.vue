@@ -85,7 +85,7 @@ export default {
       return currentName.includes(currentInput)
     },
     getList () {
-      axios.get('/api/calendar/search').then( response => {
+      axios.get('/api/v2/search').then( response => {
         this.itemList = response.data
         this.apiLoaded = true
       })
