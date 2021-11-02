@@ -26,8 +26,9 @@ class LoginTest(TestCase):
     def test_valid_login(self):
         response = self.client.post(reverse('api_v2:login'), self.user1_account)
         self.assertEqual(200, response.status_code)
+        self.assertEqual(User.objects.get(username=self.user1_account["username"]).id,
+                                            int(self.client.session['_auth_user_id']))
     
     def test_invalid_test(self):
         response = self.client.post(reverse('api_v2:login'), self.user2_account)
         self.assertEqual(404, response.status_code)
-        
