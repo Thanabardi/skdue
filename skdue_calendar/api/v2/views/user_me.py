@@ -144,13 +144,21 @@ class UserMeFollowedView(APIView):
 
     def post(self, request):
         """User can follow another user here"""
+        opt = request.data["option"]
         follow_id = request.data["follow_id"]
         followed_user = User.objects.get(id=follow_id)
-        if FollowStatus.is_valid(request.user, followed_user):
-            fs = FollowStatus(user=request.user, followed=followed_user)
-            fs.save()
-            return Response({"msg": "followed"}, 201)
-        return Response({"msg": "error"})
+        if opt == "follow":
+            if FollowStatus.is_valid(request.user, followed_user):
+                fs = FollowStatus(user=request.user, followed=followed_user)
+                fs.save()
+                return Response({"msg": "followed"}, 201)
+            else:
+                return Response({"msg": "invalid follow status"}, 400)
+        elif opt == "unfollow":
+            fs = FollowStatus.objects.get(user=request.user, followed=followed_user)
+            fs.unfollow()
+            return Response({"msg": "unfollowed"}, 200)
+        return Response({"msg": "option not found"}, 404)
 
 
 class UserMeAddTagView(APIView):

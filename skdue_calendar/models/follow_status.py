@@ -31,13 +31,14 @@ class FollowStatus(models.Model):
 
     def unfollow(self):
         self.delete()
-        print(f'{self.user.username} has UNFOLLOWED {self.followed.username}')
+        return f'{self.user.username} has UNFOLLOWED {self.followed.username}'
 
     @classmethod
     def is_valid(self, user, followed):
-        # print(FollowStatus.objects.filter(user=user, follower=follower))
+        # A user can't follow himself
         if user == followed:
             return False
+        # A user must follow another exist user
         if len(FollowStatus.objects.filter(user=user, followed=followed)) != 0:
             return False
         return True

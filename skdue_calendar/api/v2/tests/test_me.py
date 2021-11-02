@@ -199,7 +199,7 @@ class UserMeTests(TestCase):
         followed = User(username="followed", password="followed")
         followed.save()
         fs = FollowStatus(user=self.user, followed=followed)
-        response = self.client.get(reverse('api_v2:me_followed'))
+        response = self.client.get(reverse('api_v2:me_follow'))
         response_data = convert_response(response.content)
         expect = json.dumps(FollowStatusSerializer(FollowStatus.objects.all(), many=True).data)
         self.assertJSONEqual(expect, response_data)
@@ -209,10 +209,34 @@ class UserMeTests(TestCase):
         followed = User(username="followed", password="followed")
         followed.save()
         response = self.client.post(
-            reverse('api_v2:me_followed'),
-            data = {"follow_id": followed.id}
+            reverse('api_v2:me_follow'),
+            data = {
+                "option": "follow",
+                "follow_id": followed.id}
         )
         self.assertEqual(201, response.status_code)
+
+    def test_me_unfollowed_post(self):
+        self.client.force_login(self.user)
+        # follow
+        followed = User(username="followed", password="followed")
+        followed.save()
+        self.client.post(
+            reverse('api_v2:me_follow'),
+            data = {
+                "option": "follow",
+                "follow_id": followed.id}
+        )
+        # unfollow
+        response = self.client.post(
+            reverse('api_v2:me_follow'),
+            data = {
+                "option": "unfollow",
+                "follow_id": followed.id
+            }
+        )
+        with self.assertRaises(FollowStatus.DoesNotExist):
+            _ = FollowStatus.objects.get(user=self.user, followed=followed)
 
     def test_me_add_tag_post_with_unlogin(self):
         response = self.client.post(reverse('api_v2:me_add_new_tag'), {"tag": "event"})
