@@ -1,7 +1,5 @@
 from datetime import datetime, timedelta
-from itertools import chain
 import json
-from django.http import response
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User

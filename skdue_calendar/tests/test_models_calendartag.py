@@ -1,15 +1,11 @@
-from datetime import datetime, timedelta
-from django.contrib.auth.models import User
-
 from django.test import TestCase
 from django.contrib.auth.models import User
-from skdue_calendar.models import Calendar, CalendarEvent, CalendarTag, CalendarTagType
+from skdue_calendar.models import Calendar, CalendarTag, CalendarTagType
 from skdue_calendar.utils import generate_slug
 
 
 class CalendarTagModelTests(TestCase):
     def setUp(self):
-        self.start_date = datetime.now().replace(microsecond=0)
         user = User(username="tester")
         user.save()
         self.tag_type = CalendarTagType(tag_type="default")

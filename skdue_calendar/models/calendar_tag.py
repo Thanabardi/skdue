@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-from .calendar import Calendar
 from .calendar_tag_type import CalendarTagType
 from skdue_calendar.utils import generate_tag
 
