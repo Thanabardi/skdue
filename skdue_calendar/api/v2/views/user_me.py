@@ -158,7 +158,7 @@ class UserMeAddTagView(APIView):
         """User can add new custom tag from here"""
         if request.user.id:
             user = request.user
-            if len(CalendarTag.objects.filter(tag=request.data["tag"])) == 0:
+            if CalendarTag.is_valid(request.data):
                 new_custom_tag = CalendarTag(
                     user = user,
                     tag = request.data["tag"],

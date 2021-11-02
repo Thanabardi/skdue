@@ -20,24 +20,20 @@ class CalendarTag(models.Model):
         return str(self.tag_type)
 
     @classmethod
-    def is_valid(self, event_data: str, calendar_slug) -> bool:
+    def is_valid(self, event_data) -> bool:
         """Validate tag from calendar event data
         
         Args:
             tag: event tag name
-            calendar_slug: slug of calendar
         Returns:
             bool: False, if tag is already exist, True otherwise.
         """
-        tag = generate_tag(event_data["tag_text"])
+        tag = generate_tag(event_data["tag"])
         can_create = True
         try:
-            calendar = Calendar.objects.get(slug=calendar_slug)
-            for event in calendar.calendarevent_set.all():
-                if str(event.tag) == tag:
-                    can_create = False
-                    break
-        except:
+            _ = CalendarTag.objects.get(tag=tag)
+            can_create = False
+        except CalendarTag.DoesNotExist:
             return True # tag is not found
 
         return can_create
