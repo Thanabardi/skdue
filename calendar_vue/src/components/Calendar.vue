@@ -32,11 +32,11 @@ export default {
         // initialEvents: INITIAL_EVENTS,
         events: [],
         // editable: true,
-        // selectable: true,
+        selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
         weekends: true,
-        // select: this.handleDateSelect,
+        select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
         /* you can update a remote database when these fire:
@@ -47,6 +47,7 @@ export default {
       },
       currentEvents: [],
       calendar_events: [],
+      event_in_selected_date: [], //added in iter4
       event_details: [],
       modalActive: false,
     };
@@ -90,22 +91,24 @@ export default {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
     },
     handleDateSelect(selectInfo) {
-      let title = prompt("Please enter a new title for your event"); //input the title name of event
-      let calendarApi = selectInfo.view.calendar;
-      calendarApi.unselect(); // clear date selection
-      if (title) {
-        // if use fill the input
-        calendarApi.addEvent(
-          {
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay,
-          //color: 'red',
-          //textColor: 'black',
-        });
-      }
+      // let title = prompt("Please enter a new title for your event"); //input the title name of event
+      // let calendarApi = selectInfo.view.calendar;
+      // calendarApi.unselect(); // clear date selection
+      // if (title) {
+      //   // if use fill the input
+      //   calendarApi.addEvent(
+      //     {
+      //     id: createEventId(),
+      //     title,
+      //     start: selectInfo.startStr,
+      //     end: selectInfo.endStr,
+      //     allDay: selectInfo.allDay,
+      //     //color: 'red',
+      //     //textColor: 'black',
+      //   });
+      // }
+      console.log(selectInfo.start)
+      console.log(this.calendar_events)
     },
     handleEventClick(clickInfo) {
       this.calendar_events.forEach(elements => {
@@ -181,7 +184,7 @@ export default {
   line-height: 0px;
   height: 65px;
   display: flex;
-  justify-content: space-evenly;  
+  justify-content: space-evenly;
   z-index: 5;
   position: fixed !important;
   top: 0px;
