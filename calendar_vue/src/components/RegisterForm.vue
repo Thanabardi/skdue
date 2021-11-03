@@ -25,7 +25,7 @@
       <form @submit.prevent="getData" class="sign-up" action="#">
         <h2>Sign up</h2>
         <div>Use your email for registration</div>
-        <input class="register-input" type="text" v-model="dataRegisterForm.name" placeholder="Name" required />
+        <input class="register-input" type="text" v-model="dataRegisterForm.username" placeholder="Name" required />
         <input class="register-input" type="email" v-model="dataRegisterForm.email" placeholder="Email" required />
         <input class="register-input" type="password" v-model="dataRegisterForm.password" placeholder="Password" required />
         <button class="register-button">Sign Up</button>
@@ -61,9 +61,10 @@ import axios from 'axios'
   export default {
     data(){
       return {
+        slug : '',
         signUp: false,
         dataRegisterForm:{
-          name: null,
+          username: null,
           email: null,
           password: null,
             },
