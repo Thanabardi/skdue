@@ -32,7 +32,7 @@
       </form>
       <form @submit.prevent="checkData" class="sign-in" action="#">
         <h2>Login</h2>
-        <input class="register-input" type="email" v-model="dataLogIn.email" placeholder="Email" required />
+        <input class="register-input" type="username" v-model="dataLogIn.username" placeholder="Username" required />
         <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
         <a class="app-button-tp" style="text-decoration: none; color: var(--black);" 
           href="#">Forgot your password?</a>
@@ -54,7 +54,10 @@
   </div>
 </template>
 
+
 <script>
+import axios from 'axios'
+
   export default {
     data(){
       return {
@@ -63,27 +66,47 @@
           name: null,
           email: null,
           password: null,
-          // is_test : 'True'
             },
         dataLogIn:{
-          email: null,
+          username: null,
           password: null
         } 
       }
     },
     methods:{
-      // setData(data){
-      //       this.slug = data.slug
-      //       this.$router.push({ path: `/calendar/1234`});
+      setData(data){
+            console.log(data);
+            this.slug = data.username
+            this.$router.push({ path: `/calendar/${this.slug}`});
 
-      // },
+      },
       getData(e){
         e.preventDefault();
         console.log(this.dataRegisterForm);
+
+        axios.post(`/api/v2/register`, this.dataRegisterForm)
+                .then(response => {
+                this.setData(response.data);
+                // console.log(response.data);
+                // console.log(response.data.slug);
+                })
+                .catch(error => {
+                console.log(error)
+            })
       },
       checkData(e){
         e.preventDefault();
         console.log(this.dataLogIn);
+
+        axios.post(`/api/v2/login`, this.dataLogIn)
+                .then(response => {
+                this.setData(response.data);
+                // console.log(response.data);
+                // console.log(response.data.slug);
+                })
+                .catch(error => {
+                console.log(error)
+            })
       }
     }
   }
