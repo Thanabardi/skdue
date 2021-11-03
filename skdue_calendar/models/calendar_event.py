@@ -1,4 +1,3 @@
-from itertools import chain
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
@@ -27,7 +26,6 @@ class CalendarEvent(models.Model):
 
     @property
     def tag_text(self):
-        # TODO: change this function to return tag_text from tag field
         return str(self.tag)
 
     @classmethod
@@ -41,8 +39,6 @@ class CalendarEvent(models.Model):
         Returns:
             bool: False, if calendar_slug does not exist or start_date < end_date, True otherwise.
         """
-        # TODO: add condtion that events are invalid, when tag is not exist or 
-        # tag is not default tag or creator does not own this tag 
         slug = generate_slug(event_data["name"])
         is_same = False
         try:
