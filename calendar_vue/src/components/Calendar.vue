@@ -229,6 +229,12 @@ export default {
             <p class="app-details">{{ item[3] }}</p>
         </p>
 
+        <p v-if="this.event_details.length==0">
+          <h1>No event found on this day.</h1>
+          <h3>Sorry I'm Afriad you are sociopathy. What did you waiting! Try create new events now.</h3>
+
+        </p>
+
 
         <!-- <h1>{{ event_details[0] }}</h1>
         <div class="app-details">
