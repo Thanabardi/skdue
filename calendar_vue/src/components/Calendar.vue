@@ -23,10 +23,18 @@ export default {
           timeGridPlugin,
           interactionPlugin, // needed for dateClick
         ],
+        customButtons: {
+          myCustomButton: {
+            text: 'Year',
+            click: function() {
+              // alert('clicked the custom button!');
+            }
+          }
+        },
         headerToolbar: {
           left: "prev,next today",
           center: "title",
-          right: "dayGridMonth", //,timeGridWeek,timeGridDay
+          right: "prevYear,myCustomButton,nextYear" //,timeGridWeek,timeGridDay
         },
         initialView: "dayGridMonth",
         // initialEvents: INITIAL_EVENTS,
@@ -181,7 +189,7 @@ export default {
   line-height: 0px;
   height: 65px;
   display: flex;
-  justify-content: space-evenly;  
+  justify-content: space-evenly;
   z-index: 5;
   position: fixed !important;
   top: 0px;
