@@ -58,25 +58,32 @@ export default {
   },
   methods: {
     setCalendarEvents(data){
-      let d = data
-      this.calendar_events = d
-      for(let i=0; i<d.length; i++) {
-        this.calendarOptions.events.push({
-          id: d[i].id,
-          title: d[i].name,
-          start: d[i].start_date,
-          end: d[i].end_date,
-          description: d[i].description,
-          slug: d[i].slug
-        })
-        // console.log(this.calendarOptions.events[i])
+      let tag = data.tag
+      let all_event = data.event
+      for (let t=0; t<tag.length; t++){
+        let d = all_event[tag[t]]
+        console.log(d)
+        this.calendar_events = d
+        console.log(this.calendar_events)
+        for(let i=0; i<d.length; i++) {
+          this.calendarOptions.events.push({
+            id: d[i].id,
+            title: d[i].name,
+            start: d[i].start_date,
+            end: d[i].end_date,
+            description: d[i].description,
+            slug: d[i].slug,
+            tag : d[i].tag_text
+          })
+          // console.log(this.calendarOptions.events[i])
+        }
       }
     },
     getCalendarEvents() {
       const calendar_slug = this.$route.params.calendar_slug
       console.log("slug =", calendar_slug)
       axios
-        .get(`/api/calendar/${calendar_slug}`)
+        .get(`/api/v2/calendar/${calendar_slug}`)
         .then(response => {
           this.setCalendarEvents(response.data)
         })
