@@ -2,10 +2,14 @@
 	<div class="user-detail">
 		
 		<div v-if="this.user_name == ''" class="user-detail-not-login">
-			<button class="user-detail-button" style=" background: none; border: 2px solid var(--white);" 
+			<router-link class="user-detail-button" style=" background: none; border: 2px solid var(--white);" 
+            to=/>Login</router-link>
+			<router-link class="user-detail-button" style=" background: var(--green); border: 2px solid var(--green);" 
+            to=/>Signup</router-link>
+			<!-- <button class="user-detail-button" style=" background: none; border: 2px solid var(--white);" 
 				@click="() => TogglePopup('buttonTrigger')">Login</button>
 			<button class="user-detail-button" style=" background: var(--green); border: 2px solid var(--green);" 
-				@click="() => TogglePopup('buttonTrigger')">Signup</button>
+				@click="() => TogglePopup('buttonTrigger')">Signup</button> -->
 		</div>
 
 		<div v-else class="user-detail-login">
@@ -53,6 +57,7 @@ export default {
             // const calendar_slug = this.$route.params.calendar_slug
             axios.get(`/api/v2/me`)
 			.then( response => {
+				// console.log(response.data)
                 this.user_name = response.data["user"]["username"]
             })
         }
@@ -74,7 +79,7 @@ export default {
 	display: flex;
 	justify-content: space-evenly;
 	top: 6px;
-	width: 300px;
+	width: 320px;
 }
 .user-detail-login {
 	width: 250px;
@@ -113,9 +118,10 @@ export default {
     color: var(--white);
     cursor: pointer;
     font-size: 22px;
-    width: 40%;
+    width: 100px;
     padding: 4px 15px 4px 15px;
     text-align: center;
 	border-radius: 40px;
+	text-decoration: none;
 }
 </style>
