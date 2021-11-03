@@ -3,16 +3,14 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import EventCreate from './EventCreate'
-import Search from './search'
+import CalendarNavbar from './CalendarNavbar'
 import EventDetails from './EventDetails'
 import {ref} from 'vue'
 import axios from 'axios'
 export default {
   components: {
     FullCalendar, // make the <FullCalendar> tag available
-    Search,
-    EventCreate
+    CalendarNavbar
   },
   data: function () {
     return {
@@ -135,12 +133,7 @@ export default {
 
 <template>
   <div>
-    <header class="calendar-header">
-      <h2><router-link class="app-button-tp" style="text-decoration: none;"
-        to=/>Skdue</router-link></h2>
-      <Search />
-      <EventCreate />
-    </header>
+    <CalendarNavbar />
     <div class='calendar-sidebar'>
       <EventDetails v-show="modalActive">
         <h1>{{ event_details[0] }}</h1>
@@ -173,21 +166,6 @@ export default {
 
 @import './../assets/style.css';
 
-.calendar-header {
-  background: var(--main-green);
-  color: var(--main-green);
-  font-size: 25px;
-  font-weight: 500px;
-  line-height: 0px;
-  height: 65px;
-  display: flex;
-  justify-content: space-evenly;  
-  z-index: 5;
-  position: fixed !important;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-}
 .calendar-sidebar {
   background: var(--main-green-light);
   color: var(--white);
