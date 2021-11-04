@@ -14,11 +14,11 @@
 			<h2><div class="user-detail-app-button" @click="redirectUserHome()">Skdue</div></h2>
 			<div class="user-detail-login">
 				<button class="app-button-tp" style="font-size: 22px;" 
-					@click="() => TogglePopup('buttonTrigger')">{{ this.user_name }}</button>
+					@click="() => TogglePopup('buttonTrigger')">{{ this.user_name }}sawardeecrab</button>
 				<div v-if="popupTriggers.buttonTrigger" 
 					:TogglePopup="() => TogglePopup('buttonTrigger')">
 					<div class="user-detail-tab">
-						<button class="user-detail-button-tp" @click="() => TogglePopup('buttonTrigger')">Logout</button>
+						<button class="user-detail-button-tp" @click="() => logout()">Logout</button>
 					</div>
 				</div>
 			</div>
@@ -62,13 +62,15 @@ export default {
                 this.user_name = response.data["user"]["username"]
             })
         },
-		async redirectUserHome() {
-			axios.get(`/api/v2/me`).then( response => {
-                console.log(response.data),
-				this.$router.push({ path: `/calendar/${user_calendar[0]["slug"]}` }),
-				this.$router.go()
-			})
+		redirectUserHome() {
+			this.$router.push({ path: `/calendar/${this.user_name[0]["slug"]}` })
+			// this.$router.go()
         },
+		logout() {
+			this.$router.push({ path: `/api/v2/logout` }),
+			this.$router.replace({ path: `/` })
+
+		},
 	}
 }
 
