@@ -6,7 +6,7 @@ from skdue_calendar.utils import generate_slug
 from skdue_calendar.serializers import CalendarSerializer
 from django.contrib.auth import authenticate, login
 from skdue_calendar.serializers import CalendarSerializer, UserSerializer
-
+from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -36,9 +36,11 @@ class Register(APIView):
                 user = new_user
             )
             new_calendar.save()
+            token, _ = Token.objects.get_or_create(user=new_user)
             data = {
                 "user": UserSerializer(new_user).data,
-                "calendar": CalendarSerializer(new_calendar).data
+                "calendar": CalendarSerializer(new_calendar).data,
+                "token": token.key
             }
             data["status"] = "success" # add created status
             data["msg"] = "Account created"

@@ -6,12 +6,12 @@ from rest_framework.authtoken.models import Token
 
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
 from skdue_calendar.models import Calendar
 from skdue_calendar.serializers import UserSerializer, CalendarSerializer
 
 
 class DemoView(APIView):
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)             
 
     def get(self, request):

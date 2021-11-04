@@ -76,7 +76,15 @@ import axios from 'axios'
     },
     methods:{
       setData(data){
+        // for register
         console.log(data);
+
+        // auth setting
+        let token = data.token
+        this.$store.commit('setToken', token)            
+        axios.defaults.headers.common["Authorization"] = "Token " + token
+        localStorage.setItem("token", token)
+
         this.slug = data.calendar.slug
         this.$router.push({ path: `/me/${this.slug}`});
       },
@@ -85,7 +93,7 @@ import axios from 'axios'
         console.log(data);
 
         // auth setting
-        let token = data.token
+        token = data.token
         this.$store.commit('setToken', token)            
         axios.defaults.headers.common["Authorization"] = "Token " + token
         localStorage.setItem("token", token)
