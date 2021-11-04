@@ -2,23 +2,24 @@
 	<div class="user-detail">
 		
 		<div v-if="this.user_name == ''" class="user-detail-not-login">
+			<h2><router-link class="user-detail-app-button"
+            	to=/>Skdue</router-link></h2>
 			<router-link class="user-detail-button" style=" background: none; border: 2px solid var(--white);" 
-            to=/>Login</router-link>
+            	to=/>Login</router-link>
 			<router-link class="user-detail-button" style=" background: var(--green); border: 2px solid var(--green);" 
-            to=/>Signup</router-link>
-			<!-- <button class="user-detail-button" style=" background: none; border: 2px solid var(--white);" 
-				@click="() => TogglePopup('buttonTrigger')">Login</button>
-			<button class="user-detail-button" style=" background: var(--green); border: 2px solid var(--green);" 
-				@click="() => TogglePopup('buttonTrigger')">Signup</button> -->
+            	to=/>Signup</router-link>
 		</div>
 
-		<div v-else class="user-detail-login">
-			<button class="app-button-tp" style="font-size: 22px;" 
+		<div v-else>
+			<h2><div class="user-detail-app-button" @click="redirectUserHome()">Skdue</div></h2>
+			<div class="user-detail-login">
+				<button class="app-button-tp" style="font-size: 22px;" 
 					@click="() => TogglePopup('buttonTrigger')">{{ this.user_name }}</button>
-			<div v-if="popupTriggers.buttonTrigger" 
-				:TogglePopup="() => TogglePopup('buttonTrigger')">
-				<div class="user-detail-tab">
-					<button class="user-detail-button-tp" @click="() => TogglePopup('buttonTrigger')">Logout</button>
+				<div v-if="popupTriggers.buttonTrigger" 
+					:TogglePopup="() => TogglePopup('buttonTrigger')">
+					<div class="user-detail-tab">
+						<button class="user-detail-button-tp" @click="() => TogglePopup('buttonTrigger')">Logout</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -60,8 +61,15 @@ export default {
 				// console.log(response.data)
                 this.user_name = response.data["user"]["username"]
             })
-        }
-	},
+        },
+		async redirectUserHome() {
+			axios.get(`/api/v2/me`).then( response => {
+                console.log(response.data),
+				this.$router.push({ path: `/calendar/${user_calendar[0]["slug"]}` }),
+				this.$router.go()
+			})
+        },
+	}
 }
 
 </script>
@@ -70,6 +78,21 @@ export default {
 
 @import './../assets/style.css';
 
+.user-detail-app-button {
+    line-height: 0px;
+    font-size: 40px;
+    font-weight: 500px;
+    position: fixed;
+    left: 2%;
+    background: none;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    text-decoration: none;
+}
+.user-detail-app-button:active {
+	color: var(--white-dark);
+}
 .user-detail {
     position: absolute;
     right: 2%;
@@ -85,6 +108,7 @@ export default {
 	width: 250px;
     border: 1px solid transparent;
     padding: 5px;
+	transform: translate(0, -20px);
 }
 .user-detail-login:hover {
 	border: 1px solid var(--white-op-1);

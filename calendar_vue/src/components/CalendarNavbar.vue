@@ -1,7 +1,5 @@
 <template>
 	<div class="calendar-navbar-bg">
-        <h2><router-link class="calendar-navbar-button"
-            to=/>Skdue</router-link></h2>
         <Search />
         <EventCreate />
         <UserConfig />
@@ -39,8 +37,8 @@ export default {
                 console.log(response.data)
                 // this.user_name = response.data["user"]["username"]
             })
-        }
-	},
+        },
+	}
 }
 </script>
 
@@ -76,21 +74,6 @@ export default {
 // .calendar-navbar-link:hover {
     
 // }
-.calendar-navbar-button {
-    line-height: 20px;
-    font-size: 40px;
-    font-weight: 500px;
-    position: absolute;
-    left: 2%;
-    background: none;
-    border: none;
-    color: var(--white);
-    cursor: pointer;
-    text-decoration: none;
-}
-.calendar-navbar-button:active {
-    color: var(--white-dark);
-}
 // .user-detail {
 //     position: absolute;
 //     right: 1%;
