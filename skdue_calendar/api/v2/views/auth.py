@@ -1,10 +1,22 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
 
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from skdue_calendar.models import Calendar
+from skdue_calendar.serializers import UserSerializer, CalendarSerializer
+
+
+class DemoView(APIView):
+    permission_classes = (IsAuthenticated,)             
+
+    def get(self, request):
+        content = {'message': 'Hello! This is a Demo'}
+        return Response(content)
 
 
 class GetAuthToken(APIView):
@@ -17,6 +29,10 @@ class GetAuthToken(APIView):
 
         if user:
             token, created = Token.objects.get_or_create(user=user)
-            return Response({"token": token.key})
+            return Response({
+                "token": token.key,
+                "user":  UserSerializer(user).data,
+                "calendar": CalendarSerializer(Calendar.objects.get(user=user)).data
+            })
 
         return Response({"msg": "something wrong"})

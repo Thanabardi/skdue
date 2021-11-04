@@ -78,12 +78,20 @@ import axios from 'axios'
       setData(data){
         console.log(data);
         this.slug = data.calendar.slug
-        this.$router.push({ path: `/calendar/${this.slug}`});
+        this.$router.push({ path: `/me/${this.slug}`});
       },
       loginData(data){
+        // for login
         console.log(data);
+
+        // auth setting
+        let token = data.token
+        this.$store.commit('setToken', token)            
+        axios.defaults.headers.common["Authorization"] = "Token " + token
+        localStorage.setItem("token", token)
+
         this.slug = data.calendar.slug
-        this.$router.push({ path: `/calendar/${this.slug}`});
+        this.$router.push({ path: `/me/${this.slug}`});
       },
       getData(e){
         e.preventDefault();
@@ -100,10 +108,12 @@ import axios from 'axios'
             })
       },
       checkData(e){
+        // for loging
         e.preventDefault();
         console.log(this.dataLogIn);
 
-        axios.post(`/api/v2/login`, this.dataLogIn)
+        // get API token
+        axios.post(`/api/v2/get-auth-token`, this.dataLogIn)
                 .then(response => {
                 this.loginData(response.data);
                 // console.log(response.data);

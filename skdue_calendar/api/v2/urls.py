@@ -19,5 +19,6 @@ urlpatterns = [
     path('me/add_new_tag', UserMeAddTagView.as_view(), name="me_add_new_tag"),
     path('me/<calendar_slug>', UserMeCalendarView.as_view(), name="me_calendar"),
 
-    path('get-auth-token/', GetAuthToken.as_view(), name="get_auth_token")
+    path('get-auth-token', GetAuthToken.as_view(), name="get_auth_token"),
+    path('demo', DemoView.as_view(), name='demo')
 ]
