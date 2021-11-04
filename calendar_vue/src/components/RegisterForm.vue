@@ -77,12 +77,12 @@ import axios from 'axios'
     methods:{
       setData(data){
         console.log(data);
-        this.slug = data.username
+        this.slug = data.calendar.slug
         this.$router.push({ path: `/calendar/${this.slug}`});
       },
       loginData(data){
         console.log(data);
-        this.slug = data.username
+        this.slug = data.calendar.slug
         this.$router.push({ path: `/calendar/${this.slug}`});
       },
       getData(e){

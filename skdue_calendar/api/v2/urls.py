@@ -15,7 +15,7 @@ urlpatterns = [
     path('register', Register.as_view(), name="register"),
     path('fs/', FollowStatusView.as_view(), name="follow_status"),
     path('me', UserMeView.as_view(), name="me"),
-    path('me/followed', UserMeFollowedView.as_view(), name="me_followed"),
+    path('me/follow', UserMeFollowedView.as_view(), name="me_follow"),
     path('me/add_new_tag', UserMeAddTagView.as_view(), name="me_add_new_tag"),
     path('me/<calendar_slug>', UserMeCalendarView.as_view(), name="me_calendar"),
 ]
