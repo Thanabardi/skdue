@@ -85,9 +85,10 @@ export default {
       const calendar_slug = this.$route.params.calendar_slug
       const calendar_type = this.$route.params.calendar_type
 
-      console.log("TOKEN:", this.$store.state.token)
+      console.log("TOKEN:", localStorage.token)
 
       console.log("slug =", calendar_slug)
+      axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
       axios
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
