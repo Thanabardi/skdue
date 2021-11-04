@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from skdue_calendar.models import Calendar
 from skdue_calendar.utils import generate_slug
+from skdue_calendar.serializers import CalendarSerializer
+from django.contrib.auth import authenticate, login
 from skdue_calendar.serializers import CalendarSerializer, UserSerializer
 
 from django.views.decorators.csrf import csrf_exempt
@@ -40,6 +42,9 @@ class Register(APIView):
             }
             data["status"] = "success" # add created status
             data["msg"] = "Account created"
+            # Login 
+            user = authenticate(request, username=user['username'], password=user['password'])
+            login(request, user)
             return Response(data)
         else:
             return Response({"status": "failed", "msg": "Account created fail"})
