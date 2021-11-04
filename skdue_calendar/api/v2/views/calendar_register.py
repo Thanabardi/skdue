@@ -24,6 +24,10 @@ class Register(APIView):
         user = request.data
         if self.is_valid(request):
             # create new user
+            request_login = {
+                                "username":user['username'],
+                                "password":user['password']
+            }
             new_user = User.objects.create_user(user['username'], user['email'], user['password'])
             new_user.save()
             # Create new calendar
@@ -40,8 +44,8 @@ class Register(APIView):
             data["status"] = "success" # add created status
             data["msg"] = "Account created"
             # Login 
-            user = authenticate(request, username=user['username'], password=user['password'])
-            login(request, user)
+            user = authenticate(request_login, username=user['username'], password=user['password'])
+            login(request_login, user)
             return Response(data)
         else:
             return Response({"status": "failed", "msg": "Account created fail"})

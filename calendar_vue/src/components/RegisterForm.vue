@@ -76,10 +76,14 @@ import axios from 'axios'
     },
     methods:{
       setData(data){
-            console.log(data);
-            this.slug = data.username
-            this.$router.push({ path: `/calendar/${this.slug}`});
-
+        console.log(data);
+        this.slug = data.username
+        this.$router.push({ path: `/calendar/${this.slug}`});
+      },
+      loginData(data){
+        console.log(data);
+        this.slug = data.username
+        this.$router.push({ path: `/calendar/${this.slug}`});
       },
       getData(e){
         e.preventDefault();
@@ -101,7 +105,7 @@ import axios from 'axios'
 
         axios.post(`/api/v2/login`, this.dataLogIn)
                 .then(response => {
-                this.setData(response.data);
+                this.loginData(response.data);
                 // console.log(response.data);
                 // console.log(response.data.slug);
                 })
