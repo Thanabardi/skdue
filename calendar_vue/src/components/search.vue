@@ -103,7 +103,8 @@ export default {
   width: 40%;
   // padding-top: 0px;
   left: 50%;
-  transform: translate(-50%, -9px);
+  top: 12px;
+  transform: translate(-50%);
   /* max-width: 400px; */
   /* margin: 0 auto; */
 }
