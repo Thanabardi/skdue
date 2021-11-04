@@ -93,7 +93,7 @@ import axios from 'axios'
         console.log(data);
 
         // auth setting
-        token = data.token
+        let token = data.token
         this.$store.commit('setToken', token)            
         axios.defaults.headers.common["Authorization"] = "Token " + token
         localStorage.setItem("token", token)
