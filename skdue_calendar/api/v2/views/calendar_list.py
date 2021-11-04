@@ -1,10 +1,8 @@
-from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from skdue_calendar.models import Calendar
 from skdue_calendar.serializers import CalendarSerializer
-from skdue_calendar.utils import generate_slug
 
 
 class CalendarListView(APIView):
