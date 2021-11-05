@@ -228,56 +228,59 @@ export default {
     </header>
     <div class='calendar-sidebar'>
       <EventDetails>
+        <p style="line-height: 0px;">follow v-if plz hidden unless template will k-boom</p>
         <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}, 
           {{ new Date(this.day_select).getDate() }}
           {{ this.month[new Date(this.day_select).getMonth()] }}
           {{ new Date(this.day_select).getFullYear() }}
         </h2>
-        <div v-if="this.event_details.length!=0">
-          <p style="font-size: 18px; color: var(--white-op-1); text-align: center;">All-Day Event</p>
-            <div v-for="item in this.event_details">
-                <div v-if="item['allday']">
-                  <table class="calendar-table">
-                  <!-- <td style="width: 105px; text-align: center;">All-Day</td> -->
-                  <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
-                      {{ item["description"] }}</td></tr>
-                  </table>
-                </div>
-            </div>
-            <hr class="calendar-hr">
-            <div v-for="item in this.event_details">
-              <div v-if="!item['allday']">
-                <div v-if="(item['start_date'] < this.day_select)">
-                  <table class="calendar-table">
-                  <tr><td style="width: 105px;">00:00-{{ item["end_time"] }}</td>
-                    <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
-                      {{ item["description"] }}</td></tr>
-                  </table>
-                </div>
-                <div v-if="this.day_select < item['end_date']">
-                  <table class="calendar-table">
-                  <tr><td style="width: 105px;">{{ item["start_time"] }}-00:00</td>
-                    <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
-                      {{ item["description"] }}</td></tr>
-                  </table>
-                </div>
-                <div v-if="item['start_date'] == item['end_date']">
-                  <table class="calendar-table">
-                  <tr><td style="width: 105px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
-                    <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
-                      {{ item["description"] }}</td></tr>
-                  </table>
+        <div style="overflow-x: hidden;height: 74%;">
+          <div v-if="this.event_details.length!=0">
+            <p style="font-size: 18px; color: var(--white-op-1); text-align: center;">All-Day Event</p>
+              <div v-for="item in this.event_details">
+                  <div v-if="item['allday']">
+                    <table class="calendar-table">
+                    <!-- <td style="width: 105px; text-align: center;">All-Day</td> -->
+                    <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
+                    <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                        {{ item["description"] }}</td></tr>
+                    </table>
+                  </div>
+              </div>
+              <hr class="calendar-hr">
+              <div v-for="item in this.event_details">
+                <div v-if="!item['allday']">
+                  <div v-if="(item['start_date'] < this.day_select)">
+                    <table class="calendar-table">
+                    <tr><td style="width: 105px;">00:00-{{ item["end_time"] }}</td>
+                      <td>{{ item["name"] }}</td></tr>
+                    <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                        {{ item["description"] }}</td></tr>
+                    </table>
+                  </div>
+                  <div v-if="this.day_select < item['end_date']">
+                    <table class="calendar-table">
+                    <tr><td style="width: 105px;">{{ item["start_time"] }}-00:00</td>
+                      <td>{{ item["name"] }}</td></tr>
+                    <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                        {{ item["description"] }}</td></tr>
+                    </table>
+                  </div>
+                  <div v-if="item['start_date'] == item['end_date']">
+                    <table class="calendar-table">
+                    <tr><td style="width: 105px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
+                      <td>{{ item["name"] }}</td></tr>
+                    <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                        {{ item["description"] }}</td></tr>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-        </div>
-        <div v-else> 
-          <p style="font-size: 20px; color: var(--white-op); text-align: center;">
-            You have no events scheduled today</p>
+          <div v-else> 
+            <p style="font-size: 20px; color: var(--white-op); text-align: center;">
+              You have no events scheduled today</p>
+          </div>
         </div>
 
 
@@ -290,7 +293,7 @@ export default {
           <h3>Description</h3>
           <p class="app-details">{{ event_details[3] }}</p>
         </div> -->
-        <hr class="calendar-hr" style="position: absolute; bottom: 130px; left: 30px; width: 85%;">
+        <hr class="calendar-hr" style="position: absolute; bottom: 125px; left: 32px; width: 82%;">
         <div class="calendar-sidebar-footer">
           <button class="app-button-tp" @click="doSomething()"
             type="button" name="button" style="font-size: 20px; color: var(--white-op-1);">Manage View</button>
@@ -313,6 +316,7 @@ export default {
 @import './../assets/style.css';
 
 .calendar-header {
+
   background: var(--main-green);
   color: var(--main-green);
   font-size: 25px;
