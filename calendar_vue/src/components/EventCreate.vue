@@ -30,6 +30,10 @@
 								<td></td>
 								<td>Time  <input class="event-create-input" type="time" required v-model="end_time"></td>
 							</tr>
+							<tr>
+								<td>Tag</td>
+								<td><input style="width: 250px;" class="event-create-input" required v-model="tag"></td>
+							</tr>
 						</table>
 						<div class="event-create-footer">
 							<button class="app-button-main" type="submit">Done</button>
@@ -63,15 +67,28 @@ export default {
 	},
 	data() {
 		return {
+			user_name: '',
 			name: '',
 			description: '',
 			start_date: '',
 			start_time: '',
 			end_date: '',
-			end_time: ''
+			end_time: '',
+			tag: '',
 		}
 	},
+	mounted() {
+    	this.getUser()
+	},
 	methods: {
+		getUser() {
+			axios.get(`/api/v2/me`)
+			.then( response => {
+				console.log(response.data)
+                this.user_name = response.data["user"]["username"]
+				console.log(this.user_name)
+			})
+		},
 		eventCreate() {
 			const start_date_time = this.start_date + " " + this.start_time + ":00"
 			const end_date_time = this.end_date + " " + this.end_time + ":00"
@@ -79,16 +96,18 @@ export default {
 				"name" : this.name,
 				"description" : this.description,
 				"start_date" : start_date_time,
-				"end_date" : end_date_time
+				"end_date" : end_date_time,
+				"tag" : this.tag
 			}
 			const calendar_slug = this.$route.params.calendar_slug
 
-			// console.log(this.name)
-			// console.log(this.description)
-			// console.log(start_date_time)
-			// console.log(end_date_time)
+			console.log(this.name)
+			console.log(this.description)
+			console.log(start_date_time)
+			console.log(end_date_time)
+			console.log(this.tag)
 
-			axios.post(`/api/calendar/${calendar_slug}/`, event)
+			axios.post(`/api/v2/me/${calendar_slug}`, event)
 				.then(function(response) {
 					console.log(response),
 					window.location.reload()
