@@ -60,10 +60,11 @@ export default {
 			.then( response => {
 				// console.log(response.data)
                 this.user_name = response.data["user"]["username"]
+				console.log(response.data)
             })
         },
 		redirectUserHome() {
-			this.$router.push({ path: `/calendar/${this.user_name[0]["slug"]}` })
+			this.$router.push({ path: `/me/${this.user_name}` })
 			// this.$router.go()
         },
 		logout() {
