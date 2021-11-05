@@ -231,7 +231,7 @@ export default {
         </div>
       </EventDetails>
       <div v-for="tag_text in this.tag_list" :key="tag_text"> 
-        <input type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
+        <input class="flipswitch" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
         <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
       </div>
     </div>
@@ -295,5 +295,47 @@ b { /* used for event dates/times */
 .fc { /* the calendar root */
   margin: 3% 2% 0% 26%; /* Same as the sidebar width and nav bar heigh*/
   max-height: 85vh;
+}
+.flipswitch {
+  position: relative;
+  background: white;
+  width: 100px;
+  height: 40px;
+  top: 18px;
+  -webkit-appearance: initial;
+  border-radius: 3px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  outline: none;
+  font-size: 14px;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  border: 7px solid #ddd;
+}
+
+.flipswitch:after {
+  position: absolute;
+  top: 0%;
+  display: block;
+  line-height: 32px;
+  width: 45%;
+  height: 90%;
+  background: #fff;
+  box-sizing: border-box;
+  text-align: center;
+  transition: all 0.3s ease-in 0s;
+  color: black;
+  border: #888 1px solid;
+  border-radius: 3px;
+}
+
+.flipswitch:after {
+  left: 2%;
+  content: "Hide";
+}
+
+.flipswitch:checked:after {
+  left: 53%;
+  content: "Show";
 }
 </style>
