@@ -50,6 +50,7 @@ export default {
       event_in_selected_date: [], //added in iter4
       event_details: [],
       modalActive: true,
+      day_select: "",
     };
   },
   setup() {  //EventDetails
@@ -60,39 +61,19 @@ export default {
     this.getCalendarEvents()
   },
   methods: {
-    setTodayEvents(){
+    setTodayEvents() {
       this.event_details = []
-      let today = new Date();
-      let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-
-      let y_today = today.getFullYear()
-      let m_today = (today.getMonth()+1)
-      let d_today = today.getDate()
-
-      //date.substring(5,7)
-      //date.substring(8,10)
+      let today = new Date()
+      today.setHours(0, 0, 0)
+      this.day_select = today
 
       this.calendarOptions.events.forEach(elements => {
-          let start_y = elements.start.substring(0,4)
-          let start_m = elements.start.substring(5,7)
-          let start_d = elements.start.substring(8,10)
-
-          let end_y = elements.end.substring(0,4)
-          let end_m = elements.end.substring(5,7)
-          let end_d = elements.end.substring(8,10)
-
-          if((start_y <= y_today) && (y_today <=end_y) &&
-              (start_m <= m_today) && (m_today <=end_m) &&
-              (start_d <= d_today) && (d_today <=end_d)){
-
-
-              var form_e = [elements.title, elements.start, elements.end, elements.description , elements.tag]
-              this.event_details.push(form_e)
-          }
+        let event = this.convertEventDateTime(elements)
+        if((event["start_date"] <= today) && (today <= event["end_date"])){
+          // console.log(event)
+          this.event_details.push(event)
+        }
       });
-          console.log(this.calendarOptions.events.length)
-          console.log('here')
-          console.log(this.event_details)
     },
     setCalendarEvents(data){
       console.log(data.event)
@@ -100,9 +81,9 @@ export default {
       let all_event = data.event
       for (let t=0; t<tag.length; t++){
         let d = all_event[tag[t]]
-        console.log(d)
+        // console.log(d)
         this.calendar_events = d
-        console.log(this.calendar_events)
+        // console.log(this.calendar_events)
         for(let i=0; i<d.length; i++) {
           this.calendarOptions.events.push({
             id: d[i].id,
@@ -157,54 +138,67 @@ export default {
       //   });
       // }
       this.event_details = []
-      console.log(selectInfo.startStr)
-      let y_select = selectInfo.startStr.substring(0,4)
-      let m_select = selectInfo.startStr.substring(5,7)
-      let d_select = selectInfo.startStr.substring(8,10)
-
-
+      let select = selectInfo.start
+      select.setHours(0, 0, 0)
+      this.day_select = select
 
       this.calendarOptions.events.forEach(elements => {
-          let start_y = elements.start.substring(0,4)
-          let start_m = elements.start.substring(5,7)
-          let start_d = elements.start.substring(8,10)
-
-          let end_y = elements.end.substring(0,4)
-          let end_m = elements.end.substring(5,7)
-          let end_d = elements.end.substring(8,10)
-
-          if((start_y <= y_select) && (y_select <=end_y) &&
-              (start_m <= m_select) && (m_select <=end_m) &&
-              (start_d <= d_select) && (d_select <=end_d)){
-
-
-              var form_e = [elements.title, elements.start, elements.end, elements.description , elements.tag]
-              this.event_details.push(form_e)
-          }
+        let event = this.convertEventDateTime(elements)
+        if((event["start_date"] <= select) && (select <= event["end_date"])){
+          // console.log(event)
+          this.event_details.push(event)
+        }
       });
-          console.log(this.event_details)
     },
     handleEventClick(clickInfo) {
       this.calendar_events.forEach(elements => {
+        let event = this.convertEventDateTime(elements)
         if (elements.id == clickInfo.event.id){
           this.modalActive = true;
-          let  start_date = elements.start_date.substring(11, 16) +
-            ", " + elements.start_date.substring(0, 10)
-          let  end_date = elements.end_date.substring(11, 16) +
-            ", " + elements.start_date.substring(0, 10)
-          this.event_details = [
-            elements.name,
-            start_date,
-            end_date,
-            elements.description
-          ]
-          return this.event_details
+          // let  start_date = elements.start_date.substring(11, 16) +
+          //   ", " + elements.start_date.substring(0, 10)
+          // let  end_date = elements.end_date.substring(11, 16) +
+          //   ", " + elements.start_date.substring(0, 10)
+          // this.event_details = [
+          //   elements.name,
+          //   start_date,
+          //   end_date,
+          //   elements.description
+          // ]
+          this.event_details.push(event)
         }
       });
     },
     handleEvents(events) {
       this.currentEvents = events;
     },
+    convertEventDateTime(events) {
+      let start_date = new Date(events.start.substring(0, 10) + " 00:00:00")
+      let end_date = new Date(events.end.substring(0, 10) + " 00:00:00")
+      let start_time = events.start.substring(11, 16)
+      let end_time = events.end.substring(11, 16)
+      let allday = false
+
+      let start_date_check = events.start.substring(0, 10).replace('-','')
+      let end_date_check = events.end.substring(0, 10).replace('-','')
+
+      if ((start_date < this.day_select) && (this.day_select < end_date)){
+        allday = true
+      }
+      else if ((start_date_check == end_date_check) && (start_time == "00:00") && (end_time == "23:59")) {
+        allday = true
+      }
+      return {
+				"name" : events.title,
+				"description" : events.description,
+				"start_date" : start_date,
+        "start_time" : start_time,
+				"end_date" : end_date,
+        "end_time" : end_time,
+        "tag" : events.tag,
+        "allday" : allday
+			}
+    }
   },
 };
 </script>
@@ -220,10 +214,32 @@ export default {
     </header>
     <div class='calendar-sidebar'>
       <EventDetails>
+        <h1>{{ String(this.day_select).substring(0, 15) }}</h1>
+        <div v-for="item in this.event_details">
+          <div v-if="item['allday']">
+            <p>allday</p>
+            <p>{{ item["name"] }}</p>
+          </div>
+        </div>
+        <div v-for="item in this.event_details">
+          <div v-if="!item['allday']">
+            <div v-if="(item['start_date'] < this.day_select)">
+              <p>00:00 {{ item["end_time"] }} {{ item["name"] }}</p>
+            </div>
+            <div v-else-if="this.day_select < item['end_date']">
+              <p>{{ item["start_time"] }} 00:00 {{ item["name"] }}</p>
+            </div>
+            <div v-else>
+              <p>{{ item["start_time"] }} {{ item["end_time"] }} {{ item["name"] }}</p>
+            </div>
+          </div>
+          <!-- <p>{{ item["end_date"].getTime() }}</p> -->
 
+            <!-- <p>{{ item }}</p>
+            <p>{{ item[1].substring(11, 19) + " " + item[1].substring(0, 10) }}</p>
 
-        <p v-for="item in this.event_details">
-            <h1>{{ item[0] }}</h1>
+            <p>{{ new Date(item[2].substring(0, 10) + " " + item[2].substring(11, 19)) }}</p>
+            <h1>{{ item[1] }}</h1>
 
             <p>from {{ item[1] }}</p>
             <p>to {{ item[2] }}</p>
@@ -231,8 +247,8 @@ export default {
             <h3>Tag </h3> <p class="app-details"> {{ item[4] }} </p>
 
             <h3>Description</h3>
-            <p class="app-details">{{ item[3] }}</p>
-        </p>
+            <p class="app-details">{{ item[3] }}</p> -->
+        </div>
 
         <p v-if="this.event_details.length==0">
           <h1>No event found on this day.</h1>
