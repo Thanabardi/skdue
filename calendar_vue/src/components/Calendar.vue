@@ -230,6 +230,8 @@ export default {
             type="button" name="button">Done</button>
         </div>
       </EventDetails>
+
+      <!-- Tag filter render -->
       <div v-for="tag_text in this.tag_list" :key="tag_text"> 
         <input class="flipswitch" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
         <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
