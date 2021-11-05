@@ -2,6 +2,8 @@ from copy import error
 from itertools import chain
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
 from skdue_calendar.serializers import *
@@ -27,6 +29,9 @@ def get_custom_tag(user):
 
 
 class UserMeView(APIView):
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)  
+
     def get(self, request):
         if request.user.id:
             user = request.user
@@ -42,6 +47,9 @@ class UserMeView(APIView):
 
 
 class UserMeCalendarView(APIView):
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,) 
+
     def get(self, request, calendar_slug):
         """User calendar detail with public, private, and followed events"""
         if request.user.id == Calendar.objects.get(slug=calendar_slug).user.id:
@@ -134,6 +142,9 @@ class UserMeCalendarView(APIView):
 
 
 class UserMeFollowedView(APIView):
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,) 
+
     def get(self, request):
         """Get list of user's follwed people"""
         if request.user.id:
@@ -162,6 +173,9 @@ class UserMeFollowedView(APIView):
 
 
 class UserMeAddTagView(APIView):
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,) 
+    
     def post(self, request):
         """User can add new custom tag from here"""
         if request.user.id:
