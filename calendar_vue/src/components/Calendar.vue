@@ -47,6 +47,9 @@ export default {
       },
       currentEvents: [],
       calendar_events: [],
+      event_response: {}, // data from response
+      tag_status: {}, // a dict for which tag gonna show in calendar
+      tag_list: [], // store all tag name
       event_details: [],
       modalActive: false,
     };
@@ -61,12 +64,21 @@ export default {
   methods: {
     setCalendarEvents(data){
       let tag = data.tag
+      this.tag_list = data.tag // check this line
       let all_event = data.event
+      this.event_response = data
+      console.log("RESPONSE", this.event_response)
       for (let t=0; t<tag.length; t++){
+        
+        // init tag status
+        this.tag_status[tag[t]] = true;
+
         let d = all_event[tag[t]]
-        console.log(d)
+        // console.log(d)
         this.calendar_events = d
-        console.log(this.calendar_events)
+        // console.log(this.calendar_events)
+        // this.calendarOptions.events = []
+        // console.log(this.calendarOptions.events)
         for(let i=0; i<d.length; i++) {
           this.calendarOptions.events.push({
             id: d[i].id,
@@ -80,6 +92,7 @@ export default {
           // console.log(this.calendarOptions.events[i])
         }
       }
+      // FullCalendar.calendar.currentData.calendarApi.refetchEvents()
     },
     getCalendarEvents() {
       const calendar_slug = this.$route.params.calendar_slug
@@ -140,6 +153,54 @@ export default {
     handleEvents(events) {
       this.currentEvents = events;
     },
+    handlefiltertag(tag_text){
+      // only change status in `this.tag_status`
+      var checkBox = document.getElementById(tag_text);
+      if (checkBox.checked==false){
+        this.tag_status[tag_text] = false
+        }
+      else if (checkBox.checked==true){
+        this.tag_status[tag_text] = true
+      }
+      console.log(this.tag_status)
+
+      // whenever status has been changed, call a re-rederevent function
+      this.calendarOptions.events = []
+      let event = this.event_response.event; // get event
+      for(let i=0; i<this.tag_list.length; i++) {
+        // using this.event_response
+        let tag = this.tag_list[i]
+        let tagged_event = event[tag]
+        if(this.tag_status[tag]) {
+          // console.log(tag, this.tag_status[tag])
+          for(let j=0; j<event[tag].length; j++) {
+            this.calendarOptions.events.push({
+              id: tagged_event[j].id,
+              title: tagged_event[j].name,
+              start: tagged_event[j].start_date,
+              end: tagged_event[j].end_date,
+              description: tagged_event[j].description,
+              slug: tagged_event[j].slug,
+              tag : tagged_event[j].tag_text
+            })
+          }
+        }
+      }
+
+      FullCalendar.calendar.currentData.calendarApi.refetchEvents()
+    },
+    async showingtag(){
+      let TagDict = {}
+      let data = this.event_response
+      console.log(this.event_response.tag)
+      let range = data.tag.length;
+      // assign dict with true
+      for (let i=0; i< range; i++){
+        TagDict[this.event_response.tag[i]] = true
+      }
+      console.log(TagDict)
+      return TagDict
+    }
   },
 };
 </script>
@@ -169,6 +230,10 @@ export default {
             type="button" name="button">Done</button>
         </div>
       </EventDetails>
+      <div v-for="tag_text in this.tag_list" :key="tag_text"> 
+        <input type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
+        <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
+      </div>
     </div>
 
     <FullCalendar class="calendar-app-main" :options="calendarOptions">
