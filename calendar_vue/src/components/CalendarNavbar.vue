@@ -4,7 +4,7 @@
         <EventCreate />
         <UserConfig />
         <div class="calendar-navbar-link">
-            <p>thai-national-holiday-2021</p>
+            <p>user follow list</p>
         </div>
 	</div>
 </template>
@@ -33,9 +33,8 @@ export default {
     	methods: {
         getFollowList() {
             // const calendar_slug = this.$route.params.calendar_slug
-            axios.get(`/api/v2/follow`).then( response => {
+            axios.get(`/api/v2/me/follow`).then( response => {
                 console.log(response.data)
-                // this.user_name = response.data["user"]["username"]
             })
         },
 	}

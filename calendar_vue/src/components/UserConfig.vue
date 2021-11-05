@@ -4,17 +4,17 @@
 		<div v-if="this.user_name == ''" class="user-detail-not-login">
 			<h2><router-link class="user-detail-app-button"
             	to=/>Skdue</router-link></h2>
-			<router-link class="user-detail-button" style=" background: none; border: 2px solid var(--white);" 
-            	to=/>Login</router-link>
+			<!-- <router-link class="user-detail-button" style=" background: none; border: 2px solid var(--white);" 
+            	to=/>Login</router-link> -->
 			<router-link class="user-detail-button" style=" background: var(--green); border: 2px solid var(--green);" 
-            	to=/>Signup</router-link>
+            	to=/>Login</router-link>
 		</div>
 
 		<div v-else>
 			<h2><div class="user-detail-app-button" @click="redirectUserHome()">Skdue</div></h2>
 			<div class="user-detail-login">
 				<button class="app-button-tp" style="font-size: 22px;" 
-					@click="() => TogglePopup('buttonTrigger')">{{ this.user_name }}sawardeecrab</button>
+					@click="() => TogglePopup('buttonTrigger')">{{ this.user_name }}</button>
 				<div v-if="popupTriggers.buttonTrigger" 
 					:TogglePopup="() => TogglePopup('buttonTrigger')">
 					<div class="user-detail-tab">
