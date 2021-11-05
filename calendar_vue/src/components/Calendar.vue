@@ -4,6 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import EventCreate from './EventCreate'
+import Follow from './Follow'
 import Search from './search'
 import EventDetails from './EventDetails'
 import {ref} from 'vue'
@@ -12,7 +13,8 @@ export default {
   components: {
     FullCalendar, // make the <FullCalendar> tag available
     Search,
-    EventCreate
+    EventCreate,
+    Follow,
   },
   data: function () {
     return {
@@ -49,6 +51,8 @@ export default {
       calendar_events: [],
       event_details: [],
       modalActive: false,
+      owner_id: 0,
+      fs: "FOLLOW"
     };
   },
   setup() {  //EventDetails
@@ -79,7 +83,29 @@ export default {
           })
           // console.log(this.calendarOptions.events[i])
         }
-      }
+    }},
+    setCalendarOwner(data) {
+          //set owner_id
+    this.owner_id = data.user.id
+    console.log('owner_id=',this.owner_id,'id_type',typeof this.owner_id)
+    // check follow status
+    axios
+      .get(`/api/v2/me/follow`)
+      .then(response => {
+        response.data.forEach(user=>{
+          if(user.followed == this.owner_id){
+            this.fs = 'UNFOLLOW';
+          }
+          else if (user.user == this.owner_id) {
+            this.fs = '';
+          }
+          // window.location.reload()
+        })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
     },
     getCalendarEvents() {
       const calendar_slug = this.$route.params.calendar_slug
@@ -93,6 +119,7 @@ export default {
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
           this.setCalendarEvents(response.data)
+          this.setCalendarOwner(response.data)
         })
         .catch(error => {
           console.log(error)
@@ -100,6 +127,28 @@ export default {
     },
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
+    },
+    follow_button() {
+      const follow = {
+      	"option" : this.fs.toLowerCase(),
+      	"follow_id" : this.owner_id,
+      }
+      console.log(follow)
+      axios.post(`/api/v2/me/follow`, follow)
+      	.then(function(response) {
+      		console.log(response)
+      		// window.location.reload()
+      		})
+      	.catch(function(error) {
+      		console.log(error),
+      		alert("Opps, " + error)
+        })
+      if (this.fs.toLowerCase() == 'follow') {
+        this.fs = 'UNFOLLOW'
+      }
+      else if (this.fs.toLowerCase() == 'unfollow') {
+        this.fs = 'FOLLOW'
+      }
     },
     handleDateSelect(selectInfo) {
       let title = prompt("Please enter a new title for your event"); //input the title name of event
@@ -152,8 +201,15 @@ export default {
         to=/>Skdue</router-link></h2>
       <Search />
       <EventCreate />
+
+
     </header>
     <div class='calendar-sidebar'>
+      <!-- <h2>  +++ !!!!          ตรงนี้ไอภูมิ    !!!!  +++     </h2> -->
+      <div class="follow_button" v-if="fs != ''">
+          <button type="button" name="button" @click="() => follow_button()">{{this.fs}}</button>
+      </div>
+
       <EventDetails v-show="modalActive">
         <h1>{{ event_details[0] }}</h1>
         <div class="app-details">
@@ -170,6 +226,9 @@ export default {
         </div>
       </EventDetails>
     </div>
+
+
+
 
     <FullCalendar class="calendar-app-main" :options="calendarOptions">
       <template v-slot:eventContent="arg">
@@ -193,7 +252,7 @@ export default {
   line-height: 0px;
   height: 65px;
   display: flex;
-  justify-content: space-evenly;  
+  justify-content: space-evenly;
   z-index: 5;
   position: fixed !important;
   top: 0px;
