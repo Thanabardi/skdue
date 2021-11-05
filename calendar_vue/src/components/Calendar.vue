@@ -51,6 +51,11 @@ export default {
       event_details: [],
       modalActive: true,
       day_select: "",
+      day: ['Sunday','Monday','Tuesday','Wednesday',
+        'Thursday','Friday','Saturday'],
+      month: ['January','February','March','April',
+        'May','June','July','August','September',
+        'October','November','December']
     };
   },
   setup() {  //EventDetails
@@ -64,13 +69,17 @@ export default {
     setTodayEvents() {
       this.event_details = []
       let today = new Date()
-      today.setHours(0, 0, 0)
-      this.day_select = today
+      this.day_select = today.getFullYear()+"-"+
+        ("0" + (today.getMonth() + 1)).slice(-2)+"-"+
+        ("0" + today.getDate()).slice(-2)
+      
+      let day_select_check = this.day_select.replace(/-/g,'')
 
       this.calendarOptions.events.forEach(elements => {
         let event = this.convertEventDateTime(elements)
-        if((event["start_date"] <= today) && (today <= event["end_date"])){
-          // console.log(event)
+        let start_date_check = event["start_date"].replace(/-/g,'')
+        let end_date_check = event["end_date"].replace(/-/g,'')
+        if((start_date_check <= day_select_check) && (day_select_check <= end_date_check)){
           this.event_details.push(event)
         }
       });
@@ -139,13 +148,17 @@ export default {
       // }
       this.event_details = []
       let select = selectInfo.start
-      select.setHours(0, 0, 0)
-      this.day_select = select
+      this.day_select = select.getFullYear()+"-"+
+        ("0" + (select.getMonth() + 1)).slice(-2)+"-"+
+        ("0" + select.getDate()).slice(-2)
+
+      let day_select_check = this.day_select.replace(/-/g,'')
 
       this.calendarOptions.events.forEach(elements => {
         let event = this.convertEventDateTime(elements)
-        if((event["start_date"] <= select) && (select <= event["end_date"])){
-          // console.log(event)
+        let start_date_check = event["start_date"].replace(/-/g,'')
+        let end_date_check = event["end_date"].replace(/-/g,'')
+        if((start_date_check <= day_select_check) && (day_select_check <= end_date_check)){
           this.event_details.push(event)
         }
       });
@@ -173,16 +186,17 @@ export default {
       this.currentEvents = events;
     },
     convertEventDateTime(events) {
-      let start_date = new Date(events.start.substring(0, 10) + " 00:00:00")
-      let end_date = new Date(events.end.substring(0, 10) + " 00:00:00")
+      let start_date = events.start.substring(0, 10)
+      let end_date = events.end.substring(0, 10)
       let start_time = events.start.substring(11, 16)
       let end_time = events.end.substring(11, 16)
       let allday = false
 
-      let start_date_check = events.start.substring(0, 10).replace('-','')
-      let end_date_check = events.end.substring(0, 10).replace('-','')
+      let start_date_check = start_date.replace(/-/g,'')
+      let end_date_check = end_date.replace(/-/g,'')
+      let day_select_check = this.day_select.replace(/-/g,'')
 
-      if ((start_date < this.day_select) && (this.day_select < end_date)){
+      if ((start_date_check < day_select_check) && (day_select_check < end_date_check)){
         allday = true
       }
       else if ((start_date_check == end_date_check) && (start_time == "00:00") && (end_time == "23:59")) {
@@ -214,46 +228,38 @@ export default {
     </header>
     <div class='calendar-sidebar'>
       <EventDetails>
-        <h1>{{ String(this.day_select).substring(0, 15) }}</h1>
-        <div v-for="item in this.event_details">
-          <div v-if="item['allday']">
-            <p>allday</p>
-            <p>{{ item["name"] }}</p>
-          </div>
-        </div>
-        <div v-for="item in this.event_details">
-          <div v-if="!item['allday']">
-            <div v-if="(item['start_date'] < this.day_select)">
-              <p>00:00 {{ item["end_time"] }} {{ item["name"] }}</p>
-            </div>
-            <div v-else-if="this.day_select < item['end_date']">
-              <p>{{ item["start_time"] }} 00:00 {{ item["name"] }}</p>
-            </div>
-            <div v-else>
-              <p>{{ item["start_time"] }} {{ item["end_time"] }} {{ item["name"] }}</p>
+        <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}, 
+          {{ new Date(this.day_select).getDate() }}
+          {{ this.month[new Date(this.day_select).getMonth()] }}
+          {{ new Date(this.day_select).getFullYear() }}
+        </h2>
+        <table style="width: 100%; align-items: center;">
+          <div v-for="item in this.event_details">
+            <div v-if="item['allday']">
+              <td>All-Day</td><td>{{ item["name"] }}</td>
             </div>
           </div>
-          <!-- <p>{{ item["end_date"].getTime() }}</p> -->
+          <div v-for="item in this.event_details">
+            <div v-if="!item['allday']">
+              <div v-if="(item['start_date'] < this.day_select)">
+                <tr><td style="font-size: 20px;">00:00</td><td rowspan="2" style="padding-left: 10px;">{{ item["name"] }}</td></tr>
+                <tr style="font-size: 20px;">{{ item["end_time"] }}</tr>
+              </div>
+              <div v-if="this.day_select < item['end_date']">
+                <tr><td style="font-size: 20px;">{{ item["start_time"] }}</td><td rowspan="2" style="padding-left: 10px;">{{ item["name"] }}</td></tr>
+                <tr style="font-size: 20px;">00:00</tr>
+              </div>
+              <div v-if="item['start_date'] == item['end_date']">
+                <tr><td style="font-size: 20px;">{{ item["start_time"] }}</td><td rowspan="2" style="padding-left: 10px;">{{ item["name"] }}</td></tr>
+                <tr style="font-size: 20px;">{{ item["end_time"] }}</tr>
+                <!-- <p>{{ item["start_time"] }} {{ item["end_time"] }} {{ item["name"] }}</p> -->
+              </div>
+            </div>
+          </div>
+        </table>
 
-            <!-- <p>{{ item }}</p>
-            <p>{{ item[1].substring(11, 19) + " " + item[1].substring(0, 10) }}</p>
-
-            <p>{{ new Date(item[2].substring(0, 10) + " " + item[2].substring(11, 19)) }}</p>
-            <h1>{{ item[1] }}</h1>
-
-            <p>from {{ item[1] }}</p>
-            <p>to {{ item[2] }}</p>
-
-            <h3>Tag </h3> <p class="app-details"> {{ item[4] }} </p>
-
-            <h3>Description</h3>
-            <p class="app-details">{{ item[3] }}</p> -->
-        </div>
-
-        <p v-if="this.event_details.length==0">
-          <h1>No event found on this day.</h1>
-          <h3>Sorry I'm Afriad you are sociopathy. What did you waiting! Try create new events now.</h3>
-
+        <p v-if="this.event_details.length==0"> 
+          <p style="text-align: center;">No event</p>
         </p>
 
 
@@ -265,11 +271,11 @@ export default {
         <div v-if="event_details[3] != ''">
           <h3>Description</h3>
           <p class="app-details">{{ event_details[3] }}</p>
-        </div>
-        <div class="calendar-sidebar-footer">
-          <button class="app-button-main" @click="this.modalActive = !this.modalActive"
-            type="button" name="button">Done</button>
         </div> -->
+        <div class="calendar-sidebar-footer">
+          <button class="app-button-tp" @click="this.modalActive = !this.modalActive"
+            type="button" name="button" style="font-size: 20px;">Manage View</button>
+        </div>
       </EventDetails>
     </div>
 
@@ -306,20 +312,21 @@ export default {
   background: var(--main-green-light);
   color: var(--white);
   height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 20%; /* Set the width of the sidebar */
+  width: 23%; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
   overflow-x: hidden; /* Disable horizontal scroll */
   margin-top: 65px;
-  padding: 10px 40px 10px 40px;
-  font-size: 20px;
+  padding: 10px 10px 10px 10px;
+  font-size: 22px;
 }
 .calendar-sidebar-footer {
   position: fixed;
-  bottom: 5%;
-  left: 10%;
+  bottom: 2%;
+  left: 9%;
+
 }
 b { /* used for event dates/times */
   margin-right: 3px;
