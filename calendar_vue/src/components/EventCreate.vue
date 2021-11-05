@@ -16,23 +16,30 @@
 						<table class="event-create-table">
 							<tr>
 								<td>Start</td>
-								<td>Date  <input class="event-create-input" type="date" required v-model="start_date"></td>
+								<td>Date  <input class="event-create-input" type="date"
+									required v-model="start_date"></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td>Time  <input class="event-create-input" type="time" required v-model="start_time"></td>
+								<td>Time  <input class="event-create-input" type="time"
+									required v-model="start_time"></td>
 							</tr>
 							<tr>
 								<td>End</td>
-								<td>Date  <input class="event-create-input" type="date" required v-model="end_date"></td>
+								<td>Date  <input class="event-create-input" type="date"
+									required v-model="end_date"></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td>Time  <input class="event-create-input" type="time" required v-model="end_time"></td>
+								<td>Time  <input class="event-create-input" type="time"
+									required v-model="end_time"></td>
 							</tr>
 							<tr>
 								<td>Tag</td>
-								<td><input style="width: 250px;" class="event-create-input" required v-model="tag"></td>
+								<td style="width: 400px;">
+									<button type="button" v-for="tag in available_tag" :key="tag" 
+										class="event-create-tag-bt" @click="() => this.tag = tag">
+										{{ tag }}</button></td>
 							</tr>
 						</table>
 						<div class="event-create-footer">
@@ -43,7 +50,8 @@
 				</div>
 			</div>
 		</CreateEvent>
-		<button class="app-button-tp" style="font-size: 40px; padding: 5px" @click="() => TogglePopup('buttonTrigger')">+</button>
+		<button v-if="this.user_name" class="app-button-tp" style="font-size: 40px; padding: 5px"
+			@click="() => TogglePopup('buttonTrigger')">+</button>
 	</div>
 </template>
 
@@ -68,6 +76,7 @@ export default {
 	data() {
 		return {
 			user_name: '',
+			available_tag: [],
 			name: '',
 			description: '',
 			start_date: '',
@@ -77,18 +86,24 @@ export default {
 			tag: '',
 		}
 	},
-	mounted() {
-    	this.getUser()
-	},
+	mounted () {
+        this.getUserNameAndTag()
+    },
 	methods: {
-		getUser() {
-			axios.get(`/api/v2/me`)
+        getUserNameAndTag() {
+            // const calendar_slug = this.$route.params.calendar_slug
+            axios.get(`/api/v2/me`)
 			.then( response => {
-				console.log(response.data)
+				// console.log(response.data)
                 this.user_name = response.data["user"]["username"]
-				console.log(this.user_name)
+				console.log(response.data["available_tag"])
+
+				response.data["available_tag"].forEach(elements => {
+				this.available_tag.push(elements["tag"])
+            	})
+				console.log(this.available_tag)
 			})
-		},
+        },
 		eventCreate() {
 			const start_date_time = this.start_date + " " + this.start_time + ":00"
 			const end_date_time = this.end_date + " " + this.end_time + ":00"
@@ -99,15 +114,14 @@ export default {
 				"end_date" : end_date_time,
 				"tag" : this.tag
 			}
-			const calendar_slug = this.$route.params.calendar_slug
 
-			console.log(this.name)
-			console.log(this.description)
-			console.log(start_date_time)
-			console.log(end_date_time)
-			console.log(this.tag)
+			// console.log(this.name)
+			// console.log(this.description)
+			// console.log(start_date_time)
+			// console.log(end_date_time)
+			// console.log(this.tag)
 
-			axios.post(`/api/v2/me/${calendar_slug}`, event)
+			axios.post(`/api/v2/me/${this.user_name}`, event)
 				.then(function(response) {
 					console.log(response),
 					window.location.reload()
@@ -177,6 +191,20 @@ export default {
 	width: 200px;
 	border: none;
 	border-radius: 8px;
+}
+.event-create-tag-bt {
+	background-color: var(--gray-light);
+	margin-left: 10px;
+    border: 0;
+    padding: 5px 10px;
+    margin-top: 20px;
+    color: var(--black);
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+.event-create-tag-bt:focus {
+	background-color: var(--green);
 }
 .event-create-footer {
 	display: flex;
