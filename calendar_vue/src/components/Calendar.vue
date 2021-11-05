@@ -51,8 +51,6 @@ export default {
       calendar_events: [],
       event_details: [],
       modalActive: false,
-      owner_id: 0,
-      fs: "FOLLOW"
     };
   },
   setup() {  //EventDetails
@@ -84,29 +82,6 @@ export default {
           // console.log(this.calendarOptions.events[i])
         }
     }},
-    setCalendarOwner(data) {
-          //set owner_id
-    this.owner_id = data.user.id
-    console.log('owner_id=',this.owner_id,'id_type',typeof this.owner_id)
-    // check follow status
-    axios
-      .get(`/api/v2/me/follow`)
-      .then(response => {
-        response.data.forEach(user=>{
-          if(user.followed == this.owner_id){
-            this.fs = 'UNFOLLOW';
-          }
-          else if (user.user == this.owner_id) {
-            this.fs = '';
-          }
-          // window.location.reload()
-        })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-    },
     getCalendarEvents() {
       const calendar_slug = this.$route.params.calendar_slug
       const calendar_type = this.$route.params.calendar_type
@@ -119,7 +94,6 @@ export default {
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
           this.setCalendarEvents(response.data)
-          this.setCalendarOwner(response.data)
         })
         .catch(error => {
           console.log(error)
@@ -127,28 +101,6 @@ export default {
     },
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
-    },
-    follow_button() {
-      const follow = {
-      	"option" : this.fs.toLowerCase(),
-      	"follow_id" : this.owner_id,
-      }
-      console.log(follow)
-      axios.post(`/api/v2/me/follow`, follow)
-      	.then(function(response) {
-      		console.log(response)
-      		// window.location.reload()
-      		})
-      	.catch(function(error) {
-      		console.log(error),
-      		alert("Opps, " + error)
-        })
-      if (this.fs.toLowerCase() == 'follow') {
-        this.fs = 'UNFOLLOW'
-      }
-      else if (this.fs.toLowerCase() == 'unfollow') {
-        this.fs = 'FOLLOW'
-      }
     },
     handleDateSelect(selectInfo) {
       let title = prompt("Please enter a new title for your event"); //input the title name of event
@@ -205,10 +157,11 @@ export default {
 
     </header>
     <div class='calendar-sidebar'>
-      <!-- <h2>  +++ !!!!          ตรงนี้ไอภูมิ    !!!!  +++     </h2> -->
-      <div class="follow_button" v-if="fs != ''">
-          <button type="button" name="button" @click="() => follow_button()">{{this.fs}}</button>
+        <!-- <h2>  +++ !!!!          ตรงนี้ไอภูมิ    !!!!  +++     </h2> -->
+      <div class="follow">
+          <Follow></Follow>
       </div>
+
 
       <EventDetails v-show="modalActive">
         <h1>{{ event_details[0] }}</h1>
