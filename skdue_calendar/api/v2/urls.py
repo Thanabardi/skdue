@@ -1,6 +1,6 @@
 from django.urls import path
 from skdue_calendar.api.v2.views import *
-from skdue_calendar.api.v2.views.user_me import UserMeAddTagView, UserMeCalendarView, UserMeFollowedView
+from skdue_calendar.api.v2.views.auth import GetAuthToken
 
 
 app_name = "api_v2"
@@ -18,4 +18,7 @@ urlpatterns = [
     path('me/follow', UserMeFollowedView.as_view(), name="me_follow"),
     path('me/add_new_tag', UserMeAddTagView.as_view(), name="me_add_new_tag"),
     path('me/<calendar_slug>', UserMeCalendarView.as_view(), name="me_calendar"),
+
+    path('get-auth-token', GetAuthToken.as_view(), name="get_auth_token"),
+    path('demo', DemoView.as_view(), name='demo')
 ]

@@ -27,7 +27,7 @@ const routes = [
         component: SearchCalendar
     },
     {
-        path: '/calendar/:calendar_slug',
+        path: '/:calendar_type/:calendar_slug',
         name: 'CalendarDetail',
         component: CalendarDetail
     },
