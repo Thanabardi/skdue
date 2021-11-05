@@ -1,10 +1,7 @@
-import json
-from django.http import response
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from .utils import convert_response
+from skdue_calendar.models import Calendar
 
 
 class LoginTest(TestCase):
@@ -22,6 +19,10 @@ class LoginTest(TestCase):
                                 "email":"pastpong@test.com",
                                 "password":"pastpong1234"
                             }
+        self.calendar1 = Calendar(
+            user=self.user1
+        )
+        self.calendar1.save()
 
     def test_valid_login(self):
         response = self.client.post(reverse('api_v2:login'), self.user1_account)
