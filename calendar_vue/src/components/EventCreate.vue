@@ -128,14 +128,26 @@ export default {
 				// console.log(response.data)
         this.user_name = response.data.user.username
 				this.checkOwner(response.data.user.id)
-
-				console.log('available tag',response.data.tag)
-
-				response.data.tag.forEach(elements => {
-				this.available_tag.push(elements)
-            	})
-				console.log('last',this.available_tag)
 			})
+				axios.get(`/api/v2/me`)
+					.then( response => {
+							// console.log(response.data)
+					this.user_name = response.data["user"]["username"]
+					console.log(response.data["available_tag"])
+					response.data["available_tag"].forEach(elements => {
+					this.available_tag.push(elements["tag"])
+						})
+					console.log('avaliable',this.available_tag)
+			})
+
+				//
+				// console.log('available tag',response.data.tag)
+				//
+				// response.data.tag.forEach(elements => {
+				// this.available_tag.push(elements)
+        //     	})
+				// console.log('last',this.available_tag)
+			// })
 
         },
 		eventCreate() {
