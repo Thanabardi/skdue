@@ -99,17 +99,20 @@ export default {
 @import './../assets/style.css';
 
 .dropdown{
-  position: relative;
+  position: absolute;
   width: 40%;
-  padding-top: 11px;
+  // padding-top: 0px;
+  left: 50%;
+  top: 12px;
+  transform: translate(-50%);
   /* max-width: 400px; */
   /* margin: 0 auto; */
 }
 .dropdown-input {
-	background: var(--gray-light);
+	background: var(--white);
 	font-size: 20px;
 	padding: 8px 20px;
-	width: 700px;
+	width: 100%;
 	border: none;
 	border-radius: 4px;
 }
@@ -127,22 +130,22 @@ export default {
 .dropdown-list{
   background: var(--white);
   position: absolute;
-  width: 96%;
+  width: 105%;
   max-height: 500px;
   margin-top: 4px;
-  overflow-y: auto;
-  box-shadow: 0 10px 15px -3px var(--black-op-1), 0 4px 6px -2px var(--black-op-2);
-  border-radius: 8px;
+  overflow-x: hidden;
+  box-shadow: 0px 0px 1px 0px var(--black-op-1), 0px 0px 40px 0px var(--black-op-2);
+  border-radius: 2px;
   font-size: 20px;
   color: var(--black);
 }
 .dropdown-item{
-  padding: 15px 16px;
-  width: 94%;
+  padding: 5px 16px;
+  width: 96%;
   cursor: pointer;
 }
 .dropdown-item:hover{
-  background: var(--green-op);
+  background: var(--white-dark);
 }
 .dropdown-item-flag{
   max-width: 24px;

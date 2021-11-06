@@ -1,6 +1,9 @@
 <template>
-	<div>
-		<CreateEvent style="text-align: center;" v-if="popupTriggers.buttonTrigger" 
+	<div class="event-create">
+		<button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
+			@click="() => TogglePopup('buttonTrigger')">+</button>
+
+		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger"
 		:TogglePopup="() => TogglePopup('buttonTrigger')">
 			<div class="event-create-popup-bg">
 				<div class="event-create-popup">
@@ -16,19 +19,30 @@
 						<table class="event-create-table">
 							<tr>
 								<td>Start</td>
-								<td>Date  <input class="event-create-input" type="date" required v-model="start_date"></td>
+								<td>Date  <input class="event-create-input" type="date"
+									required v-model="start_date"></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td>Time  <input class="event-create-input" type="time" required v-model="start_time"></td>
+								<td>Time  <input class="event-create-input" type="time"
+									required v-model="start_time"></td>
 							</tr>
 							<tr>
 								<td>End</td>
-								<td>Date  <input class="event-create-input" type="date" required v-model="end_date"></td>
+								<td>Date  <input class="event-create-input" type="date"
+									required v-model="end_date"></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td>Time  <input class="event-create-input" type="time" required v-model="end_time"></td>
+								<td>Time  <input class="event-create-input" type="time"
+									required v-model="end_time"></td>
+							</tr>
+							<tr>
+								<td>Tag</td>
+								<td style="width: 400px;">
+									<button type="button" v-for="tag in available_tag" :key="tag"
+										class="event-create-tag-bt" @click="() => this.tag = tag">
+										{{ tag }}</button></td>
 							</tr>
 						</table>
 						<div class="event-create-footer">
@@ -38,8 +52,7 @@
 					</form>
 				</div>
 			</div>
-		</CreateEvent>
-		<button class="app-button-tp" style="font-size: 40px; padding: 5px" @click="() => TogglePopup('buttonTrigger')">+</button>
+		</div>
 	</div>
 </template>
 
@@ -63,15 +76,62 @@ export default {
 	},
 	data() {
 		return {
+			user_name: '',
+			available_tag: [],
 			name: '',
 			description: '',
 			start_date: '',
 			start_time: '',
 			end_date: '',
-			end_time: ''
+			end_time: '',
+			tag: '',
+			token: "asdad",
+			fs: "follow",
+
 		}
 	},
+	mounted () {
+        this.getUserNameAndTag()
+    },
 	methods: {
+		checkOwner(owner) {
+			axios
+				.get(`/api/v2/me`)
+				.then(response => {
+					console.log(response.data.user.id == owner)
+					if (response.data.user.id == owner) {
+						this.fs = 'follow';
+					}
+					else {
+						this.fs = ''
+					}
+				})
+				.catch(error => {
+					console.log(error)
+				})
+		},
+        getUserNameAndTag() {
+					const calendar_slug = this.$route.params.calendar_slug
+      const calendar_type = this.$route.params.calendar_type
+			this.token = localStorage.token
+      console.log("slug =", calendar_slug)
+      axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
+      axios
+        .get(`/api/v2/${calendar_type}/${calendar_slug}`)
+        .then(response => {
+        this.user_name = response.data.user.username
+				this.checkOwner(response.data.user.id)
+			})
+				axios.get(`/api/v2/me`)
+					.then( response => {
+					this.user_name = response.data["user"]["username"]
+					response.data["available_tag"].forEach(elements => {
+					this.available_tag.push(elements["tag"])
+						})
+					console.log('avaliable',this.available_tag)
+			})
+
+        },
 		eventCreate() {
 			const start_date_time = this.start_date + " " + this.start_time + ":00"
 			const end_date_time = this.end_date + " " + this.end_time + ":00"
@@ -79,16 +139,17 @@ export default {
 				"name" : this.name,
 				"description" : this.description,
 				"start_date" : start_date_time,
-				"end_date" : end_date_time
+				"end_date" : end_date_time,
+				"tag" : this.tag
 			}
-			const calendar_slug = this.$route.params.calendar_slug
 
 			// console.log(this.name)
 			// console.log(this.description)
 			// console.log(start_date_time)
 			// console.log(end_date_time)
+			// console.log(this.tag)
 
-			axios.post(`/api/calendar/${calendar_slug}/`, event)
+			axios.post(`/api/v2/me/${this.user_name}`, event)
 				.then(function(response) {
 					console.log(response),
 					window.location.reload()
@@ -107,6 +168,19 @@ export default {
 
 @import './../assets/style.css';
 
+.event-create {
+    position: absolute;
+    right: 25%;
+    border-radius: 2px;
+    width: 40px;
+    top: 14px;
+	height: 40px;
+	line-height: 10px;
+	text-align: center;
+}
+.app-button-tp:hover {
+    background-color: var(--white-op-2);
+}
 .event-create-popup-bg {
 	background-color: var(--black-op-1);
 	top: 0;
@@ -159,8 +233,22 @@ export default {
 	border: none;
 	border-radius: 8px;
 }
+.event-create-tag-bt {
+	background-color: var(--gray-light);
+	margin-left: 10px;
+    border: 0;
+    padding: 5px 10px;
+    margin-top: 20px;
+    color: var(--black);
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+.event-create-tag-bt:focus {
+	background-color: var(--green);
+}
 .event-create-footer {
 	display: flex;
-	justify-content: space-evenly; 
+	justify-content: space-evenly;
 }
 </style>

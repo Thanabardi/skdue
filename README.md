@@ -61,6 +61,18 @@
   </p>
     </details>
 
+<details>
+  <summary> Dev Setup </summary>
+  <p>      
+
+  ``` DEBUG = True  ```          
+  ``` SECRET_KEY = this-is-my-secret-key-not-safe ```       
+  ``` ALLOWED_HOSTS = 127.0.0.1 ```          
+  ``` CORS_ALLOWED_ORIGINS = http://localhost:8080 ``` 
+
+  </p>
+    </details>
+
 
 ## Iteration Plan
 

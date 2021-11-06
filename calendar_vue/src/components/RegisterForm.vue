@@ -41,7 +41,7 @@
     </div>
 
     <!-- router-link for mockup -->
-    <div style="text-align: center;">
+    <!-- <div style="text-align: center;">
       <h1 style="font-size: 50px; color: var(--red);" class="register-header">*This is just a login mockup*</h1>
       <h2 style="color: var(--gray-dark);">Anyway, if you want to create your own calendar check
       <router-link class="app-button-tp" style="text-decoration: none; color: var(--green);"
@@ -49,7 +49,7 @@
       out to see how our Skdue works, or if you want to take a look at the existing Skdue try 
       <router-link class="app-button-tp" style="text-decoration: none; color: var(--green);"
         to=/calendar/holidays>this</router-link>.</h2>
-    </div>
+    </div> -->
 
   </div>
 </template>
