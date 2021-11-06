@@ -1,10 +1,10 @@
 <template>
   <div class="follow-main" v-if="fs != ''">
     {{ this.calendar_slug }}
-    <button v-if="fs == 'UNFOLLOW'" style="  background-color: var(--gray); width: 90px;" 
+    <button v-if="(fs == 'Unfollow') || (fs == 'UNFOLLOW')" style="background-color: var(--gray); width: 90px;" 
       type="button" name="button" class="follow-button" 
       @click="() => follow_button()">{{this.fs}}</button>
-    <button v-if="fs == 'FOLLOW'" style="  background-color: var(--green); width: 90px;" 
+    <button v-if="(fs == 'follow') || (fs == 'FOLLOW')" style="background-color: var(--green); width: 90px;" 
       type="button" name="button" class="follow-button" 
       @click="() => follow_button()">{{this.fs}}</button>
     </div>
