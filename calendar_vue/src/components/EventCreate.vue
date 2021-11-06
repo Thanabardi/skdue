@@ -1,6 +1,6 @@
 <template>
 	<div class="event-create">
-		<button v-if="this.user_name!=''" class="app-button-tp" style="font-size: 40px; line-height: 35px;" 
+		<button v-if="this.user_name!=''" class="app-button-tp" style="font-size: 40px; line-height: 30px;" 
 			@click="() => TogglePopup('buttonTrigger')">+</button>
 
 		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger" 
@@ -155,12 +155,12 @@ export default {
     right: 25%;
     border-radius: 2px;
     width: 40px;
-    top: 10px;
+    top: 14px;
 	height: 40px;
 	line-height: 10px;
 	text-align: center;
 }
-.event-create:hover {
+.app-button-tp:hover {
     background-color: var(--white-op-2);
 }
 .event-create-popup-bg {
