@@ -4,13 +4,19 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import CalendarNavbar from './CalendarNavbar'
+import EventCreate from './EventCreate'
+import Follow from './Follow'
+import Search from './search'
 import EventDetails from './EventDetails'
 import {ref} from 'vue'
 import axios from 'axios'
 export default {
   components: {
     FullCalendar, // make the <FullCalendar> tag available
-    CalendarNavbar
+    CalendarNavbar,
+    Search,
+    EventCreate,
+    Follow,
   },
   data: function () {
     return {
@@ -289,6 +295,10 @@ export default {
           </div>
         </div>
 
+        <div class="follow">
+          <Follow></Follow>
+        </div>
+
 
         <!-- <h1>{{ event_details[0] }}</h1>
         <div class="app-details">
@@ -306,6 +316,9 @@ export default {
         </div>
       </EventDetails>
     </div>
+
+
+
 
     <FullCalendar class="calendar-app-main" :options="calendarOptions">
       <template v-slot:eventContent="arg">

@@ -1,6 +1,6 @@
 <template>
 	<div class="event-create">
-		<button class="app-button-tp" style="font-size: 40px; line-height: 35px;" 
+		<button v-if="this.user_name!=''" class="app-button-tp" style="font-size: 40px; line-height: 35px;" 
 			@click="() => TogglePopup('buttonTrigger')">+</button>
 
 		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger" 
