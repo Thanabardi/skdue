@@ -59,7 +59,10 @@ export default {
         'Thursday','Friday','Saturday'],
       month: ['January','February','March','April',
         'May','June','July','August','September',
-        'October','November','December']
+        'October','November','December'],
+      dataLogout:{
+        "status":"logout"
+      }
     };
   },
   setup() {  //EventDetails
@@ -229,6 +232,23 @@ export default {
         "tag" : events.tag,
         "allday" : allday
 			}
+    },
+    clearData(data){
+      localStorage.setItem("token", "")
+      this.$router.push({ path: `/`});
+    },
+    logoutData(e){
+      e.preventDefault();
+
+      axios.get(`/api/v2/logout`, this.dataLogout)
+        .then(response => {
+        this.clearData(response.data);
+          // console.log(response.data);
+          // console.log(response.data.slug);
+      })
+        .catch(error => {
+        console.log(error)
+      })
     }
   },
 };
@@ -237,6 +257,9 @@ export default {
 
 <template>
   <div>
+      <form @submit.prevent="logoutData" class="form-form">
+        <button class="logout-button">Logout</button>
+      </form>
     <CalendarNavbar />
     <div class='calendar-sidebar'>
       <EventDetails>
@@ -375,6 +398,18 @@ export default {
 .calendar-hr {
   border: 1px solid var(--white-op-2);
   width: 90%;
+}
+.logout-button {
+  background-color: #646464;
+  border: none;
+  color: var(--white);
+  padding: 13px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 8px 2px;
+  cursor: pointer;
 }
 b { /* used for event dates/times */
   margin-right: 3px;
