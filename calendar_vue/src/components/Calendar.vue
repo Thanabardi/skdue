@@ -186,21 +186,8 @@ export default {
           }
         }
       }
-
       FullCalendar.calendar.currentData.calendarApi.refetchEvents()
     },
-    async showingtag(){
-      let TagDict = {}
-      let data = this.event_response
-      console.log(this.event_response.tag)
-      let range = data.tag.length;
-      // assign dict with true
-      for (let i=0; i< range; i++){
-        TagDict[this.event_response.tag[i]] = true
-      }
-      console.log(TagDict)
-      return TagDict
-    }
   },
 };
 </script>
