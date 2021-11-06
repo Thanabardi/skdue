@@ -137,7 +137,6 @@ export default {
       const calendar_type = this.$route.params.calendar_type
 
       this.token = localStorage.token
-      console.log("TOKEN:", this.token)
 
 
       console.log("slug =", calendar_slug)

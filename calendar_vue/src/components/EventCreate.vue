@@ -104,9 +104,7 @@ export default {
 					}
 					else {
 						this.fs = ''
-						console.log('user', response.data.user.id , 'owner', owner)
 					}
-					console.log('fs',this.fs,'token',this.token)
 				})
 				.catch(error => {
 					console.log(error)
@@ -115,39 +113,23 @@ export default {
         getUserNameAndTag() {
 					const calendar_slug = this.$route.params.calendar_slug
       const calendar_type = this.$route.params.calendar_type
-      console.log("TOKEN:", localStorage.token)
 			this.token = localStorage.token
       console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
       axios
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
-            // const calendar_slug = this.$route.params.calendar_slug
-            // axios.get(`/api/v2/me`)
-			// .then( response => {
-				// console.log(response.data)
         this.user_name = response.data.user.username
 				this.checkOwner(response.data.user.id)
 			})
 				axios.get(`/api/v2/me`)
 					.then( response => {
-							// console.log(response.data)
 					this.user_name = response.data["user"]["username"]
-					console.log(response.data["available_tag"])
 					response.data["available_tag"].forEach(elements => {
 					this.available_tag.push(elements["tag"])
 						})
 					console.log('avaliable',this.available_tag)
 			})
-
-				//
-				// console.log('available tag',response.data.tag)
-				//
-				// response.data.tag.forEach(elements => {
-				// this.available_tag.push(elements)
-        //     	})
-				// console.log('last',this.available_tag)
-			// })
 
         },
 		eventCreate() {
