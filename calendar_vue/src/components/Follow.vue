@@ -1,12 +1,12 @@
 <template>
-<div class="follow-main">
+<div class="follow-main" v-if="(fs != '')">
   {{ this.calendar_slug }}
-  <div v-if="fs != ''">
-    <button v-if="(fs == 'Unfollow') || (fs == 'UNFOLLOW')" style="background-color: var(--gray); width: 90px;" 
-      type="button" name="button" class="follow-button" 
+  <div v-if="this.token != ''">
+    <button v-if="(fs == 'Unfollow') || (fs == 'UNFOLLOW')" style="background-color: var(--gray); width: 90px;"
+      type="button" name="button" class="follow-button"
       @click="() => follow_button()">UNFOLLOW</button>
-    <button v-if="(fs == 'Follow') || (fs == 'FOLLOW')" style="background-color: var(--green); width: 90px;" 
-      type="button" name="button" class="follow-button" 
+    <button v-if="(fs == 'Follow') || (fs == 'FOLLOW')" style="background-color: var(--green); width: 90px;"
+      type="button" name="button" class="follow-button"
       @click="() => follow_button()">FOLLOW</button>
     </div>
 </div>
@@ -25,6 +25,7 @@ export default {
       owner_id :0,
       fs:"Follow",
       calendar_slug: "",
+      token: "",
 		}
 	},
   mounted() {
@@ -94,6 +95,7 @@ export default {
       this.calendar_slug = calendar_slug.replace(/-/g,' ')
 
       console.log("TOKEN:", localStorage.token)
+      this.token = localStorage.token
 
 
       console.log("slug =", calendar_slug)

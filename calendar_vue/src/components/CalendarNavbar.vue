@@ -47,7 +47,7 @@ export default {
 
 .calendar-navbar-bg {
     background: var(--main-green);
-    height: 65px; 
+    height: 65px;
     z-index: 5;
     position: fixed !important;
     top: 0px;
@@ -71,7 +71,7 @@ export default {
     cursor: pointer;
 }
 // .calendar-navbar-link:hover {
-    
+
 // }
 // .user-detail {
 //     position: absolute;

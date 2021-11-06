@@ -57,6 +57,7 @@ export default {
       tag_list: [], // store all tag name
       event_details: [],
       modalActive: true,
+      token: "",
       day_select: "",
       day: ['Sunday','Monday','Tuesday','Wednesday',
         'Thursday','Friday','Saturday'],
@@ -127,7 +128,9 @@ export default {
       const calendar_slug = this.$route.params.calendar_slug
       const calendar_type = this.$route.params.calendar_type
 
-      console.log("TOKEN:", localStorage.token)
+      this.token = localStorage.token
+      console.log("TOKEN:", this.token)
+
 
       console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
@@ -306,7 +309,7 @@ export default {
     <CalendarNavbar />
     <div class='calendar-sidebar'>
       <EventDetails>
-        
+
         <Follow />
         <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
           {{ (this.day_select.substring(8, 10)) }}
@@ -373,7 +376,7 @@ export default {
         </div> -->
         <hr class="calendar-hr" style="position: absolute; bottom: 125px; left: 32px; width: 82%;">
         <div class="calendar-sidebar-footer">
-          <div style="display: inline-block; " v-for="tag_text in this.tag_list" :key="tag_text"> 
+          <div style="display: inline-block; " v-for="tag_text in this.tag_list" :key="tag_text">
             <input class="filter-tag" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
             <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
           </div>

@@ -1,9 +1,9 @@
 <template>
 	<div class="event-create">
-		<button v-if="this.user_name!=''" class="app-button-tp" style="font-size: 40px; line-height: 30px;" 
+		<button v-if="this.token!=''" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
 			@click="() => TogglePopup('buttonTrigger')">+</button>
 
-		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger" 
+		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger"
 		:TogglePopup="() => TogglePopup('buttonTrigger')">
 			<div class="event-create-popup-bg">
 				<div class="event-create-popup">
@@ -85,6 +85,7 @@ export default {
 			end_date: '',
 			end_time: '',
 			tag: '',
+			token: "",
 		}
 	},
 	mounted () {
@@ -95,6 +96,7 @@ export default {
 					const calendar_slug = this.$route.params.calendar_slug
       const calendar_type = this.$route.params.calendar_type
       console.log("TOKEN:", localStorage.token)
+			this.token = localStorage.token
       console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
       axios
