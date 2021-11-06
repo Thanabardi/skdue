@@ -25,13 +25,13 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </template>
 
 <script>
 import { ref } from 'vue';
 import axios from 'axios';
+import Calendar from '../components/Calendar.vue'
 
 export default {
 	setup () {
@@ -68,9 +68,11 @@ export default {
 				console.log(response.data)
             })
         },
-		redirectUserHome() {
-			this.$router.push({ path: `/me/${this.user_name}` })
+		async redirectUserHome() {
+			await this.$router.push({ path: `/me/` })
+			await this.$router.replace({ path: `/me/${this.user_name}` })
 			// this.$router.go()
+			Calendar.components.FullCalendar.calendar.currentData.calendarApi.refetchEvents()
         },
 		clearlogout(data) {
 			localStorage.setItem("token", "")

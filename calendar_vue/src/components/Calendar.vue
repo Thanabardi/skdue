@@ -306,7 +306,8 @@ export default {
     <CalendarNavbar />
     <div class='calendar-sidebar'>
       <EventDetails>
-        <p style="line-height: 0px;">follow v-if plz hidden unless template will k-boom</p>
+        
+        <Follow />
         <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
           {{ (this.day_select.substring(8, 10)) }}
           {{ this.month[new Date(this.day_select).getMonth()] }}
@@ -360,11 +361,6 @@ export default {
               You have no events scheduled today</p>
           </div>
         </div>
-
-        <div class="follow">
-          <Follow></Follow>
-        </div>
-
 
         <!-- <h1>{{ event_details[0] }}</h1>
         <div class="app-details">

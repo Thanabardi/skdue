@@ -1,7 +1,12 @@
 <template>
-  <!-- <h2>  +++ !!!!          ตรงนี้ไอภูมิ    !!!!  +++     </h2> -->
-  <div class="follow_button" v-if="fs != ''">
-      <button type="button" name="button" @click="() => follow_button()">{{this.fs}}</button>
+  <div class="follow-main" v-if="fs != ''">
+    {{ this.calendar_slug }}
+    <button v-if="fs == 'UNFOLLOW'" style="  background-color: var(--gray); width: 90px;" 
+      type="button" name="button" class="follow-button" 
+      @click="() => follow_button()">{{this.fs}}</button>
+    <button v-if="fs == 'FOLLOW'" style="  background-color: var(--green); width: 90px;" 
+      type="button" name="button" class="follow-button" 
+      @click="() => follow_button()">{{this.fs}}</button>
     </div>
 </template>
 
@@ -17,6 +22,7 @@ export default {
       follow_id : "",
       owner_id :0,
       fs:"Follow",
+      calendar_slug: "",
 		}
 	},
   mounted() {
@@ -83,6 +89,7 @@ export default {
     getUser() {
       const calendar_slug = this.$route.params.calendar_slug
       const calendar_type = this.$route.params.calendar_type
+      this.calendar_slug = calendar_slug.replace(/-/g,' ')
 
       console.log("TOKEN:", localStorage.token)
 
@@ -107,4 +114,20 @@ export default {
 
 @import './../assets/style.css';
 
+.follow-main {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 35px 0 35px;
+  color: var(--yellow);
+  font-weight: 600;
+}
+.follow-button {
+  border: 0;
+  padding: 4px 8px;
+  color: var(--white);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 4px;
+}
 </style>
