@@ -94,33 +94,7 @@ export default {
         this.getUserNameAndTag()
     },
 	methods: {
-        getUserNameAndTag() {
-					const calendar_slug = this.$route.params.calendar_slug
-      const calendar_type = this.$route.params.calendar_type
-      console.log("TOKEN:", localStorage.token)
-			this.token = localStorage.token
-      console.log("slug =", calendar_slug)
-      axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
-      axios
-        .get(`/api/v2/${calendar_type}/${calendar_slug}`)
-        .then(response => {
-            // const calendar_slug = this.$route.params.calendar_slug
-            // axios.get(`/api/v2/me`)
-			// .then( response => {
-				// console.log(response.data)
-        this.user_name = response.data.user.username
-				checkOwner(response.data.user.id)
-
-				console.log('available tag',response.data.tag)
-
-				response.data.tag.forEach(elements => {
-				this.available_tag.push(elements)
-            	})
-				console.log('last',this.available_tag)
-			})
-
-        },
-		checkOwner(owner){
+		checkOwner(owner) {
 			axios
 				.get(`/api/v2/me`)
 				.then(response => {
@@ -138,6 +112,32 @@ export default {
 					console.log(error)
 				})
 		},
+        getUserNameAndTag() {
+					const calendar_slug = this.$route.params.calendar_slug
+      const calendar_type = this.$route.params.calendar_type
+      console.log("TOKEN:", localStorage.token)
+			this.token = localStorage.token
+      console.log("slug =", calendar_slug)
+      axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
+      axios
+        .get(`/api/v2/${calendar_type}/${calendar_slug}`)
+        .then(response => {
+            // const calendar_slug = this.$route.params.calendar_slug
+            // axios.get(`/api/v2/me`)
+			// .then( response => {
+				// console.log(response.data)
+        this.user_name = response.data.user.username
+				this.checkOwner(response.data.user.id)
+
+				console.log('available tag',response.data.tag)
+
+				response.data.tag.forEach(elements => {
+				this.available_tag.push(elements)
+            	})
+				console.log('last',this.available_tag)
+			})
+
+        },
 		eventCreate() {
 			const start_date_time = this.start_date + " " + this.start_time + ":00"
 			const end_date_time = this.end_date + " " + this.end_time + ":00"
