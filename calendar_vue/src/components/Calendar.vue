@@ -69,16 +69,13 @@ export default {
       this.event_response = data
       console.log("RESPONSE", this.event_response)
       for (let t=0; t<tag.length; t++){
-        
         // init tag status
         this.tag_status[tag[t]] = true;
 
         let d = all_event[tag[t]]
-        // console.log(d)
+        
         this.calendar_events = d
-        // console.log(this.calendar_events)
-        // this.calendarOptions.events = []
-        // console.log(this.calendarOptions.events)
+        
         for(let i=0; i<d.length; i++) {
           this.calendarOptions.events.push({
             id: d[i].id,
@@ -89,10 +86,8 @@ export default {
             slug: d[i].slug,
             tag : d[i].tag_text
           })
-          // console.log(this.calendarOptions.events[i])
         }
       }
-      // FullCalendar.calendar.currentData.calendarApi.refetchEvents()
     },
     getCalendarEvents() {
       const calendar_slug = this.$route.params.calendar_slug
@@ -223,6 +218,7 @@ export default {
         <input class="flipswitch" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
         <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
       </div>
+      <!-- End filter-->
     </div>
 
     <FullCalendar class="calendar-app-main" :options="calendarOptions">
