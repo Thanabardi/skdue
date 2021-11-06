@@ -51,6 +51,17 @@ export default {
     console.log('owner_id=',this.owner_id,'id_type',typeof this.owner_id)
     // check follow status
     axios
+      .get(`/api/v2/me`)
+      .then(response => {
+        if (response.data.user.id == this.owner_id) {
+          this.fs = '';
+          console.log('done')
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    axios
       .get(`/api/v2/me/follow`)
       .then(response => {
         response.data.forEach(user=>{
@@ -60,7 +71,10 @@ export default {
           else if (user.user == this.owner_id) {
             this.fs = '';
           }
+          console.log('user',user.user)
+          console.log('owner',this.owner_id)
         })
+
       })
       .catch(error => {
         console.log(error)
