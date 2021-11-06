@@ -217,10 +217,7 @@ export default {
 			}
     },
     clearData(data){
-      let token = data.token
-      this.$store.commit('setToken', token)            
-      axios.defaults.headers.common["Authorization"] = "Token " + token
-      localStorage.removeToken()
+      localStorage.setItem("token", "")
       this.$router.push({ path: `/`});
     },
     logoutData(e){
