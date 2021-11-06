@@ -18,7 +18,9 @@
 				<div v-if="popupTriggers.buttonTrigger" 
 					:TogglePopup="() => TogglePopup('buttonTrigger')">
 					<div class="user-detail-tab">
-						<button class="user-detail-button-tp" @click="() => logout()">Logout</button>
+						<form @submit.prevent="logoutData">
+							<button class="user-detail-button-tp" >Logout</button>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -47,7 +49,10 @@ export default {
 	},
 	data() {
 		return {
-			user_name: ''
+			user_name: '',
+			dataLogout:{
+				"status":"logout"
+			}
 		}
 	},
     mounted () {
@@ -67,11 +72,23 @@ export default {
 			this.$router.push({ path: `/me/${this.user_name}` })
 			// this.$router.go()
         },
-		logout() {
-			this.$router.push({ path: `/api/v2/logout` }),
-			this.$router.replace({ path: `/` })
+		clearlogout(data) {
+			localStorage.setItem("token", "")
+			this.$router.push({ path: `/`});
 
 		},
+		logoutData(e){
+			e.preventDefault();
+			axios.get(`/api/v2/logout`, this.dataLogout)
+				.then(response => {
+				this.clearlogout(response.data);
+				// console.log(response.data);
+				// console.log(response.data.slug);
+			})
+				.catch(error => {
+				console.log(error)
+			})
+		},		
 	}
 }
 
