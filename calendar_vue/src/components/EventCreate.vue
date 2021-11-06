@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<CreateEvent style="text-align: center;" v-if="popupTriggers.buttonTrigger" 
+		<CreateEvent style="text-align: center;" v-if="popupTriggers.buttonTrigger"
 		:TogglePopup="() => TogglePopup('buttonTrigger')">
 			<div class="event-create-popup-bg">
 				<div class="event-create-popup">
@@ -37,7 +37,7 @@
 							<tr>
 								<td>Tag</td>
 								<td style="width: 400px;">
-									<button type="button" v-for="tag in available_tag" :key="tag" 
+									<button type="button" v-for="tag in available_tag" :key="tag"
 										class="event-create-tag-bt" @click="() => this.tag = tag">
 										{{ tag }}</button></td>
 							</tr>
@@ -91,17 +91,26 @@ export default {
     },
 	methods: {
         getUserNameAndTag() {
-            // const calendar_slug = this.$route.params.calendar_slug
-            axios.get(`/api/v2/me`)
-			.then( response => {
-				// console.log(response.data)
-                this.user_name = response.data["user"]["username"]
-				console.log(response.data["available_tag"])
+					const calendar_slug = this.$route.params.calendar_slug
+      const calendar_type = this.$route.params.calendar_type
+      console.log("TOKEN:", localStorage.token)
+      console.log("slug =", calendar_slug)
+      axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
+      axios
+        .get(`/api/v2/${calendar_type}/${calendar_slug}`)
+        .then(response => {
+      //       // const calendar_slug = this.$route.params.calendar_slug
+      //       axios.get(`/api/v2/me`)
+			// .then( response => {
+			// 	// console.log(response.data)
+        this.user_name = response.data.user.username
 
-				response.data["available_tag"].forEach(elements => {
-				this.available_tag.push(elements["tag"])
+				console.log('available tag',response.data.tag)
+
+				response.data.tag.forEach(elements => {
+				this.available_tag.push(elements)
             	})
-				console.log(this.available_tag)
+				console.log('last',this.available_tag)
 			})
         },
 		eventCreate() {
@@ -208,6 +217,6 @@ export default {
 }
 .event-create-footer {
 	display: flex;
-	justify-content: space-evenly; 
+	justify-content: space-evenly;
 }
 </style>

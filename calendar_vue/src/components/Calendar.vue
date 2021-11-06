@@ -72,7 +72,7 @@ export default {
       this.day_select = today.getFullYear()+"-"+
         ("0" + (today.getMonth() + 1)).slice(-2)+"-"+
         ("0" + today.getDate()).slice(-2)
-      
+
       let day_select_check = this.day_select.replace(/-/g,'')
 
       this.calendarOptions.events.forEach(elements => {
@@ -161,7 +161,20 @@ export default {
         if((start_date_check <= day_select_check) && (day_select_check <= end_date_check)){
           this.event_details.push(event)
         }
-      });
+      }
+    );
+      // sort by start time
+      function compare( a, b ) {
+        if ( a.start_time < b.start_time ){
+          return -1;
+        }
+        if ( a.start_time > b.start_time ){
+          return 1;
+        }
+        return 0;
+      }
+      this.event_details.sort( compare );
+      console.log('sort',this.event_details)
     },
     handleEventClick(clickInfo) {
       this.calendar_events.forEach(elements => {
@@ -229,7 +242,7 @@ export default {
     <div class='calendar-sidebar'>
       <EventDetails>
         <p style="line-height: 0px;">follow v-if plz hidden unless template will k-boom</p>
-        <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}, 
+        <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }},
           {{ new Date(this.day_select).getDate() }}
           {{ this.month[new Date(this.day_select).getMonth()] }}
           {{ new Date(this.day_select).getFullYear() }}
@@ -252,7 +265,7 @@ export default {
                 <div v-if="!item['allday']">
                   <div v-if="(item['start_date'] < this.day_select)">
                     <table class="calendar-table">
-                    <tr><td style="width: 105px;">00:00-{{ item["end_time"] }}</td>
+                    <tr><td style="width: 110px;">00:00-{{ item["end_time"] }}</td>
                       <td>{{ item["name"] }}</td></tr>
                     <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
                         {{ item["description"] }}</td></tr>
@@ -260,7 +273,7 @@ export default {
                   </div>
                   <div v-if="this.day_select < item['end_date']">
                     <table class="calendar-table">
-                    <tr><td style="width: 105px;">{{ item["start_time"] }}-00:00</td>
+                    <tr><td style="width: 110px;">{{ item["start_time"] }}-00:00</td>
                       <td>{{ item["name"] }}</td></tr>
                     <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
                         {{ item["description"] }}</td></tr>
@@ -268,7 +281,7 @@ export default {
                   </div>
                   <div v-if="item['start_date'] == item['end_date']">
                     <table class="calendar-table">
-                    <tr><td style="width: 105px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
+                    <tr><td style="width: 110px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
                       <td>{{ item["name"] }}</td></tr>
                     <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
                         {{ item["description"] }}</td></tr>
@@ -277,7 +290,7 @@ export default {
                 </div>
               </div>
             </div>
-          <div v-else> 
+          <div v-else>
             <p style="font-size: 20px; color: var(--white-op); text-align: center;">
               You have no events scheduled today</p>
           </div>
