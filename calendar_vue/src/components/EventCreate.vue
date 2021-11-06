@@ -1,6 +1,6 @@
 <template>
 	<div class="event-create">
-		<button v-if="this.token!=''" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
+		<button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
 			@click="() => TogglePopup('buttonTrigger')">+</button>
 
 		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger"
@@ -86,6 +86,7 @@ export default {
 			end_time: '',
 			tag: '',
 			token: "",
+			fs: "",
 		}
 	},
 	mounted () {
@@ -99,6 +100,16 @@ export default {
 			this.token = localStorage.token
       console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
+			axios
+				.get(`/api/v2/me`)
+				.then(response => {
+					if (response.data.user.id == this.owner_id) {
+						this.fs = '';
+					}
+				})
+				.catch(error => {
+					console.log(error)
+				})
       axios
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
