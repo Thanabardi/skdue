@@ -27,10 +27,18 @@ export default {
           timeGridPlugin,
           interactionPlugin, // needed for dateClick
         ],
+        customButtons: {
+          myCustomButton: {
+            text: 'Year',
+            click: function() {
+              // alert('clicked the custom button!');
+            }
+          }
+        },
         headerToolbar: {
           left: "prev,next today",
           center: "title",
-          right: "dayGridMonth", //,timeGridWeek,timeGridDay
+          right: "prevYear,myCustomButton,nextYear" //,timeGridWeek,timeGridDay
         },
         initialView: "dayGridMonth",
         // initialEvents: INITIAL_EVENTS,
@@ -400,6 +408,24 @@ export default {
 
 @import './../assets/style.css';
 
+<<<<<<< HEAD
+=======
+.calendar-header {
+  background: var(--main-green);
+  color: var(--main-green);
+  font-size: 25px;
+  font-weight: 500px;
+  line-height: 0px;
+  height: 65px;
+  display: flex;
+  justify-content: space-evenly;
+  z-index: 5;
+  position: fixed !important;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+}
+>>>>>>> month-button
 .calendar-sidebar {
   background: var(--main-green-light);
   color: var(--white);
