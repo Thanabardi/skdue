@@ -1,6 +1,6 @@
 <template>
 	<div class="event-create">
-		<button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
+		<button v-if="(this.token!='') && (this.fs=='')" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
 			@click="() => TogglePopup('buttonTrigger')">+</button>
 
 		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger"
@@ -86,7 +86,8 @@ export default {
 			end_time: '',
 			tag: '',
 			token: "",
-			fs: "",
+			fs: "follow",
+			owner_id: 0,
 		}
 	},
 	mounted () {
@@ -100,16 +101,6 @@ export default {
 			this.token = localStorage.token
       console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
-			axios
-				.get(`/api/v2/me`)
-				.then(response => {
-					if (response.data.user.id == this.owner_id) {
-						this.fs = '';
-					}
-				})
-				.catch(error => {
-					console.log(error)
-				})
       axios
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
@@ -118,6 +109,7 @@ export default {
 			// .then( response => {
 				// console.log(response.data)
         this.user_name = response.data.user.username
+				this.owner_id = response.data.user.id
 
 				console.log('available tag',response.data.tag)
 
@@ -126,6 +118,20 @@ export default {
             	})
 				console.log('last',this.available_tag)
 			})
+			axios
+				.get(`/api/v2/me`)
+				.then(response => {
+					console.log(response.data.user.id == this.owner_id)
+					if (response.data.user.id == this.owner_id) {
+						this.fs = '';
+					}
+					else {
+						this.fs = 'follow'
+					}
+				})
+				.catch(error => {
+					console.log(error)
+				})
         },
 		eventCreate() {
 			const start_date_time = this.start_date + " " + this.start_time + ":00"
