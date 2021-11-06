@@ -398,6 +398,18 @@ export default {
   border: 1px solid var(--white-op-2);
   width: 90%;
 }
+.logout-button {
+  background-color: #646464;
+  border: none;
+  color: var(--white);
+  padding: 13px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 8px 2px;
+  cursor: pointer;
+}
 b { /* used for event dates/times */
   margin-right: 3px;
 }
