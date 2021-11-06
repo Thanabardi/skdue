@@ -55,7 +55,10 @@ export default {
         'Thursday','Friday','Saturday'],
       month: ['January','February','March','April',
         'May','June','July','August','September',
-        'October','November','December']
+        'October','November','December'],
+      dataLogout:{
+        "status":"logout"
+      }
     };
   },
   setup() {  //EventDetails
@@ -212,6 +215,26 @@ export default {
         "tag" : events.tag,
         "allday" : allday
 			}
+    },
+    clearData(data){
+      let token = data.token
+      this.$store.commit('setToken', token)            
+      axios.defaults.headers.common["Authorization"] = "Token " + token
+      localStorage.removeToken()
+      this.$router.push({ path: `/`});
+    },
+    logoutData(e){
+      e.preventDefault();
+
+      axios.get(`/api/v2/logout`, this.dataLogout)
+        .then(response => {
+        this.clearData(response.data);
+          // console.log(response.data);
+          // console.log(response.data.slug);
+      })
+        .catch(error => {
+        console.log(error)
+      })
     }
   },
 };
@@ -225,6 +248,11 @@ export default {
         to=/>Skdue</router-link></h2>
       <Search />
       <EventCreate />
+      <!-- Logout button -->
+      <form @submit.prevent="logoutData" class="form-form">
+        <button class="logout-button">Logout</button>
+      </form>
+      <!-- End logout -->
     </header>
     <div class='calendar-sidebar'>
       <EventDetails>
