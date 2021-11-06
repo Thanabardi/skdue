@@ -100,10 +100,10 @@ export default {
       axios
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
-      //       // const calendar_slug = this.$route.params.calendar_slug
-      //       axios.get(`/api/v2/me`)
+            // const calendar_slug = this.$route.params.calendar_slug
+            // axios.get(`/api/v2/me`)
 			// .then( response => {
-			// 	// console.log(response.data)
+				// console.log(response.data)
         this.user_name = response.data.user.username
 
 				console.log('available tag',response.data.tag)

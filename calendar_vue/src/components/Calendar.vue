@@ -313,7 +313,7 @@ export default {
           {{ this.month[new Date(this.day_select).getMonth()] }}
           {{ (this.day_select.substring(0, 4)) }}
         </h2>
-        <div style="overflow-x: hidden;height: 74%;">
+        <div style="overflow-x: hidden; height: 76%;">
           <div v-if="this.event_details.length!=0">
             <p style="font-size: 18px; color: var(--white-op-1); text-align: center;">All-Day Event</p>
               <div v-for="item in this.event_details">
@@ -373,21 +373,15 @@ export default {
         </div> -->
         <hr class="calendar-hr" style="position: absolute; bottom: 125px; left: 32px; width: 82%;">
         <div class="calendar-sidebar-footer">
-          <button class="app-button-tp" @click="doSomething()"
-            type="button" name="button" style="font-size: 20px; color: var(--white-op-1);">Manage View</button>
+          <div style="display: inline-block; " v-for="tag_text in this.tag_list" :key="tag_text"> 
+            <input class="filter-tag" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
+            <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
+          </div>
+          <!-- <button class="app-button-tp" @click="doSomething()"
+            type="button" name="button" style="font-size: 20px; color: var(--white-op-1);">Manage View</button> -->
         </div>
       </EventDetails>
-
-      <!-- Tag filter render -->
-      <div v-for="tag_text in this.tag_list" :key="tag_text"> 
-        <input class="flipswitch" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
-        <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
-      </div>
-      <!-- End filter-->
     </div>
-
-
-
 
     <FullCalendar class="calendar-app-main" :options="calendarOptions">
       <template v-slot:eventContent="arg">
@@ -438,7 +432,9 @@ export default {
 .calendar-sidebar-footer {
   position: fixed;
   bottom: 2%;
-  left: 9%;
+  left: 2%;
+  // left: 2%;
+  // justify-items: center;
 
 }
 .calendar-hr {
@@ -456,6 +452,9 @@ export default {
   font-size: 16px;
   margin: 8px 2px;
   cursor: pointer;
+}
+.filter-tag {
+  display: inline-block;
 }
 b { /* used for event dates/times */
   margin-right: 3px;
