@@ -1,6 +1,9 @@
 <template>
-	<div>
-		<CreateEvent style="text-align: center;" v-if="popupTriggers.buttonTrigger"
+	<div class="event-create">
+		<button class="app-button-tp" style="font-size: 40px; line-height: 35px;" 
+			@click="() => TogglePopup('buttonTrigger')">+</button>
+
+		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger" 
 		:TogglePopup="() => TogglePopup('buttonTrigger')">
 			<div class="event-create-popup-bg">
 				<div class="event-create-popup">
@@ -49,9 +52,7 @@
 					</form>
 				</div>
 			</div>
-		</CreateEvent>
-		<button v-if="this.user_name" class="app-button-tp" style="font-size: 40px; padding: 5px"
-			@click="() => TogglePopup('buttonTrigger')">+</button>
+		</div>
 	</div>
 </template>
 
@@ -149,6 +150,19 @@ export default {
 
 @import './../assets/style.css';
 
+.event-create {
+    position: absolute;
+    right: 25%;
+    border-radius: 2px;
+    width: 40px;
+    top: 10px;
+	height: 40px;
+	line-height: 10px;
+	text-align: center;
+}
+.event-create:hover {
+    background-color: var(--white-op-2);
+}
 .event-create-popup-bg {
 	background-color: var(--black-op-1);
 	top: 0;

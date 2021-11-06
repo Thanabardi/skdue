@@ -7,7 +7,7 @@
 }
 
 .app-details {
-    color: var(--white-op);
+    color: var(--white-op-1);
     font-size: 20px;
 }
 
@@ -21,7 +21,6 @@
     cursor: pointer;
     border-radius: 8px;
 }
-
 .app-button-main:active {
     background-color: var(--main-green-dark);
 }
@@ -36,7 +35,6 @@
     cursor: pointer;
     border-radius: 8px;
 }
-
 .app-button-gray:active {
     background-color: var(--gray-dark);
 }
@@ -46,9 +44,7 @@
     border: none;
     color: var(--white);
     cursor: pointer;
-    border-radius: 8px;
 }
-
 .app-button-tp:active {
     color: var(--white-dark);
 }
