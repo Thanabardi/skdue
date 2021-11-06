@@ -52,6 +52,9 @@ export default {
       currentEvents: [],
       calendar_events: [],
       event_in_selected_date: [], //added in iter4
+      event_response: {}, // data from response
+      tag_status: {}, // a dict for which tag gonna show in calendar
+      tag_list: [], // store all tag name
       event_details: [],
       modalActive: true,
       day_select: "",
@@ -94,8 +97,14 @@ export default {
     setCalendarEvents(data){
       console.log(data.event)
       let tag = data.tag
+      this.tag_list = data.tag // check this line
       let all_event = data.event
+      this.event_response = data
+      console.log("RESPONSE", this.event_response)
       for (let t=0; t<tag.length; t++){
+        // init tag status
+        this.tag_status[tag[t]] = true;
+
         let d = all_event[tag[t]]
         // console.log(d)
         this.calendar_events = d
@@ -110,7 +119,6 @@ export default {
             slug: d[i].slug,
             tag : d[i].tag_text
           })
-          // console.log(this.calendarOptions.events[i])
         }
       }
     this.setTodayEvents();
@@ -249,7 +257,42 @@ export default {
         .catch(error => {
         console.log(error)
       })
-    }
+    },
+    handlefiltertag(tag_text){
+      // only change status in `this.tag_status`
+      var checkBox = document.getElementById(tag_text);
+      if (checkBox.checked==false){
+        this.tag_status[tag_text] = false
+        }
+      else if (checkBox.checked==true){
+        this.tag_status[tag_text] = true
+      }
+      console.log(this.tag_status)
+
+      // whenever status has been changed, call a re-rederevent function
+      this.calendarOptions.events = []
+      let event = this.event_response.event; // get event
+      for(let i=0; i<this.tag_list.length; i++) {
+        // using this.event_response
+        let tag = this.tag_list[i]
+        let tagged_event = event[tag]
+        if(this.tag_status[tag]) {
+          // console.log(tag, this.tag_status[tag])
+          for(let j=0; j<event[tag].length; j++) {
+            this.calendarOptions.events.push({
+              id: tagged_event[j].id,
+              title: tagged_event[j].name,
+              start: tagged_event[j].start_date,
+              end: tagged_event[j].end_date,
+              description: tagged_event[j].description,
+              slug: tagged_event[j].slug,
+              tag : tagged_event[j].tag_text
+            })
+          }
+        }
+      }
+      FullCalendar.calendar.currentData.calendarApi.refetchEvents()
+    },
   },
 };
 </script>
@@ -257,9 +300,9 @@ export default {
 
 <template>
   <div>
-      <form @submit.prevent="logoutData" class="form-form">
+      <!-- <form @submit.prevent="logoutData" class="form-form">
         <button class="logout-button">Logout</button>
-      </form>
+      </form> -->
     <CalendarNavbar />
     <div class='calendar-sidebar'>
       <EventDetails>
@@ -338,6 +381,13 @@ export default {
             type="button" name="button" style="font-size: 20px; color: var(--white-op-1);">Manage View</button>
         </div>
       </EventDetails>
+
+      <!-- Tag filter render -->
+      <div v-for="tag_text in this.tag_list" :key="tag_text"> 
+        <input class="flipswitch" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
+        <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
+      </div>
+      <!-- End filter-->
     </div>
 
 
@@ -423,4 +473,47 @@ b { /* used for event dates/times */
   margin: 3% 2% 0% 26%; /* Same as the sidebar width and nav bar heigh*/
   max-height: 85vh;
 }
+// checkbox style sliding
+// .flipswitch {
+//   position: relative;
+//   background: white;
+//   width: 50px;
+//   height: 20px;
+//   top: 18px;
+//   -webkit-appearance: initial;
+//   border-radius: 3px;
+//   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+//   outline: none;
+//   font-size: 14px;
+//   font-family: Trebuchet, Arial, sans-serif;
+//   font-weight: bold;
+//   cursor: pointer;
+//   border: 7px solid #ddd;
+// }
+
+// .flipswitch:after {
+//   position: absolute;
+//   top: 0%;
+//   display: block;
+//   line-height: 32px;
+//   width: 45%;
+//   height: 90%;
+//   background: #fff;
+//   box-sizing: border-box;
+//   text-align: center;
+//   transition: all 0.3s ease-in 0s;
+//   color: black;
+//   border: #888 1px solid;
+//   border-radius: 3px;
+// }
+
+// .flipswitch:after {
+//   left: 2%;
+//   content: "Hide";
+// }
+
+// .flipswitch:checked:after {
+//   left: 53%;
+//   content: "Show";
+// }
 </style>
