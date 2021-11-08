@@ -37,12 +37,23 @@
 								<td>Time  <input class="event-create-input" type="time"
 									required v-model="end_time"></td>
 							</tr>
-							<tr>
+
+							<tr v-if="this.available_tag.length < 5">
 								<td>Tag</td>
+								<td>
+									<input style="width: 250px;" class="event-create-input" 
+										placeholder="MyNewTag" maxlength="10" required v-model="tag">
+								</td>
+							</tr>
+							<tr>
+								<td v-if="this.available_tag.length > 5" 
+									style="vertical-align: top; padding-top: 10px;">Tag</td>
+								<td v-else></td>
 								<td style="width: 400px;">
 									<button type="button" v-for="tag in available_tag" :key="tag"
-										class="event-create-tag-bt" @click="() => this.tag = tag">
-										{{ tag }}</button></td>
+										class="event-create-tag-bt" v-on:click.left="this.tag = tag"
+										v-on:click.right="TagEdit($event)">{{ tag }}</button>
+								</td>
 							</tr>
 						</table>
 						<div class="event-create-footer">
@@ -91,7 +102,8 @@ export default {
 		}
 	},
 	mounted () {
-        this.getUserNameAndTag()
+        this.getUserName(),
+		this.getTag()
     },
 	methods: {
 		checkOwner(owner) {
@@ -110,26 +122,27 @@ export default {
 					console.log(error)
 				})
 		},
-        getUserNameAndTag() {
-					const calendar_slug = this.$route.params.calendar_slug
-      const calendar_type = this.$route.params.calendar_type
+        getUserName() {
+			const calendar_slug = this.$route.params.calendar_slug
+      		const calendar_type = this.$route.params.calendar_type
 			this.token = localStorage.token
-      console.log("slug =", calendar_slug)
-      axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
-      axios
-        .get(`/api/v2/${calendar_type}/${calendar_slug}`)
-        .then(response => {
-        this.user_name = response.data.user.username
-				this.checkOwner(response.data.user.id)
-			})
-				axios.get(`/api/v2/me`)
-					.then( response => {
+			console.log("slug =", calendar_slug)
+			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
+			axios.get(`/api/v2/${calendar_type}/${calendar_slug}`)
+				.then(response => {
+					this.user_name = response.data.user.username
+					this.checkOwner(response.data.user.id)
+				})
+        },
+		getTag() {
+			this.available_tag = []
+			axios.get(`/api/v2/me`)
+				.then( response => {
 					this.user_name = response.data["user"]["username"]
 					response.data["available_tag"].forEach(elements => {
-					this.available_tag.push(elements["tag"])
-						})
-					console.log('avaliable',this.available_tag)
-			})
+						this.available_tag.push(elements["tag"])
+					})
+				})
 
         },
 		eventCreate() {
@@ -149,15 +162,39 @@ export default {
 			// console.log(end_date_time)
 			// console.log(this.tag)
 
+			if (!this.available_tag.includes(this.tag)) {
+				this.tagCreate()
+			}
 			axios.post(`/api/v2/me/${this.user_name}`, event)
 				.then(function(response) {
 					console.log(response),
 					window.location.reload()
-					})
+				})
 				.catch(function(error) {
 					console.log(error),
 					alert("Opps, " + error)
+				})
+		},
+		tagCreate() {
+			if (this.tag == '') {
+				alert("Tag can't be blank")
+			} else if (!this.available_tag.includes(this.tag)) {
+				axios.post(`/api/v2/me/add_new_tag`, {"tag":this.tag})
+					.then(function(response) {
+						console.log(response),
+						this.getTag()
 					})
+					.catch(function(error) {
+						console.log(error),
+						alert("Opps, " + error)
+					})
+			} else {
+				alert("This tag already exists")
+			}
+		},
+		TagEdit(e) {
+			alert("EditTag")
+			e.preventDefault()
 		}
 	},
 }
@@ -238,7 +275,7 @@ export default {
 	margin-left: 10px;
     border: 0;
     padding: 5px 10px;
-    margin-top: 20px;
+    margin-bottom: 10px;
     color: var(--black);
     font-size: 20px;
     cursor: pointer;
