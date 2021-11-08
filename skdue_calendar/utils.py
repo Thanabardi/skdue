@@ -4,4 +4,12 @@ def generate_slug(name):
     for a in name:
         if(a.isalnum() or a in [' ', '-']):
             temp += a
-    return '-'.join(temp.lower().split())
+    return '-'.join(temp.split())
+
+def generate_tag(name):
+    """A valid 'tag' consisting of letters, numbers, underscores or hyphens."""
+    temp = ""
+    for text in name:
+        if text.isalnum():
+            temp += text
+    return temp.lower()

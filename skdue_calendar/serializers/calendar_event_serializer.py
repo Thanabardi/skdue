@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Calendar, CalendarEvent
+from skdue_calendar.models import CalendarEvent
 
 
 class CalendarEventSerializer(serializers.ModelSerializer):
@@ -7,21 +7,12 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         model = CalendarEvent
         fields = (
             "id",
+            "calendar",
             "name",
             "slug",
             "get_absolute_url",
             "description",
             "start_date",
-            "end_date"
-        )
-
-
-class CalendarSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Calendar
-        fields = (
-            "id",
-            "name",
-            "slug",
-            "get_absolute_url"
+            "end_date",
+            "tag_text"
         )

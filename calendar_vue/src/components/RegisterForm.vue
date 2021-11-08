@@ -25,14 +25,14 @@
       <form @submit.prevent="getData" class="sign-up" action="#">
         <h2>Sign up</h2>
         <div>Use your email for registration</div>
-        <input class="register-input" type="text" v-model="dataRegisterForm.name" placeholder="Name" required />
+        <input class="register-input" type="text" v-model="dataRegisterForm.username" placeholder="Name" required />
         <input class="register-input" type="email" v-model="dataRegisterForm.email" placeholder="Email" required />
         <input class="register-input" type="password" v-model="dataRegisterForm.password" placeholder="Password" required />
         <button class="register-button">Sign Up</button>
       </form>
       <form @submit.prevent="checkData" class="sign-in" action="#">
         <h2>Login</h2>
-        <input class="register-input" type="email" v-model="dataLogIn.email" placeholder="Email" required />
+        <input class="register-input" type="username" v-model="dataLogIn.username" placeholder="Username" required />
         <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
         <a class="app-button-tp" style="text-decoration: none; color: var(--black);" 
           href="#">Forgot your password?</a>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- router-link for mockup -->
-    <div style="text-align: center;">
+    <!-- <div style="text-align: center;">
       <h1 style="font-size: 50px; color: var(--red);" class="register-header">*This is just a login mockup*</h1>
       <h2 style="color: var(--gray-dark);">Anyway, if you want to create your own calendar check
       <router-link class="app-button-tp" style="text-decoration: none; color: var(--green);"
@@ -49,41 +49,87 @@
       out to see how our Skdue works, or if you want to take a look at the existing Skdue try 
       <router-link class="app-button-tp" style="text-decoration: none; color: var(--green);"
         to=/calendar/holidays>this</router-link>.</h2>
-    </div>
+    </div> -->
 
   </div>
 </template>
 
+
 <script>
+import axios from 'axios'
+
   export default {
     data(){
       return {
+        slug : '',
         signUp: false,
         dataRegisterForm:{
-          name: null,
+          username: null,
           email: null,
           password: null,
-          // is_test : 'True'
             },
         dataLogIn:{
-          email: null,
+          username: null,
           password: null
         } 
       }
     },
     methods:{
-      // setData(data){
-      //       this.slug = data.slug
-      //       this.$router.push({ path: `/calendar/1234`});
+      setData(data){
+        // for register
+        console.log(data);
 
-      // },
+        // auth setting
+        let token = data.token
+        this.$store.commit('setToken', token)            
+        axios.defaults.headers.common["Authorization"] = "Token " + token
+        localStorage.setItem("token", token)
+
+        this.slug = data.calendar.slug
+        this.$router.push({ path: `/me/${this.slug}`});
+      },
+      loginData(data){
+        // for login
+        console.log(data);
+
+        // auth setting
+        let token = data.token
+        this.$store.commit('setToken', token)            
+        axios.defaults.headers.common["Authorization"] = "Token " + token
+        localStorage.setItem("token", token)
+
+        this.slug = data.calendar.slug
+        this.$router.push({ path: `/me/${this.slug}`});
+      },
       getData(e){
         e.preventDefault();
         console.log(this.dataRegisterForm);
+
+        axios.post(`/api/v2/register`, this.dataRegisterForm)
+                .then(response => {
+                this.setData(response.data);
+                // console.log(response.data);
+                // console.log(response.data.slug);
+                })
+                .catch(error => {
+                console.log(error)
+            })
       },
       checkData(e){
+        // for loging
         e.preventDefault();
         console.log(this.dataLogIn);
+
+        // get API token
+        axios.post(`/api/v2/get-auth-token`, this.dataLogIn)
+                .then(response => {
+                this.loginData(response.data);
+                // console.log(response.data);
+                // console.log(response.data.slug);
+                })
+                .catch(error => {
+                console.log(error)
+            })
       }
     }
   }
