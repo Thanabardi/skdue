@@ -79,7 +79,19 @@ export default {
   },
   setup() {  //EventDetails
   let modalActive = ref(false);
-  return {modalActive};
+
+  const popupTriggers = ref({
+    buttonTrigger: false,
+  });
+
+  const TogglePopup = (trigger) => {
+    popupTriggers.value[trigger] = !popupTriggers.value[trigger]
+  }
+  return {
+    modalActive,
+    popupTriggers,
+    TogglePopup
+  }
   },
   mounted() {
     this.getCalendarEvents()
@@ -381,16 +393,42 @@ export default {
           <h3>Description</h3>
           <p class="app-details">{{ event_details[3] }}</p>
         </div> -->
-        <hr class="calendar-hr" style="position: absolute; bottom: 125px; left: 32px; width: 82%;">
+
         <div class="calendar-sidebar-footer">
-          <div style="display: inline-block; " v-for="tag_text in this.tag_list" :key="tag_text">
-            <input class="filter-tag" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
-            <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
-          </div>
+          <hr class="calendar-hr">
           <!-- <button class="app-button-tp" @click="doSomething()"
             type="button" name="button" style="font-size: 20px; color: var(--white-op-1);">Manage View</button> -->
+          <button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp"
+            style="font-size: 20px; color: var(--white-op-1);"
+            @click="() => TogglePopup('buttonTrigger')">Manage View</button>
         </div>
       </EventDetails>
+      <div style="text-align: center;" v-if="popupTriggers.buttonTrigger"
+		  :TogglePopup="() => TogglePopup('buttonTrigger')">
+        <div class="filter-tag-popup">
+          <p style="font-size: 20px; color: var(--white-op-1); text-align: left; padding-left: 20px;">My Tags</p>
+          <hr class="calendar-hr">
+          <div class="filter-tag-bg" style="height: 20%;">
+            <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.tag_list" :key="tag_text">
+              <input class="filter-tag" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
+              <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
+            </div>
+          </div>
+          <p style="font-size: 20px; color: var(--white-op-1); text-align: left; padding-left: 20px;">Follow</p>
+          <hr class="calendar-hr">
+          <div class="filter-tag-bg" style="height: 41%;">
+            <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.tag_list" :key="tag_text">
+              <input class="filter-tag" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
+              <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
+            </div>
+          </div>
+          <div class="calendar-sidebar-footer">
+            <hr class="calendar-hr">
+            <button class="app-button-tp" @click="() => TogglePopup('buttonTrigger')"
+              type="button" name="button" style="font-size: 20px; color: var(--white-op-1);">Back</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <FullCalendar class="calendar-app-main" :options="calendarOptions">
@@ -416,9 +454,8 @@ export default {
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
-  overflow-x: hidden; /* Disable horizontal scroll */
   margin-top: 65px;
-  padding: 10px 10px 10px 10px;
+  padding: 10px;
   font-size: 22px;
 }
 .calendar-table {
@@ -440,11 +477,10 @@ export default {
   // text-align: center;
 }
 .calendar-sidebar-footer {
-  position: fixed;
-  bottom: 2%;
-  left: 2%;
-  // left: 2%;
-  // justify-items: center;
+  position: absolute;
+  bottom: 100px;
+  width: 95%;
+  text-align: center;
 
 }
 .calendar-hr {
@@ -477,6 +513,33 @@ b { /* used for event dates/times */
 .fc { /* the calendar root */
   margin: 3% 2% 0% 26%; /* Same as the sidebar width and nav bar heigh*/
   max-height: 85vh;
+}
+.filter-tag-popup {
+  background: var(--main-green-light);
+  color: var(--white);
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 23%; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  margin-top: 65px;
+  padding: 10px;
+  font-size: 22px;
+}
+.filter-tag-bg {
+  background-color: var(--white-op-1);
+  color: var(--black);
+  padding: 10px 20px 10px 20px;
+  display: block;
+  margin: 20px auto 20px auto;
+  text-align: left;
+  width: 70%;
+  border-radius: 8px;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    display: none;
 }
 // checkbox style sliding
 // .flipswitch {
