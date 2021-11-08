@@ -1,6 +1,7 @@
 <template>
 	<div class="event-create">
-		<button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
+		<button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp"
+			style="font-size: 40px; line-height: 30px;"
 			@click="() => TogglePopup('buttonTrigger')">+</button>
 
 		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger"
@@ -287,5 +288,8 @@ export default {
 .event-create-footer {
 	display: flex;
 	justify-content: space-evenly;
+}
+::-webkit-scrollbar {
+    display: none;
 }
 </style>
