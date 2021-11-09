@@ -3,9 +3,9 @@
         <Search />
         <EventCreate />
         <UserConfig />
-        <div class="calendar-navbar-link">
-            <FollowedList />
-        </div>
+        <!-- <div class="calendar-navbar-link"> -->
+        <FollowedList />
+        <!-- </div> -->
 	</div>
 </template>
 
