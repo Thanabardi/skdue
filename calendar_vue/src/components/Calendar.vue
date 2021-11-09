@@ -81,10 +81,12 @@ export default {
   let modalActive = ref(false);
 
   const popupTriggers = ref({
-    buttonTrigger: false,
+    sidebarTrigger: false,
+    editTrigger: false,
   });
 
-  const TogglePopup = (trigger) => {
+  const TogglePopup = (trigger, e) => {
+    e.preventDefault()
     popupTriggers.value[trigger] = !popupTriggers.value[trigger]
   }
   return {
@@ -322,114 +324,130 @@ export default {
 
 <template>
   <div>
-      <!-- <form @submit.prevent="logoutData" class="form-form">
-        <button class="logout-button">Logout</button>
-      </form> -->
     <CalendarNavbar />
     <div class='calendar-sidebar'>
-      <EventDetails>
-
-        <Follow />
-        <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
-          {{ (this.day_select.substring(8, 10)) }}
-          {{ this.month[new Date(this.day_select).getMonth()] }}
-          {{ (this.day_select.substring(0, 4)) }}
-        </h2>
+      <Follow />
+      <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
+        {{ (this.day_select.substring(8, 10)) }}
+        {{ this.month[new Date(this.day_select).getMonth()] }}
+        {{ (this.day_select.substring(0, 4)) }}
+      </h2>
+        <!-- list of all event -->
         <div style="overflow-x: hidden; height: 76%;">
           <div v-if="this.event_details.length!=0">
             <p style="font-size: 18px; color: var(--white-op-1); text-align: center;">All-Day Event</p>
-              <div v-for="item in this.event_details">
-                  <div v-if="item['allday']">
-                    <table class="calendar-table">
-                    <!-- <td style="width: 105px; text-align: center;">All-Day</td> -->
-                    <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
-                    <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
-                        {{ item["description"] }}</td></tr>
-                    </table>
-                  </div>
-              </div>
-              <hr class="calendar-hr">
-              <div v-for="item in this.event_details">
-                <div v-if="!item['allday']">
-                  <div v-if="(item['start_date'] < this.day_select)">
-                    <table class="calendar-table">
-                    <tr><td style="width: 110px;">00:00-{{ item["end_time"] }}</td>
-                      <td>{{ item["name"] }}</td></tr>
-                    <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
-                        {{ item["description"] }}</td></tr>
-                    </table>
-                  </div>
-                  <div v-if="this.day_select < item['end_date']">
-                    <table class="calendar-table">
-                    <tr><td style="width: 110px;">{{ item["start_time"] }}-00:00</td>
-                      <td>{{ item["name"] }}</td></tr>
-                    <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
-                        {{ item["description"] }}</td></tr>
-                    </table>
-                  </div>
-                  <div v-if="item['start_date'] == item['end_date']">
-                    <table class="calendar-table">
-                    <tr><td style="width: 110px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
-                      <td>{{ item["name"] }}</td></tr>
-                    <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
-                        {{ item["description"] }}</td></tr>
-                    </table>
-                  </div>
-                </div>
+
+            <!-- list of all day event -->
+            <div v-for="item in this.event_details">
+                <button v-if="item['allday']" class="calendar-detail-bg"
+                  v-on:click.right="TogglePopup('editTrigger', $event)">
+                  <table class="calendar-table">
+                  <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
+                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                      {{ item["description"] }}</td></tr>
+                  </table>
+                </button>
+            </div>
+            <!-- list of all day event -->
+
+            <!-- list of other event -->
+            <hr class="calendar-hr">
+            <div v-for="item in this.event_details">
+              <div v-if="!item['allday']">
+                <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg"
+                  v-on:click.right="TogglePopup('editTrigger', $event)">
+                  <table class="calendar-table">
+                  <tr><td style="width: 110px;">00:00-{{ item["end_time"] }}</td>
+                    <td>{{ item["name"] }}</td></tr>
+                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                      {{ item["description"] }}</td></tr>
+                  </table>
+                </button>
+                <button v-if="this.day_select < item['end_date']" class="calendar-detail-bg"
+                  v-on:click.right="TogglePopup('editTrigger', $event)">
+                  <table class="calendar-table">
+                  <tr><td style="width: 110px;">{{ item["start_time"] }}-00:00</td>
+                    <td>{{ item["name"] }}</td></tr>
+                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                      {{ item["description"] }}</td></tr>
+                  </table>
+                </button>
+                <button v-if="item['start_date'] == item['end_date']" class="calendar-detail-bg"
+                  v-on:click.right="TogglePopup('editTrigger', $event)">
+                  <table class="calendar-table">
+                  <tr><td style="width: 110px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
+                    <td>{{ item["name"] }}</td></tr>
+                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                      {{ item["description"] }}</td></tr>
+                  </table>
+                </button>
               </div>
             </div>
-          <div v-else>
-            <p style="font-size: 20px; color: var(--white-op); text-align: center;">
-              You have no events scheduled today</p>
+            <!-- list of other event -->
+
           </div>
-        </div>
+          <!-- list of all event -->
 
-        <!-- <h1>{{ event_details[0] }}</h1>
-        <div class="app-details">
-          <p>from {{ event_details[1] }}</p>
-          <p>to {{ event_details[2] }}</p>
+        <div v-else>
+          <p style="font-size: 20px; color: var(--white-op); text-align: center;">
+            You have no events scheduled today</p>
         </div>
-        <div v-if="event_details[3] != ''">
-          <h3>Description</h3>
-          <p class="app-details">{{ event_details[3] }}</p>
-        </div> -->
+      </div>
+      <!-- side bar footer -->
+      <div class="calendar-sidebar-footer">
+        <hr class="calendar-hr">
+        <button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp"
+          style="font-size: 20px; color: var(--white-op-1);"
+          v-on:click.left="TogglePopup('sidebarTrigger', $event)">Manage View</button>
+      </div>
+      <!-- side bar footer -->
 
-        <div class="calendar-sidebar-footer">
-          <hr class="calendar-hr">
-          <!-- <button class="app-button-tp" @click="doSomething()"
-            type="button" name="button" style="font-size: 20px; color: var(--white-op-1);">Manage View</button> -->
-          <button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp"
-            style="font-size: 20px; color: var(--white-op-1);"
-            @click="() => TogglePopup('buttonTrigger')">Manage View</button>
-        </div>
-      </EventDetails>
-      <div style="text-align: center;" v-if="popupTriggers.buttonTrigger"
-		  :TogglePopup="() => TogglePopup('buttonTrigger')">
-        <div class="filter-tag-popup">
+      <!-- Tag filters -->
+      <div style="text-align: center;" v-if="popupTriggers.sidebarTrigger">
+        <div class="calendar-sidebar">
+          
+          <!-- My Tag filters -->
           <p style="font-size: 20px; color: var(--white-op-1); text-align: left; padding-left: 20px;">My Tags</p>
           <hr class="calendar-hr">
-          <div class="filter-tag-bg" style="height: 20%;">
+          <div class="filter-tag-bg" style="max-height: 20%; min-height: 0;">
             <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.tag_list" :key="tag_text">
-              <input class="filter-tag" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
+              <input type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)" checked>
               <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
             </div>
           </div>
+          <!-- My Tag filters -->
+
+          <!-- Follow Tag filters -->
           <p style="font-size: 20px; color: var(--white-op-1); text-align: left; padding-left: 20px;">Follow</p>
           <hr class="calendar-hr">
-          <div class="filter-tag-bg" style="height: 41%;">
+          <div class="filter-tag-bg" style="max-height: 41%;">
+            <!-- Fix here!!! -->
             <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.tag_list" :key="tag_text">
-              <input class="filter-tag" type="checkbox" v-bind:id="tag_text" @click="handlefiltertag(tag_text)" checked>
+              <input type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)" checked>
               <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
             </div>
+            <!-- Fix here!!! -->
           </div>
+          <!-- Follow Tag filters -->
+
           <div class="calendar-sidebar-footer">
             <hr class="calendar-hr">
-            <button class="app-button-tp" @click="() => TogglePopup('buttonTrigger')"
+            <button class="app-button-tp" v-on:click.left="TogglePopup('sidebarTrigger', $event)"
               type="button" name="button" style="font-size: 20px; color: var(--white-op-1);">Back</button>
           </div>
         </div>
       </div>
     </div>
+    <!-- Tag filters -->
+
+    <!-- edit event -->
+    <div style="text-align: center;" v-if="popupTriggers.editTrigger">
+      <div class="calendar-sidebar">
+        <button class="app-button-main" v-on:click.left="TogglePopup('editTrigger', $event)">Edit</button>
+        <button class="app-button-gray" v-on:click.left="TogglePopup('editTrigger', $event)">Delete</button>
+      </div>
+    </div>
+    <!-- edit event -->
 
     <FullCalendar class="calendar-app-main" :options="calendarOptions">
       <template v-slot:eventContent="arg">
@@ -458,9 +476,8 @@ export default {
   padding: 10px;
   font-size: 22px;
 }
-.calendar-table {
+.calendar-detail-bg {
   background-color: var(--white-op-1);
-  color: var(--black);
   border-collapse: collapse;
   padding: 5px;
   display: block;
@@ -468,20 +485,25 @@ export default {
   justify-items: center;
   width: 90%;
   border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+.calendar-table {
+  // color: var(--black);
+  border-collapse: collapse;
 }
 .calendar-table td{
   font-size: 20px;
   padding-left: 5px;
   font-weight: 550;
   word-break: break-word;
-  // text-align: center;
+  text-align: left;
 }
 .calendar-sidebar-footer {
   position: absolute;
   bottom: 100px;
   width: 95%;
   text-align: center;
-
 }
 .calendar-hr {
   border: 1px solid var(--white-op-2);
@@ -499,8 +521,16 @@ export default {
   margin: 8px 2px;
   cursor: pointer;
 }
-.filter-tag {
-  display: inline-block;
+.filter-tag-bg {
+  background-color: var(--white-op-1);
+  color: var(--black);
+  padding: 10px 20px 10px 20px;
+  display: block;
+  margin: 20px auto 20px auto;
+  text-align: left;
+  width: 70%;
+  border-radius: 8px;
+  overflow-x: hidden;
 }
 b { /* used for event dates/times */
   margin-right: 3px;
@@ -513,30 +543,6 @@ b { /* used for event dates/times */
 .fc { /* the calendar root */
   margin: 3% 2% 0% 26%; /* Same as the sidebar width and nav bar heigh*/
   max-height: 85vh;
-}
-.filter-tag-popup {
-  background: var(--main-green-light);
-  color: var(--white);
-  height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 23%; /* Set the width of the sidebar */
-  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1; /* Stay on top */
-  top: 0; /* Stay at the top */
-  left: 0;
-  margin-top: 65px;
-  padding: 10px;
-  font-size: 22px;
-}
-.filter-tag-bg {
-  background-color: var(--white-op-1);
-  color: var(--black);
-  padding: 10px 20px 10px 20px;
-  display: block;
-  margin: 20px auto 20px auto;
-  text-align: left;
-  width: 70%;
-  border-radius: 8px;
-  overflow-x: hidden;
 }
 ::-webkit-scrollbar {
     display: none;
