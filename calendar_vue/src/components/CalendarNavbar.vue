@@ -4,7 +4,7 @@
         <EventCreate />
         <UserConfig />
         <div class="calendar-navbar-link">
-            <p>user follow list</p>
+            <FollowedList />
         </div>
 	</div>
 </template>
@@ -15,22 +15,24 @@ import axios from 'axios';
 import Search from './search'
 import EventCreate from './EventCreate'
 import UserConfig from './UserConfig'
+import FollowedList from './FollowedList'
 
 export default {
     components: {
         Search,
         EventCreate,
-        UserConfig
+        UserConfig,
+        FollowedList
 	},
     data() {
 		return {
-			follow: ''
+            follow: '',
 		}
 	},
     mounted () {
         this.getFollowList()
     },
-    	methods: {
+    methods: {
         getFollowList() {
             // const calendar_slug = this.$route.params.calendar_slug
             axios.get(`/api/v2/me/follow`).then( response => {
@@ -60,7 +62,7 @@ export default {
     position: absolute;
     right: 2%;
     border-radius: 2px;
-    width: 250px;
+    width: 125px;
     border: 1px solid transparent;
     padding: 0px 10px 0px 10px;
 	top: 10px;
