@@ -168,7 +168,7 @@ export default {
 			}
 			axios.post(`/api/v2/me/${this.user_name}`, event)
 				.then(function(response) {
-					console.log(response),
+					console.log("create new Event", response),
 					window.location.reload()
 				})
 				.catch(function(error) {
@@ -182,12 +182,8 @@ export default {
 			} else if (!this.available_tag.includes(this.tag)) {
 				axios.post(`/api/v2/me/add_new_tag`, {"tag":this.tag})
 					.then(function(response) {
-						console.log(response),
-						this.getTag()
-					})
-					.catch(function(error) {
-						console.log(error),
-						alert("Opps, " + error)
+						console.log("create new Tag", response),
+						this.available_tag.push(this.tag)
 					})
 			} else {
 				alert("This tag already exists")
