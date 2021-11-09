@@ -1,6 +1,6 @@
 <template>
 <div class="follow-main" v-if="(fs != '')">
-  {{ this.calendar_slug }}
+  {{ this.follow_name }}
   <div v-if="this.token != ''">
     <button v-if="(fs == 'Unfollow') || (fs == 'UNFOLLOW')" style="background-color: var(--gray); width: 90px;"
       type="button" name="button" class="follow-button"
@@ -26,6 +26,7 @@ export default {
       fs:"Follow",
       calendar_slug: "",
       token: "",
+      follow_name: ""
 		}
 	},
   mounted() {
@@ -103,7 +104,8 @@ export default {
       axios
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
-          this.setCalendarOwner(response.data)
+          this.setCalendarOwner(response.data),
+          this.follow_name = response.data.user.username
         })
         .catch(error => {
           console.log(error)
