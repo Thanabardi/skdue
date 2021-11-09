@@ -2,7 +2,7 @@
     <div class="user-detail-login">
 		<button class="app-button-tp" style="font-size: 22px;" 
 		@click="() => TogglePopup('buttonTrigger')">{{ this.calendar_slug }}</button>
-		<div v-if="popupTriggers.buttonTrigger" :TogglePopup="() => TogglePopup('buttonTrigger')">
+		<div v-if="popupTriggers.buttonTrigger && this.user_name == ''" :TogglePopup="() => TogglePopup('buttonTrigger')">
 		    <div class="user-detail-tab" v-for="item in itemList" :key="item">
 				<button @click="redirectFollowedCalendar(item)" class="user-detail-button-tp"> {{ item.followed_name }}</button>
 			</div>
@@ -13,9 +13,6 @@
 <script>
 import axios from 'axios';
 import { ref } from 'vue';
-import Calendar from '../components/Calendar.vue'
-import EventDetails from '../components/EventDetails.vue'
-import { globalLocales } from '@fullcalendar/common'
 
 export default ({
     setup () {
@@ -39,6 +36,7 @@ export default ({
             itemList: [],
             apiLoaded: false,
             calendar_slug: "",
+            user_name: '',
 		}
 	},
     mounted () {
