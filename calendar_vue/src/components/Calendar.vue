@@ -8,6 +8,7 @@ import EventCreate from './EventCreate'
 import Follow from './Follow'
 import Search from './search'
 import EventDetails from './EventDetails'
+import EditRemove from './EditRemove'
 import {ref} from 'vue'
 import axios from 'axios'
 export default {
@@ -17,6 +18,7 @@ export default {
     Search,
     EventCreate,
     Follow,
+    EditRemove,
   },
   data: function () {
     return {
@@ -57,6 +59,8 @@ export default {
         eventRemove:
         */
       },
+      editEvent: false,
+      editEventList: [],
       currentEvents: [],
       calendar_events: [],
       event_in_selected_date: [], //added in iter4
@@ -202,23 +206,22 @@ export default {
       console.log('sort',this.event_details)
     },
     handleEventClick(clickInfo) {
-      this.calendar_events.forEach(elements => {
-        let event = this.convertEventDateTime(elements)
-        if (elements.id == clickInfo.event.id){
-          this.modalActive = true;
-          // let  start_date = elements.start_date.substring(11, 16) +
-          //   ", " + elements.start_date.substring(0, 10)
-          // let  end_date = elements.end_date.substring(11, 16) +
-          //   ", " + elements.start_date.substring(0, 10)
-          // this.event_details = [
-          //   elements.name,
-          //   start_date,
-          //   end_date,
-          //   elements.description
-          // ]
-          this.event_details.push(event)
-        }
-      });
+      console.log(clickInfo.event._def.title)
+      console.log(clickInfo.event._def.extendedProps.description)
+      console.log(clickInfo.event._instance)
+      this.editEventList.push(
+        clickInfo.event._def.title,
+        clickInfo.event._def.extendedProps.description,
+        clickInfo.event._instance.range.start,
+          clickInfo.event._instance.range.end,
+        )
+      console.log(this.editEventList)
+      this.editEvent =true;
+    },
+    swap(value){
+      console.log(value)
+      this.editEvent = false
+      this.editEventList = []
     },
     handleEvents(events) {
       this.currentEvents = events;
@@ -314,6 +317,10 @@ export default {
         <button class="logout-button">Logout</button>
       </form> -->
     <CalendarNavbar />
+    <div class="editremove">
+          <EditRemove :popup="this.editEvent" :detail="this.editEventList" @closed="swap"/>
+    </div>
+
     <div class='calendar-sidebar'>
       <EventDetails>
 
@@ -406,6 +413,12 @@ export default {
 <style lang='scss' scoped>
 
 @import './../assets/style.css';
+
+.editremove {
+  height: 65px;
+  z-index: 5;
+  position: fixed !important;
+}
 
 .calendar-sidebar {
   background: var(--main-green-light);
