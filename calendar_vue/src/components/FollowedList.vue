@@ -1,10 +1,10 @@
 <template>
-    <div class="user-detail-login">
-		<button class="app-button-tp" style="font-size: 22px;" 
-		@click="() => TogglePopup('buttonTrigger')">{{ this.calendar_slug }}</button>
-		<div v-if="popupTriggers.buttonTrigger && this.user_name == ''" :TogglePopup="() => TogglePopup('buttonTrigger')">
-		    <div class="user-detail-tab" v-for="item in itemList" :key="item">
-				<button @click="redirectFollowedCalendar(item)" class="user-detail-button-tp"> {{ item.followed_name }}</button>
+    <div class="follow-list" @click="() => TogglePopup('buttonTrigger')">
+		<div>{{ this.calendar_slug }}</div>
+		<div v-if="popupTriggers.buttonTrigger && this.user_name == ''">
+		    <div class="follow-list-tab">
+				<button v-for="name in followed_name" :key="name" @click="redirectFollowedCalendar(name)" 
+                    class="follow-list-button-tp"> {{ name }}</button>
 			</div>
 		</div>
 	</div>
@@ -33,9 +33,9 @@ export default ({
             selectedItem: {},
 			follow: '',
             inputValue: '',
-            itemList: [],
+            followed_name: [],
             apiLoaded: false,
-            calendar_slug: "",
+            calendar_slug: '',
             user_name: '',
 		}
 	},
@@ -44,17 +44,17 @@ export default ({
     },
     methods: {
         getFollowList() {
-            // const calendar_slug = this.$route.params.calendar_slug
             const calendar_slug = this.$route.params.calendar_slug
             this.calendar_slug = calendar_slug.replace(/-/g,' ')
             axios.get(`/api/v2/me/follow`).then( response => {
-                console.log("fs data=", response.data)
-                this.itemList = response.data
+                response.data.forEach(elements => {
+				this.followed_name.push(elements["followed_name"])
+					})
             })
         },
-        async redirectFollowedCalendar(theItem) {
+        async redirectFollowedCalendar(followed) {
 			await this.$router.push({ path: `/me/` })
-			await this.$router.replace({ path: `/calendar/${theItem.followed_name}` })
+			await this.$router.replace({ path: `/calendar/${followed}` })
         },
 	}
 })
@@ -62,74 +62,49 @@ export default ({
 
 
 <style scoped>
-.user-detail-app-button {
-    line-height: 0px;
-    font-size: 40px;
-    font-weight: 500px;
-    position: fixed;
-    left: 2%;
-    background: none;
-    border: none;
+.follow-list {
     color: var(--white);
-    cursor: pointer;
-    text-decoration: none;
-}
-.user-detail-app-button:active {
-	color: var(--white-dark);
-}
-.user-detail {
+    left: 10%;
     position: absolute;
     right: 2%;
-	top: 10px;
-}
-.user-detail-not-login {
-	display: flex;
-	justify-content: space-evenly;
-	top: 6px;
-	width: 320px;
-}
-.user-detail-login {
-	width: 250px;
+    border-radius: 2px;
+    width: 260px;
     border: 1px solid transparent;
     padding: 5px;
-	transform: translate(0, -20px);
+	top: 12px;
+    border: 1px solid var(--white-op-1);
+    font-size: 22px;
+    cursor: pointer;
 }
-.user-detail-login:hover {
+.follow-list:hover {
 	border: 1px solid var(--white-op-1);
 }
-.user-detail-tab {
+.follow-list-tab {
     background-color: var(--white);
     box-shadow: 0px 0px 1px 0px var(--black-op-1), 0px 0px 40px 0px var(--black-op-2);
     position: absolute;
-    width: 262px;
+    width: 272px;
     margin-top: 10px;
     overflow-x: hidden;
     right: 0;
     border-radius: 2px;
     text-align: left;
+    max-height: 200px;
 }
-.user-detail-button-tp {
+.follow-list-button-tp {
     background: none;
     border: none;
     color: var(--black);
     cursor: pointer;
     font-size: 18px;
     width: 100%;
-    padding: 8px 15px 8px 15px;
+    padding: 5px 15px 5px 15px;
     text-align: left;
 }
-.user-detail-button-tp:hover {
-    background-color: var(--green);
-    color: var(--white);
+.follow-list-button-tp:hover {
+    background-color: var(--white-dark);
 }
-.user-detail-button {
-    color: var(--white);
-    cursor: pointer;
-    font-size: 22px;
-    width: 100px;
-    padding: 4px 15px 4px 15px;
-    text-align: center;
-	border-radius: 40px;
-	text-decoration: none;
+::-webkit-scrollbar {
+    display: none;
 }
 </style>

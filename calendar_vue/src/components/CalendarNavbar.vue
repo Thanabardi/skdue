@@ -3,9 +3,7 @@
         <Search />
         <EventCreate />
         <UserConfig />
-        <!-- <div class="calendar-navbar-link"> -->
         <FollowedList />
-        <!-- </div> -->
 	</div>
 </template>
 
@@ -56,25 +54,6 @@ export default {
     left: 0px;
     right: 0px;
 }
-.calendar-navbar-link {
-    color: var(--white);
-    left: 10%;
-    position: absolute;
-    right: 2%;
-    border-radius: 2px;
-    width: 125px;
-    border: 1px solid transparent;
-    padding: 0px 10px 0px 10px;
-	top: 10px;
-    border: 1px solid var(--white-op-1);
-    height: 40px;
-    line-height: 0px;
-    font-size: 20px;
-    cursor: pointer;
-}
-// .calendar-navbar-link:hover {
-
-// }
 // .user-detail {
 //     position: absolute;
 //     right: 1%;
