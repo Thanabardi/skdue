@@ -5,4 +5,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('api/calendar/', include('skdue_calendar.urls')),
     path('api/v2/', include('skdue_calendar.api.v2.urls')),
+    path('accounts/', include('allauth.urls')), # new
 ]

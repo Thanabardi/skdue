@@ -36,6 +36,7 @@
         <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
         <a class="app-button-tp" style="text-decoration: none; color: var(--black);" 
           href="#">Forgot your password?</a>
+          <a title="Google" class="socialaccount_provider google" href="/accounts/google/login/?process=login">Google</a>
         <button class="register-button">Continue</button>
       </form>
     </div>
