@@ -1,4 +1,5 @@
 from django.urls import path
+from skdue_calendar.api.v2 import views
 from skdue_calendar.api.v2.views import *
 
 
@@ -19,4 +20,6 @@ urlpatterns = [
     path('me/<calendar_slug>', UserMeCalendarView.as_view(), name="me_calendar"),
 
     path('get-auth-token', GetAuthToken.as_view(), name="get_auth_token"),
+
+    path('user_setting', views.UserSettingView.as_view(), name="user_setting")
 ]

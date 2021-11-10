@@ -9,3 +9,4 @@ from .calendar_logout import Logout
 from .calendar_register import Register
 from .follow_status import FollowStatusView
 from .auth import *
+from .user_setting import UserSettingView
