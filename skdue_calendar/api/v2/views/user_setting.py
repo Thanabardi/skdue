@@ -1,3 +1,5 @@
+import os
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import *
@@ -43,4 +45,16 @@ class UserMeSetting(APIView):
         return Response(UserSettingSerializer(user_setting).data)
 
     def put(self, request):
-        pass
+        user_setting = UserSetting.objects.get(user=request.user)
+        old_img_url = user_setting.image.url
+        try:
+            user_setting.image = request.data["file"]
+            user_setting.save()
+
+            # remove old image, save space
+            if DEFAULT_IMAGE != old_img_url:
+                pass
+            
+        except:
+            return Response({"msg": "invalid data"}, HTTP_400_BAD_REQUEST)
+        return Response(UserSettingSerializer(user_setting).data, HTTP_202_ACCEPTED)
