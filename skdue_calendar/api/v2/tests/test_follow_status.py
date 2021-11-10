@@ -2,7 +2,7 @@ import json
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.urls.conf import path
+from rest_framework.status import *
 from skdue_calendar.models import FollowStatus
 from .utils import convert_response
 
@@ -42,6 +42,13 @@ class CalendarListTests(TestCase):
             }
             expect_data.append(data)
         expect_data = json.dumps(expect_data)
-        response = self.client.get(reverse('api_v2:fs'))
+        response = self.client.get(reverse('api_v2:follow_status'))
         response_data = convert_response(response.content)
         self.assertJSONEqual(expect_data, response_data)
+
+    def test_post(self):
+        """Test that user can't create new user status from `api/v2/follow_status` end point"""
+        response = self.client.post(reverse('api_v2:follow_status'))
+        self.assertEqual(HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
+        print()
+        print("tested")
