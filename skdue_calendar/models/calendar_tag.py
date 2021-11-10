@@ -8,7 +8,7 @@ class CalendarTag(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tag = models.CharField(max_length=15)
     tag_type = models.ForeignKey(CalendarTagType, on_delete=models.CASCADE)
-    tag_color = models.CharField(max_length=64)
+    tag_color = models.CharField(max_length=64, blank=True, null=True)
     
     def __str__(self):
         return self.tag
