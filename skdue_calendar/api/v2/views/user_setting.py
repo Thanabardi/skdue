@@ -46,15 +46,15 @@ class UserMeSetting(APIView):
 
     def put(self, request):
         user_setting = UserSetting.objects.get(user=request.user)
-        old_img_url = user_setting.image.url
+        old_img = user_setting.image
         try:
             user_setting.image = request.data["file"]
             user_setting.save()
 
             # remove old image, save space
-            if DEFAULT_IMAGE != old_img_url:
-                pass
-            
+            if "/media"+DEFAULT_IMAGE != old_img.url:
+                os.remove(old_img.path)
+
         except:
             return Response({"msg": "invalid data"}, HTTP_400_BAD_REQUEST)
         return Response(UserSettingSerializer(user_setting).data, HTTP_202_ACCEPTED)
