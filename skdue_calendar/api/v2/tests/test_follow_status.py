@@ -2,6 +2,7 @@ import json
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.urls.conf import path
 from skdue_calendar.models import FollowStatus
 from .utils import convert_response
 
@@ -23,6 +24,9 @@ class CalendarListTests(TestCase):
         self.user2 = create_account("harry", "hackme22")
         self.user2.first_name = "Harry"
         self.user2.save()
+        # create user3
+        self.user3 = create_account("tester", "tester_pwd")
+        self.user3.save()
         #follow
         FollowStatus.objects.create(user=self.user1, followed=self.user2)
 
@@ -41,15 +45,3 @@ class CalendarListTests(TestCase):
         response = self.client.get(reverse('api_v2:fs'))
         response_data = convert_response(response.content)
         self.assertJSONEqual(expect_data, response_data)
-
-    def test_post_with_invalid_follow_status_data(self):
-        """Response is the fail status with message"""
-        # TODO: add this test case after implement new `is_valid` method in `FollowStatus` model
-        # what to test status_code, resounse_data
-        pass
-
-    def test_post_with_valid_follow_status_data(self):
-        """Response is the new follow status data with success status"""
-        # TODO: add this test case after implement new `is_valid` method in `FollowStatus` model
-        # what to test status_code, resounse_data
-        pass

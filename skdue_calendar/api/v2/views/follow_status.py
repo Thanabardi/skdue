@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.status import *
 
 from skdue_calendar.models import FollowStatus
 from skdue_calendar.serializers import FollowStatusSerializer
@@ -36,4 +37,4 @@ class FollowStatusView(APIView):
             data["status"] = "success" # add created status
             data["msg"] = "follower_status created"
             return Response(data)
-        return Response({"status": "failed", "msg": "invalid calendar"})
+        return Response({"status": "failed", "msg": "invalid calendar"}, HTTP_400_BAD_REQUEST)

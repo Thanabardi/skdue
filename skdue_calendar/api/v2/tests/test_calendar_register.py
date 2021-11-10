@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from rest_framework.status import *
 from .utils import convert_response
 
 
@@ -43,14 +44,15 @@ class RegisterTests(TestCase):
         )
         response_data = convert_response(response.content)
         self.assertJSONEqual(expect_data, response_data)
+        self.assertEqual(HTTP_400_BAD_REQUEST, response.status_code)
 
     def test_get(self):
         response = self.client.get(reverse('api_v2:register'))
-        self.assertEqual(405, response.status_code)
+        self.assertEqual(HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
 
     def test_valid_username(self):
         response = self.client.post(
             reverse('api_v2:register'),
             self.valid_data
         )
-        self.assertEqual(200, response.status_code)
+        self.assertEqual(HTTP_200_OK, response.status_code)
