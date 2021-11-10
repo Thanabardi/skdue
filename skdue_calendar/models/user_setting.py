@@ -11,3 +11,6 @@ class UserSetting(models.Model):
     display_name = models.CharField(max_length=100)
     image = models.ImageField(upload_to=nameFile, blank=True, null=True)
     about = models.TextField()
+
+    def __str__(self):
+        return self.user.username + " setting"

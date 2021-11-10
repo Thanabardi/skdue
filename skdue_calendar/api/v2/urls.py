@@ -21,5 +21,5 @@ urlpatterns = [
 
     path('get-auth-token', GetAuthToken.as_view(), name="get_auth_token"),
 
-    path('user_setting', views.UserSettingView.as_view(), name="user_setting")
+    path('user_setting/<calendar_slug>', views.UserSettingView.as_view(), name="user_setting")
 ]
