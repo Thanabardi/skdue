@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 from skdue_calendar.models import *
 from skdue_calendar.serializers import *
 from skdue_calendar.utils import generate_slug
-from .utils import convert_response
+from .utils import convert_response, autenticated_client_factory
+
 
 class UserMeTests(TestCase):
     def setUp(self):
@@ -65,7 +66,7 @@ class UserMeTests(TestCase):
         self.private_event.save()
 
     def test_me_get_with_login(self):
-        self.client.force_login(User.objects.get(username="tester"))
+        self.client = autenticated_client_factory(self.user)
         response = self.client.get(reverse('api_v2:me'))
         response_data = convert_response(response.content)
         expect = json.dumps({
@@ -78,23 +79,23 @@ class UserMeTests(TestCase):
 
     def test_me_get_with_unlogin(self):
         response = self.client.get(reverse('api_v2:me'))
-        self.assertEqual(403, response.status_code)
+        self.assertEqual(401, response.status_code)
 
     def test_me_calendar_get_with_unlogin(self):
         calendar_slug = generate_slug(self.user.username)
         response = self.client.get(reverse('api_v2:me_calendar', args=[calendar_slug]))
-        self.assertEqual(403, response.status_code)
+        self.assertEqual(401, response.status_code)
 
     def test_me_calendar_get_with_not_owner_user(self):
         not_owner_user = User(username="not-owner", password="not-owner")
         not_owner_user.save()
-        self.client.force_login(not_owner_user)
+        self.client = autenticated_client_factory(not_owner_user)
         calendar_slug = generate_slug(self.user.username)
         response = self.client.get(reverse('api_v2:me_calendar', args=[calendar_slug]))
         self.assertEqual(403, response.status_code)
 
     def test_me_calendar_get_with_user(self):
-        self.client.force_login(self.user)
+        self.client = autenticated_client_factory(self.user)
         calendar_slug = generate_slug(self.user.username)
         response = self.client.get(reverse('api_v2:me_calendar', args=[calendar_slug]))
         response_data = convert_response(response.content)
@@ -111,7 +112,7 @@ class UserMeTests(TestCase):
 
     def test_me_calendar_get_with_a_follow_calendar(self):
         """Test that api also return followed calendar but not their private events"""
-        self.client.force_login(User.objects.get(username="tester"))
+        self.client = autenticated_client_factory(self.user)
         followed = User(username="followed", password="followed")
         followed.save()
         f_calendar = Calendar(
@@ -164,10 +165,10 @@ class UserMeTests(TestCase):
         }
         calendar_slug = self.calendar.slug
         response = self.client.post(reverse('api_v2:me_calendar', args=[calendar_slug]), event_data)
-        self.assertEqual(403, response.status_code)
+        self.assertEqual(401, response.status_code)
 
     def test_me_calendar_post_with_a_new_public_event(self):
-        self.client.force_login(self.user)
+        self.client = autenticated_client_factory(self.user)
         event_data = {
             "name": "new public test event",
             "description": "test event",
@@ -181,7 +182,7 @@ class UserMeTests(TestCase):
         self.assertIsNotNone(CalendarEvent.objects.get(name="new public test event"))
 
     def test_me_calendar_post_with_a_new_private_event(self):
-        self.client.force_login(self.user)
+        self.client = autenticated_client_factory(self.user)
         event_data = {
             "name": "new private test event",
             "description": "test event",
@@ -195,7 +196,7 @@ class UserMeTests(TestCase):
         self.assertIsNotNone(CalendarEvent.objects.get(name="new private test event"))
 
     def test_me_followed_get(self):
-        self.client.force_login(User.objects.get(username="tester"))
+        self.client = autenticated_client_factory(self.user)
         followed = User(username="followed", password="followed")
         followed.save()
         fs = FollowStatus(user=self.user, followed=followed)
@@ -205,7 +206,7 @@ class UserMeTests(TestCase):
         self.assertJSONEqual(expect, response_data)
 
     def test_me_followed_post(self):
-        self.client.force_login(User.objects.get(username="tester"))
+        self.client = autenticated_client_factory(self.user)
         followed = User(username="followed", password="followed")
         followed.save()
         response = self.client.post(
@@ -217,7 +218,7 @@ class UserMeTests(TestCase):
         self.assertEqual(201, response.status_code)
 
     def test_me_unfollowed_post(self):
-        self.client.force_login(self.user)
+        self.client = autenticated_client_factory(self.user)
         # follow
         followed = User(username="followed", password="followed")
         followed.save()
@@ -240,18 +241,18 @@ class UserMeTests(TestCase):
 
     def test_me_add_tag_post_with_unlogin(self):
         response = self.client.post(reverse('api_v2:me_add_new_tag'), {"tag": "event"})
-        self.assertEqual(403, response.status_code)
+        self.assertEqual(401, response.status_code)
 
     def test_me_add_tag_post(self):
         new_tag = "event"
-        self.client.force_login(User.objects.get(username="tester"))
+        self.client = autenticated_client_factory(self.user)
         response = self.client.post(reverse('api_v2:me_add_new_tag'), {"tag": new_tag})
         self.assertEqual(200, response.status_code)
         self.assertEqual(new_tag, CalendarTag.objects.get(tag=new_tag).tag)
 
     def test_me_add_tag_post_with_exist_tag(self):
         new_tag = "public"
-        self.client.force_login(User.objects.get(username="tester"))
+        self.client = autenticated_client_factory(self.user)
         response = self.client.post(reverse('api_v2:me_add_new_tag'), {"tag": new_tag})
         self.assertEqual(400, response.status_code)
         self.assertEqual(1, len(CalendarTag.objects.filter(tag=new_tag)))
