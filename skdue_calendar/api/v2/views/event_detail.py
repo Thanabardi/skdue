@@ -1,6 +1,7 @@
 from django.http.response import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.status import *
 
 from skdue_calendar.models import CalendarEvent
 from skdue_calendar.serializers import CalendarEventSerializer
@@ -20,6 +21,6 @@ class EventDetailView(APIView):
     def get(self, request, calendar_slug, event_slug, format=None):
         events = self.get_object(calendar_slug, event_slug)
         if str(events.tag.tag_type) == "private":
-            return Response({"msg": "This is private event"}, 403)
+            return Response({"msg": "Sorry, you can't access to private event"}, HTTP_403_FORBIDDEN)
         serializers = CalendarEventSerializer(events)
         return Response(serializers.data)

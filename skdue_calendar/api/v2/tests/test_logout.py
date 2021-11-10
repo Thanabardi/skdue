@@ -20,4 +20,4 @@ class LogoutTest(TestCase):
         response = self.client.get(reverse('api_v2:logout'))
         response_data = convert_response(response.content)
         self.assertJSONEqual(expect_data, response_data)
-        
+    
