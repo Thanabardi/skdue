@@ -3,11 +3,11 @@
 		<!-- <button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
 			@click="() => TogglePopup('buttonTrigger')">+</button> -->
 
-		<div style="text-align: center;" v-if="this.popup" >
+		<div style="text-align: center;" v-if="this.popup && (this.token!='') && (this.fs!='')" >
 
 			<div class="event-create-popup-bg">
 				<div class="event-create-popup">
-					<h1 style="font-size: 50px;">New Event</h1>
+					<h1 style="font-size: 50px;">Edit Event</h1>
 
 					<form @submit.prevent="eventCreate" class="event-create-form">
 						<textarea class="event-create-textarea" type="name"
@@ -21,29 +21,36 @@
 							<tr>
 								<td>Start</td>
 								<td>Date  <input class="event-create-input" type="date"
-									 v-model="start_date"></td>
+                    v-model="detail[2]"></td>
 							</tr>
 							<tr>
 								<td></td>
 								<td>Time  <input class="event-create-input" type="time"
-									required v-model="start_time"></td>
+									v-model="detail[3]"></td>
 							</tr>
 							<tr>
 								<td>End</td>
 								<td>Date  <input class="event-create-input" type="date"
-									required v-model="end_date"></td>
+									v-model="detail[4]"></td>
 							</tr>
 							<tr>
 								<td></td>
 								<td>Time  <input class="event-create-input" type="time"
-									required v-model="end_time"></td>
+									v-model="detail[5]"></td>
 							</tr>
 							<tr>
-								<td>Tag</td>
+								<td>Tag    <i>(origin is `{{this.detail[6]}}`)</i></td>
 								<td style="width: 400px;">
-									<button type="button" v-for="tag in available_tag" :key="tag"
-										class="event-create-tag-bt" @click="() => this.tag = tag">
-										{{ tag }}</button></td>
+                  <button type="button" v-for="tag in available_tag" :key="tag"
+										class="event-create-tag-bt"  @click="() => this.tag = tag">
+										{{ tag }}</button>
+
+                  <!-- <div class="tag-button"  v-for="tag in available_tag" :key="tag">
+                    <button type="button" class="event-create-tag-bt" autofocus  @click="() => this.tag = tag">
+  										{{ tag }}</button> -->
+                  <!-- </div> -->
+
+                  </td>
 							</tr>
 						</table>
 						<div class="event-create-footer">
@@ -103,14 +110,11 @@ export default {
     },
 	methods: {
     log() {
-      var x = document.getElementById('title')
-      x.value = this.detail[0]
-      console.log(this.detail[0])
     },
     close() {
+      console.log('here',this.detail)
       this.$emit('closed','clicked close')
       console.log(this.popup)
-
     },
 		checkOwner(owner) {
 			axios
@@ -134,6 +138,9 @@ export default {
 			this.token = localStorage.token
       console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
+
+
+
       axios
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {

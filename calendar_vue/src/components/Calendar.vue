@@ -205,15 +205,64 @@ export default {
       this.event_details.sort( compare );
       console.log('sort',this.event_details)
     },
+    changeIntForDateTime(dateTimeList){
+      console.log(dateTimeList)
+      let list = [];
+      dateTimeList.forEach(e => {
+        if (e.length == 1) {
+          e="0"+e;
+        }
+        list.push(e);
+      })
+      return list
+      ;
+
+    },
     handleEventClick(clickInfo) {
       console.log(clickInfo.event._def.title)
       console.log(clickInfo.event._def.extendedProps.description)
       console.log(clickInfo.event._instance)
+      console.log(clickInfo.event._def.extendedProps.tag)
+      let start_date = []
+      start_date.push(clickInfo.event._instance.range.start.getFullYear().toString())
+      start_date.push((clickInfo.event._instance.range.start.getMonth()+1).toString())
+      start_date.push(clickInfo.event._instance.range.start.getDate().toString())
+
+
+      let start_time = []
+      start_time.push(clickInfo.event._instance.range.start.getUTCHours().toString())
+      start_time.push((clickInfo.event._instance.range.start.getUTCMinutes()).toString())
+
+
+      let end_date = []
+      end_date.push(clickInfo.event._instance.range.end.getFullYear().toString())
+      end_date.push((clickInfo.event._instance.range.end.getMonth()+1).toString())
+      end_date.push(clickInfo.event._instance.range.end.getDate().toString())
+
+
+      let end_time = []
+      end_time.push(clickInfo.event._instance.range.end.getUTCHours().toString())
+      end_time.push((clickInfo.event._instance.range.end.getUTCMinutes()).toString())
+
+
+      start_date = this.changeIntForDateTime(start_date)
+      start_time = this.changeIntForDateTime(start_time)
+      end_date = this.changeIntForDateTime(end_date)
+      end_time = this.changeIntForDateTime(end_time)
+
+      let s_date  = start_date.join('-')
+      let s_time  = start_time.join(':')
+      let e_date  = end_date.join('-')
+      let e_time  = end_time.join(':')
+
       this.editEventList.push(
         clickInfo.event._def.title,
         clickInfo.event._def.extendedProps.description,
-        clickInfo.event._instance.range.start,
-          clickInfo.event._instance.range.end,
+        s_date,
+        s_time,
+        e_date,
+        e_time,
+        clickInfo.event._def.extendedProps.tag
         )
       console.log(this.editEventList)
       this.editEvent =true;
