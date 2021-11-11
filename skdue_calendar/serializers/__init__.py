@@ -3,3 +3,4 @@ from .calendar_event_serializer import CalendarEventSerializer
 from .calendar_tag_serializer import CalendarTagSerializer
 from .user_serializer import UserSerializer
 from .follow_status_serializer import FollowStatusSerializer
+from .user_setting_serializer import UserSettingSerializer
