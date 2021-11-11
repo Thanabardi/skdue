@@ -139,12 +139,13 @@ export default {
 			this.available_tag = []
 			axios.get(`/api/v2/me`)
 				.then( response => {
-					this.user_name = response.data["user"]["username"]
+					// this.user_name = response.data["user"]["username"]
 					response.data["available_tag"].forEach(elements => {
-						this.available_tag.push(elements["tag"])
+						if (elements["user"] == response.data["user"]["id"]) {
+							this.available_tag.push(elements["tag"])
+						}
 					})
 				})
-
         },
 		eventCreate() {
 			const start_date_time = this.start_date + " " + this.start_time + ":00"
