@@ -18,6 +18,7 @@
 				<div v-if="popupTriggers.buttonTrigger" 
 					:TogglePopup="() => TogglePopup('buttonTrigger')">
 					<div class="user-detail-tab">
+						<button class="user-detail-button-tp" @click="settingRoute">Setting</button>
 						<form @submit.prevent="logoutData">
 							<button class="user-detail-button-tp" >Logout</button>
 						</form>
@@ -90,7 +91,10 @@ export default {
 				.catch(error => {
 				console.log(error)
 			})
-		},		
+		},
+		settingRoute(){
+			this.$router.push({path: '/setting'})
+		}		
 	}
 }
 
