@@ -5,10 +5,13 @@
         </div>
         <div class="calendar-hr">
                 <center><a style="font-size: 40px">User Setting</a></center>
+				<p></p>
+				<center><img :src="img" class="avatar"></center>
+                <p></p>
                 <center>
                     <form @submit.prevent="eventCreate" class="event-create-form">
 						<center><textarea class="event-create-textarea" type="name"
-							required v-model="name"	placeholder="Display name"
+							required v-model="display_name"	placeholder="Display name"
 							maxlength="60" rows="1" cols="50"></textarea></center>
 						<p></p>
 						<center><textarea class="event-create-textarea" type="description"
@@ -19,8 +22,6 @@
                         <center>
                             <div>
                                 <a style="font-size: 28px">Upload profile image</a><br>
-                                <p></p>
-                                <img src="media/images/default.jpg">
                                 <p></p>
                                 <input type="file" @change="onFileSelected">
                                 <button @click="onUpload">Upload</button>
@@ -73,21 +74,22 @@ export default({
             display_name: '',
 			available_tag: [],
 			description: '',
-			tag: '',
-            img: 'image',
+			usertag: [],
+            img: '',
             token: "asdad",
 			fs: "follow",
             selectedFile: null,
 		}
 	},
 	mounted () {
+		this.getUserDetail()
     },
 	methods: {
         checkOwner(owner) {
 			axios
 				.get(`/api/v2/me`)
 				.then(response => {
-					console.log(response.data.user.id == owner)
+					// console.log(response.data.user.id == owner)
 					if (response.data.user.id == owner) {
 						this.fs = 'follow';
 					}
@@ -103,7 +105,7 @@ export default({
 			const calendar_slug = this.$route.params.calendar_slug
 			const calendar_type = this.$route.params.calendar_type
 			this.token = localStorage.token
-			console.log("slug =", calendar_slug)
+			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			axios
 				.get(`/api/v2/${calendar_type}/${calendar_slug}`)
@@ -118,14 +120,26 @@ export default({
 				response.data["available_tag"].forEach(elements => {
                 this.available_tag.push(elements["tag"])
 				})
-				console.log('avaliable',this.available_tag)
+				// console.log('avaliable',this.available_tag)
 			})
         },
+		getUserDetail(){
+			axios
+				.get(`/api/v2/me/user_setting`)
+				.then(response => {
+					this.user_data = response.data
+					console.log(this.user_data)
+					this.display_name = this.user_data.setting.display_name
+					this.description = this.user_data.setting.about
+					this.img = "http://127.0.0.1:8000"+this.user_data.setting.image
+					console.log(this.img)
+				})
+		},
         onFileSelected(event) {
             this.selectedFile = event.target.files[0]
         },
         onUpload() {
-            axios.post()
+            axios.put()
         }
 	},
 })
@@ -193,7 +207,7 @@ export default({
 	resize: vertical;
 }
 .event-create-table {
-	width: 104%;
+	width: 100%;
 	text-align: end;
 	border-spacing: 20px;
 }
@@ -223,5 +237,10 @@ export default({
 	display: flex;
 	justify-content: space-evenly;
 }
-
+.avatar {
+  vertical-align: middle;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+}
 </style>
