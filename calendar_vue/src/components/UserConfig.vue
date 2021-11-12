@@ -14,7 +14,7 @@
 			<h2><div class="user-detail-app-button" @click="redirectUserHome()">Skdue</div></h2>
 			<div class="user-detail-login">
 				<button class="app-button-tp" style="font-size: 22px;" 
-					@click="() => TogglePopup('buttonTrigger')">{{ this.user_name }}</button>
+					@click="() => TogglePopup('buttonTrigger')"><img :src="img" class="avatar"> {{ this.display_name }}</button>
 				<div v-if="popupTriggers.buttonTrigger" 
 					:TogglePopup="() => TogglePopup('buttonTrigger')">
 					<div class="user-detail-tab">
@@ -53,11 +53,14 @@ export default {
 			user_name: '',
 			dataLogout:{
 				"status":"logout"
-			}
+			},
+			display_name: '',
+			img: '',
 		}
 	},
     mounted () {
         this.getUserName()
+		this.getUserDetail()
     },
 	methods: {
         getUserName() {
@@ -94,7 +97,19 @@ export default {
 		},
 		settingRoute(){
 			this.$router.push({path: '/setting'})
-		}		
+		},
+		getUserDetail(){
+			axios
+				.get(`/api/v2/me/user_setting`)
+				.then(response => {
+					this.user_data = response.data
+					console.log(this.user_data)
+					this.display_name = this.user_data.setting.display_name
+					this.description = this.user_data.setting.about
+					this.img = "http://127.0.0.1:8000"+this.user_data.setting.image
+					console.log(this.img)
+				})
+		},		
 	}
 }
 
@@ -173,5 +188,11 @@ export default {
     text-align: center;
 	border-radius: 40px;
 	text-decoration: none;
+}
+.avatar {
+  vertical-align: middle;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
 }
 </style>
