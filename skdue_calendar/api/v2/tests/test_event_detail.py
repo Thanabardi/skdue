@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from rest_framework.status import *
 from skdue_calendar.models import *
 from skdue_calendar.serializers import *
 from skdue_calendar.utils import generate_slug
@@ -79,18 +80,18 @@ class EventDetailTests(TestCase):
         calendar_slug = self.calendar
         event_slug = "not-exist-event"
         response = self.client.get(reverse('api_v2:event_detail', args=[calendar_slug, event_slug]))
-        self.assertEqual(404, response.status_code)
+        self.assertEqual(HTTP_404_NOT_FOUND, response.status_code)
 
     def test_get_non_exist_calendar(self):
         """Test that api return 404"""
         calendar_slug = "not-exist-calendar"
         event_slug = "not-exist-event"
         response = self.client.get(reverse('api_v2:event_detail', args=[calendar_slug, event_slug]))
-        self.assertEqual(404, response.status_code)
+        self.assertEqual(HTTP_404_NOT_FOUND, response.status_code)
 
     def test_get_private_event(self):
         """Test that API does not allow people to get private event"""
         calendar_slug = self.calendar.slug
         event_slug = self.private_event.slug
         response = self.client.get(reverse('api_v2:event_detail', args=[calendar_slug, event_slug]))
-        self.assertEqual(403, response.status_code)
+        self.assertEqual(HTTP_403_FORBIDDEN, response.status_code)

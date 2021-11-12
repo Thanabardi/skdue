@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.status import *
 
 from django.contrib.auth.models import User
 from skdue_calendar.serializers import *
@@ -43,7 +44,7 @@ class UserMeView(APIView):
                 "available_tag": CalendarTagSerializer(get_available_tag(user, is_private=True), many=True).data
             }
             return Response(data)
-        return Response({"msg": "login required"}, 403)
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)
 
 
 class UserMeCalendarView(APIView):
@@ -92,7 +93,7 @@ class UserMeCalendarView(APIView):
                             data_event[tag.tag] = CalendarEventSerializer(events, many=True).data
             data["tag"] = data_event.keys()
             return Response(data)
-        return Response({"msg": "login required"}, 403)
+        return Response({"msg": "login required or you are not calendar owner"}, HTTP_403_FORBIDDEN)
         
 
     def post(self, request, calendar_slug):
@@ -135,10 +136,10 @@ class UserMeCalendarView(APIView):
                 data["status"] = "success"
                 data["msg"] = "calendar event created"
                 # id of event will be null when `is_test` == true
-                return Response(data, 201)
+                return Response(data, HTTP_201_CREATED)
             else:
-                return Response({"msg": "invalid event data"}, 400)
-        return Response({"msg": "login required"}, 403) 
+                return Response({"msg": "invalid event data"}, HTTP_400_BAD_REQUEST)
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED) 
 
 
 class UserMeFollowedView(APIView):
@@ -151,7 +152,7 @@ class UserMeFollowedView(APIView):
             user = request.user
             follow_status = FollowStatus.objects.filter(user=user)
             return Response(FollowStatusSerializer(follow_status, many=True).data)
-        return Response({"msg": "login required"}, 403)
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)
 
     def post(self, request):
         """User can follow another user here"""
@@ -162,14 +163,14 @@ class UserMeFollowedView(APIView):
             if FollowStatus.is_valid(request.user, followed_user):
                 fs = FollowStatus(user=request.user, followed=followed_user)
                 fs.save()
-                return Response({"msg": "followed"}, 201)
+                return Response({"msg": "followed"}, HTTP_201_CREATED)
             else:
-                return Response({"msg": "invalid follow status"}, 400)
+                return Response({"msg": "invalid follow status"}, HTTP_400_BAD_REQUEST)
         elif opt == "unfollow":
             fs = FollowStatus.objects.get(user=request.user, followed=followed_user)
             fs.unfollow()
-            return Response({"msg": "unfollowed"}, 200)
-        return Response({"msg": "option not found"}, 404)
+            return Response({"msg": "unfollowed"}, HTTP_200_OK)
+        return Response({"msg": "option not found"}, HTTP_404_NOT_FOUND)
 
 
 class UserMeAddTagView(APIView):
@@ -187,7 +188,7 @@ class UserMeAddTagView(APIView):
                     tag_type = CalendarTagType.objects.get(tag_type="custom")
                 )
                 new_custom_tag.save()
-                return Response(CalendarTagSerializer(new_custom_tag).data)
+                return Response(CalendarTagSerializer(new_custom_tag).data, HTTP_201_CREATED)
             else:
-                return Response({"msg": f"tag: {request.data['tag']} is already exist"}, 400)
-        return Response({"msg": "login required"}, 403)
+                return Response({"msg": f"tag: {request.data['tag']} is already exist"}, HTTP_400_BAD_REQUEST)
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)

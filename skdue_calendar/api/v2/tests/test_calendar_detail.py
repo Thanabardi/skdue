@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
+from rest_framework.status import *
 from skdue_calendar.models import *
 from skdue_calendar.serializers import *
 from skdue_calendar.utils import generate_slug
@@ -79,3 +80,9 @@ class CalendarDetailTests(TestCase):
             "tag": [self.public_tag.tag]
         })
         self.assertJSONEqual(expect, response_data)
+        self.assertEqual(HTTP_200_OK, response.status_code)
+
+    def test_get_not_exist_calendar(self):
+        """Test that calendar detail return 404 for not exist calendar"""
+        response = self.client.get(reverse('api_v2:calendar_detail', args=["not-exist-calendar"]))
+        self.assertEqual(HTTP_404_NOT_FOUND, response.status_code)
