@@ -40,7 +40,7 @@
 							</tr>
 						</table></center>
 						<div class="event-create-footer">
-							<button class="app-button-main" type="submit" @click="onUpload">Done</button>
+							<button class="app-button-main" type="submit">Done</button>
 							<button class="app-button-gray" @click="() => TogglePopup('buttonTrigger')">Cancel</button>
 						</div>
 					</form>
@@ -135,6 +135,7 @@ export default({
 				.get(`/api/v2/me/user_setting`)
 				.then(response => {
 					this.user_data = response.data
+					this.user_id = this.user_data.setting.user
 					this.display = this.user_data.setting.display_name
 					this.description = this.user_data.setting.about
 					this.img = main_url + this.user_data.setting.image
@@ -146,32 +147,39 @@ export default({
 					console.log(this.usertag)
 					console.log(this.set_color)
 					console.log(this.img)
+					console.log(this.user_id)
 				})
 		},
         onFileSelected(event) {
-			this.selectedFile = event.target.files[0].name
-			this.img_render = `/media/images/${this.user_name}/` + `${this.selectedFile}`
-			console.log(this.img_render)
+			this.selectedFile = event.target.files[0]
+			console.log('file img= ', this.selectedFile)
         },
         onUpload() {
-		const apiDataForm = {
-				"display_name": this.display,
-				"image": this.img_render,
-				"about": this.description
-			}
-			console.log(this.display_name)
-			console.log(this.image)
-			console.log(this.about)
+			var apiDataForm = new FormData()
+			apiDataForm.append("file", this.selectedFile)
+			apiDataForm.append("display_name", this.display)
+			apiDataForm.append("about", this.description)
+			apiDataForm.append("color", JSON.stringify({}))
+			// apiDataForm.append("color", {})
+			// const apiDataForm = {
+			// 	"file": this.selectedFile,
+			// 	"display_name": this.display,
+			// 	"about": this.description,
+			// 	// "color": JSON.stringify({})
+			// }
+			console.log(apiDataForm)
 			// console.log(end_date_time)
 			// console.log(this.tag)
-        axios
-			.put(`/api/v2/me/user_setting`, apiDataForm)
-			.then(response => {
-		 		console.log(response.data)
-		 		})
-		 	.catch(function(error) {
-		 		console.log(error),
-		 		alert("Opps, " + error)
+			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
+			axios
+				.put(`/api/v2/me/user_setting`, apiDataForm)
+				.then(response => {
+					console.log(response.data)
+					window.location.reload()
+					})
+				.catch(function(error) {
+					console.log(error),
+					alert("Opps, " + error)
 			})
 		},
 	}
