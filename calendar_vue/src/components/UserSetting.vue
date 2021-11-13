@@ -9,9 +9,9 @@
 				<center><img :src="img" class="avatar"></center>
                 <p></p>
                 <center>
-                    <form @submit.prevent="eventCreate" class="event-create-form">
+                    <form @submit.prevent="onUpload" class="event-create-form">
 						<center><textarea class="event-create-textarea" type="name"
-							required v-model="display_name"	placeholder="Display name"
+							required v-model="display"	placeholder="Display name"
 							maxlength="60" rows="1" cols="50"></textarea></center>
 						<p></p>
 						<center><textarea class="event-create-textarea" type="description"
@@ -24,20 +24,23 @@
                                 <a style="font-size: 28px">Upload profile image</a><br>
                                 <p></p>
                                 <input type="file" @change="onFileSelected">
-                                <button @click="onUpload">Upload</button>
                             </div>
                         </center>
-						<table class="event-create-table">
+						<!-- End -->
+						<center><table>
 							<tr>
-								<center><td>Tag</td></center>
-								<td style="width: 400px;">
-									<button type="button" v-for="tag in available_tag" :key="tag"
-										class="event-create-tag-bt" @click="() => this.tag = tag">
-										{{ tag }}</button></td>
+								<p></p>
+								<!-- <div><center style="font-size:30px">Tag</center></div><br>
+								<div>
+									<p v-for="[key, color] of Object.entries(set_color)">{{ key }} 
+										<textarea>{{color}}
+										</textarea>
+									</p>
+								</div> -->
 							</tr>
-						</table>
+						</table></center>
 						<div class="event-create-footer">
-							<button class="app-button-main" type="submit">Done</button>
+							<button class="app-button-main" type="submit" @click="onUpload">Done</button>
 							<button class="app-button-gray" @click="() => TogglePopup('buttonTrigger')">Cancel</button>
 						</div>
 					</form>
@@ -71,10 +74,11 @@ export default({
 	data() {
 		return {
 			username: '',
-            display_name: '',
+            display: '',
 			available_tag: [],
 			description: '',
 			usertag: [],
+			set_color: [],
             img: '',
             token: "asdad",
 			fs: "follow",
@@ -83,6 +87,8 @@ export default({
 	},
 	mounted () {
 		this.getUserDetail()
+		this.getUserNameAndTag()
+		// this.onUpload()
     },
 	methods: {
         checkOwner(owner) {
@@ -124,24 +130,51 @@ export default({
 			})
         },
 		getUserDetail(){
+			const main_url = "http://127.0.0.1:8000"
 			axios
 				.get(`/api/v2/me/user_setting`)
 				.then(response => {
 					this.user_data = response.data
-					console.log(this.user_data)
-					this.display_name = this.user_data.setting.display_name
+					this.display = this.user_data.setting.display_name
 					this.description = this.user_data.setting.about
-					this.img = "http://127.0.0.1:8000"+this.user_data.setting.image
+					this.img = main_url + this.user_data.setting.image
+					for (let i=0; i<this.user_data.custom_tag.length; i++){
+						this.usertag.push(this.user_data.custom_tag[i].tag)
+						// usertag.push(this.user_data.custom_tag[i].tag)
+					}
+					this.set_color = this.user_data.color
+					console.log(this.usertag)
+					console.log(this.set_color)
 					console.log(this.img)
 				})
 		},
         onFileSelected(event) {
-            this.selectedFile = event.target.files[0]
+			this.selectedFile = event.target.files[0].name
+			this.img_render = `/media/images/${this.user_name}/` + `${this.selectedFile}`
+			console.log(this.img_render)
         },
         onUpload() {
-            axios.put()
-        }
-	},
+		const apiDataForm = {
+				"display_name": this.display,
+				"image": this.img_render,
+				"about": this.description
+			}
+			console.log(this.display_name)
+			console.log(this.image)
+			console.log(this.about)
+			// console.log(end_date_time)
+			// console.log(this.tag)
+        axios
+			.put(`/api/v2/me/user_setting`, apiDataForm)
+			.then(response => {
+		 		console.log(response.data)
+		 		})
+		 	.catch(function(error) {
+		 		console.log(error),
+		 		alert("Opps, " + error)
+			})
+		},
+	}
 })
 </script>
 
