@@ -1,11 +1,14 @@
 from datetime import datetime, timedelta
 import json
+from logging import setLogRecordFactory
+from django.db.models.query_utils import refs_expression
 from django.http import response
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.urls.base import resolve
 from rest_framework.status import *
+from rest_framework.test import force_authenticate
 from skdue_calendar.models import *
 from skdue_calendar.serializers import *
 from skdue_calendar.utils import generate_slug
@@ -94,8 +97,6 @@ class UserMeTests(TestCase):
             start_date = self.start_date,
             end_date = self.end_date
         )
-
-        
 
     def test_me_get_with_login(self):
         self.client = authenticated_client_factory(self.user)
@@ -311,31 +312,149 @@ class UserMeTests(TestCase):
 
     def test_me_event_get_not_owned_event(self):
         """Test that api returns 403 when request for the other's event"""
-        pass
+        self.client = authenticated_client_factory(self.user)
+        response = self.client.get(reverse('api_v2:me_event', args=[self.other_calendar.slug, self.other_event.slug]))
+        self.assertEqual(HTTP_403_FORBIDDEN, response.status_code)
 
     def test_me_event_put_with_not_owned_event(self):
-        """Test that api returns 405 when request change for the other's event"""
-        pass
+        """Test that api returns 403 when request change for the other's event"""
+        self.client = authenticated_client_factory(self.user)
+        change_data = {
+            "name": "new_name",
+            "description": "new desc",
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "tag": self.public_tag.tag
+        }
+        response = self.client.put(
+            reverse('api_v2:me_event', args=[self.other_calendar.slug, self.other_event.slug]),
+            change_data
+        )
+        self.assertEqual(HTTP_403_FORBIDDEN, response.status_code)
+        self.assertNotEqual(change_data["name"], self.other_event.name)
 
     def test_me_event_put_change_event_name(self):
-        pass
+        # change private event to public event and change name
+        self.client = authenticated_client_factory(self.user)
+        change_data = {
+            "name": "new name",
+            "description": "new desc",
+            "start_date": self.start_date + timedelta(days=1),
+            "end_date": self.end_date + timedelta(days=1),
+            "tag": self.public_tag.tag
+        }
+        response = self.client.put(
+            reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]),
+            change_data
+        )
+        self.assertEqual(HTTP_200_OK, response.status_code)
+        # find change data
+        response = self.client.get(reverse('api_v2:me_event', args=[self.calendar.slug, generate_slug(change_data["name"])]))
+        response_data = convert_response(response.content)
+        expect = json.dumps(CalendarEventSerializer(
+            CalendarEvent.objects.get(name=change_data["name"])).data
+        )
+        self.assertJSONEqual(expect, response_data)
+        # find previous event (should not found)
+        response = self.client.get(reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]))
+        self.assertEqual(HTTP_404_NOT_FOUND, response.status_code)
 
     def test_me_event_put_dont_change_event_name(self):
-        pass
+        # change private event to public event but don't change name
+        self.client = authenticated_client_factory(self.user)
+        change_data = {
+            "name": self.private_event.name,
+            "description": "new desc",
+            "start_date": self.start_date + timedelta(days=1),
+            "end_date": self.end_date + timedelta(days=1),
+            "tag": self.public_tag.tag
+        }
+        response = self.client.put(
+            reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]),
+            change_data
+        )
+        self.assertEqual(HTTP_200_OK, response.status_code)
+        # find change data, event data must not changed
+        response = self.client.get(reverse('api_v2:me_event', args=[self.calendar.slug, generate_slug(change_data["name"])]))
+        response_data = convert_response(response.content)
+        expect = json.dumps(CalendarEventSerializer(
+            CalendarEvent.objects.get(name=change_data["name"])).data
+        )
+        self.assertJSONEqual(expect, response_data)
 
     def test_me_event_put_exist_event_name(self):
         """Test that api returns 400 and does not change event detail when event name is already exist"""
-        pass
+        # change private event to public event but don't change name
+        self.client = authenticated_client_factory(self.user)
+        change_data = {
+            "name": self.public_event.name,
+            "description": "new desc",
+            "start_date": self.start_date + timedelta(days=1),
+            "end_date": self.end_date + timedelta(days=1),
+            "tag": self.public_tag.tag
+        }
+        response = self.client.put(
+            reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]),
+            change_data
+        )
+        self.assertEqual(HTTP_400_BAD_REQUEST, response.status_code)
+        # according to invalid data, event detail should not change
+        response = self.client.get(reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]))
+        response_data = convert_response(response.content)
+        expect = json.dumps(CalendarEventSerializer(self.private_event).data)
+        self.assertJSONEqual(expect, response_data)
 
     def test_me_event_put_with_not_available_tag(self):
         """Test that api returns 400 and does not change event detail whne event tag is not available"""
-        pass
+        # change detial using not owned tag
+        self.client = authenticated_client_factory(self.user)
+        change_data = {
+            "name": self.private_event.name,
+            "description": "new desc",
+            "start_date": self.start_date + timedelta(days=1),
+            "end_date": self.end_date + timedelta(days=1),
+            "tag": self.other_tag.tag
+        }
+        response = self.client.put(
+            reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]),
+            change_data
+        )
+        self.assertEqual(HTTP_400_BAD_REQUEST, response.status_code)
+        # according to invalid data, event detail should not change
+        response = self.client.get(reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]))
+        response_data = convert_response(response.content)
+        expect = json.dumps(CalendarEventSerializer(self.private_event).data)
+        self.assertJSONEqual(expect, response_data)
 
     def test_me_event_put_with_invalid_datetime(self):
         """Test that api returns 400 and does not change event detail then event datetime is invalid"""
-    pass
+        # change detial using invalid datetime
+        self.client = authenticated_client_factory(self.user)
+        change_data = {
+            "name": self.private_event.name,
+            "description": "new desc",
+            "start_date": self.start_date + timedelta(days=1),
+            "end_date": self.end_date,
+            "tag": self.private_tag.tag
+        }
+        response = self.client.put(
+            reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]),
+            change_data
+        )
+        self.assertEqual(HTTP_400_BAD_REQUEST, response.status_code)
+        # according to invalid data, event detail should not change
+        response = self.client.get(reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]))
+        response_data = convert_response(response.content)
+        expect = json.dumps(CalendarEventSerializer(self.private_event).data)
+        self.assertJSONEqual(expect, response_data)
 
     def test_me_event_delete(self):
         """Test that api completely delete event after sending delete request"""
-        pass
+        # try to delete private event
+        self.client = authenticated_client_factory(self.user)
+        response = self.client.delete(reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]))
+        self.assertEqual(HTTP_200_OK, response.status_code)
+        # deleted event should not be exist
+        with self.assertRaises(CalendarEvent.DoesNotExist):
+            _ = CalendarEvent.objects.get(name=self.private_event.name)
 
