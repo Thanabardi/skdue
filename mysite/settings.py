@@ -28,11 +28,12 @@ DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
+ACCOUNT_ADAPTER = 'mysite.adapter.MyAccountAdapter'
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.sites',
+    'django.contrib.sites', #new
     'allauth', #new
     'allauth.account', #new
     'allauth.socialaccount', #new
