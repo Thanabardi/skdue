@@ -21,6 +21,14 @@ class DemoView(APIView):
 
 class GetAuthToken(APIView):
 
+    def get(self, request):
+        if request.user:
+            token, create = Token.objects.get_or_create(user = request.user)
+            return Response({
+                "token": token.key,
+                "user": UserSerializer(request.user).data,
+                "calendar": CalendarSerializer(Calendar.objects.get(user=request.user)).data})
+
     @csrf_exempt
     def post(self, request):
         username = request.data['username']
