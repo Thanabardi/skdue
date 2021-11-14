@@ -257,3 +257,40 @@ class UserMeTests(TestCase):
         response = self.client.post(reverse('api_v2:me_add_new_tag'), {"tag": new_tag})
         self.assertEqual(HTTP_400_BAD_REQUEST, response.status_code)
         self.assertEqual(1, len(CalendarTag.objects.filter(tag=new_tag)))
+
+    def test_me_event_get(self):
+        pass
+
+    def test_me_event_get_with_unlogin(self):
+        pass
+
+    def test_me_event_get_not_owned_event(self):
+        """Test that api returns 403 when request for the other's event"""
+        pass
+
+    def test_me_event_put_with_not_owned_event(self):
+        """Test that api returns 405 when request change for the other's event"""
+        pass
+
+    def test_me_event_put_change_event_name(self):
+        pass
+
+    def test_me_event_put_dont_change_event_name(self):
+        pass
+
+    def test_me_event_put_exist_event_name(self):
+        """Test that api returns 400 and does not change event detail when event name is already exist"""
+        pass
+
+    def test_me_event_put_with_not_available_tag(self):
+        """Test that api returns 400 and does not change event detail whne event tag is not available"""
+        pass
+
+    def test_me_event_put_with_invalid_datetime(self):
+        """Test that api returns 400 and does not change event detail then event datetime is invalid"""
+    pass
+
+    def test_me_event_delete(self):
+        """Test that api completely delete event after sending delete request"""
+        pass
+
