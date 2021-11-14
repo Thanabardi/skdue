@@ -1,5 +1,8 @@
 from itertools import chain
-from django.http.response import Http404
+from datetime import datetime
+from django.urls import reverse
+from django.shortcuts import redirect
+from django.http.response import Http404, HttpResponseRedirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
@@ -236,7 +239,7 @@ class UserMeEventView(APIView):
         return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
 
     def put(self, request, calendar_slug, event_slug):
-        """Create new calendar event
+        """Change calendar event
         
         Args:
             requset.data: a dict consist of,
@@ -249,9 +252,59 @@ class UserMeEventView(APIView):
                     - is_test: True for testing, False otherwise
 
         Returns:
-            dict: response data
+            dict: response data consist of,
+                - msg
+                - new_url (when event detail is successfully changed)
         """
-        pass
+        if self.is_owner(request.user, calendar_slug):
+            event = self.get_event(calendar_slug, event_slug)
+
+            # check tag availability
+            try:
+                changed_tag = CalendarTag.objects.get(tag=request.data["tag"])
+            except CalendarTag.DoesNotExist:
+                raise Http404
+            if changed_tag.id in [t.id for t in get_available_tag(request.user, is_private=True)]:
+                event.tag = changed_tag
+            else:
+                return Response({"msg": "invalid tag"}, HTTP_400_BAD_REQUEST)
+
+            # check name availability
+            if event.name != request.data["name"]:
+                try:
+                    check_event = CalendarEvent.objects.get(
+                        calendar__slug=calendar_slug,
+                        name=request.data["name"]
+                        )
+                    print(check_event)
+                    return Response({"msg": "the event name that you want to change is already exist in your calendar event"}, HTTP_400_BAD_REQUEST)
+                except CalendarEvent.DoesNotExist:
+                    event.name = request.data["name"]
+
+            # check start and end date
+            start_date = datetime.strptime(request.data["start_date"], "%Y-%m-%d %H:%M:%S")
+            end_date = datetime.strptime(request.data["end_date"], "%Y-%m-%d %H:%M:%S")
+            if start_date < end_date:
+                event.start_date = request.data["start_date"]
+                event.end_date = request.data["end_date"]
+            else:
+                return Response({"msg": "invalid datetime"}, HTTP_400_BAD_REQUEST)
+
+            new_slug = generate_slug(request.data["name"])
+            event.slug = new_slug
+            event.description = request.data["description"]
+
+            event.save()
+
+            return Response(
+                    {
+                        "msg": "changed event detail",
+                        "new_url": reverse('api_v2:me_event', args=[calendar_slug, new_slug])
+                    }, 
+                    HTTP_200_OK
+                )
+        else:
+            return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
 
     def delete(self, request, calendar_slug, event_slug):
         """Delete requested event"""
