@@ -1,5 +1,5 @@
-from copy import error
 from itertools import chain
+from django.http.response import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
@@ -30,6 +30,8 @@ def get_custom_tag(user):
 
 
 class UserMeView(APIView):
+    """View of user's information"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)  
 
@@ -48,12 +50,20 @@ class UserMeView(APIView):
 
 
 class UserMeCalendarView(APIView):
+    """View of user's specific calendar information"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,) 
 
     def get(self, request, calendar_slug):
         """User calendar detail with public, private, and followed events"""
-        if request.user.id == Calendar.objects.get(slug=calendar_slug).user.id:
+
+        try:
+            calendar = Calendar.objects.get(slug=calendar_slug)
+        except Calendar.DoesNotExist:
+            raise Http404
+
+        if request.user.id == calendar.user.id:
             user = request.user
             # load follow status
             follow_status = FollowStatus.objects.filter(user=user)
@@ -143,6 +153,8 @@ class UserMeCalendarView(APIView):
 
 
 class UserMeFollowedView(APIView):
+    """View for user's follow status with follow/unfollow option"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,) 
 
@@ -174,6 +186,8 @@ class UserMeFollowedView(APIView):
 
 
 class UserMeAddTagView(APIView):
+    """View for adding new custom tag"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,) 
     
@@ -192,3 +206,37 @@ class UserMeAddTagView(APIView):
             else:
                 return Response({"msg": f"tag: {request.data['tag']} is already exist"}, HTTP_400_BAD_REQUEST)
         return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)
+
+
+class UserMeEventView(APIView):
+    """View for user's calendar event with ability to editing event's detail"""
+
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def is_owner(self, user, calendar_slug):
+        try:
+            calendar = Calendar.objects.get(slug=calendar_slug)
+            return user.id == calendar.user.id
+        except Calendar.DoesNotExist:
+            raise Http404
+
+    def get_event(self, calendar_slug, event_slug):
+        try:
+            event = CalendarEvent.objects.get(calendar__slug=calendar_slug, slug=event_slug)
+            return event
+        except CalendarEvent.DoesNotExist:
+            raise Http404
+
+    def get(self, request, calendar_slug, event_slug):
+        if self.is_owner(request.user, calendar_slug):
+            event = self.get_event(calendar_slug, event_slug)
+            serializer = CalendarEventSerializer(event)
+            return Response(serializer.data, HTTP_200_OK)
+        return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
+
+    def put(self, request, calendar_slug, event_slug):
+        pass
+
+    def delete(request, calendar_slug, event_slug):
+        pass
