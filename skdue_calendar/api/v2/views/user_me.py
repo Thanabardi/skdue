@@ -110,7 +110,7 @@ class UserMeCalendarView(APIView):
         """Create new calendar event
         
         Args:
-            event_data: a dict consist of,
+            requset.data: a dict consist of,
                 - name: calendar event name
                 - description: description of event
                 - start_date: format (YYYY-MM-DD hh:mm:ss)
@@ -214,14 +214,14 @@ class UserMeEventView(APIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
-    def is_owner(self, user, calendar_slug):
+    def is_owner(self, user, calendar_slug) -> bool:
         try:
             calendar = Calendar.objects.get(slug=calendar_slug)
             return user.id == calendar.user.id
         except Calendar.DoesNotExist:
             raise Http404
 
-    def get_event(self, calendar_slug, event_slug):
+    def get_event(self, calendar_slug, event_slug) -> CalendarEvent:
         try:
             event = CalendarEvent.objects.get(calendar__slug=calendar_slug, slug=event_slug)
             return event
@@ -236,7 +236,30 @@ class UserMeEventView(APIView):
         return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
 
     def put(self, request, calendar_slug, event_slug):
+        """Create new calendar event
+        
+        Args:
+            requset.data: a dict consist of,
+                - name: calendar event name
+                - description: description of event
+                - start_date: format (YYYY-MM-DD hh:mm:ss)
+                - end_date: same format as start_date
+                - tag: name of event tag
+                - optional:
+                    - is_test: True for testing, False otherwise
+
+        Returns:
+            dict: response data
+        """
         pass
 
-    def delete(request, calendar_slug, event_slug):
-        pass
+    def delete(self, request, calendar_slug, event_slug):
+        """Delete requested event"""
+        if self.is_owner(request.user, calendar_slug):
+            event = self.get_event(calendar_slug, event_slug)
+            print(event)
+            event.delete()
+            return Response({"msg": "event deleted"}, HTTP_200_OK)
+        else:
+            return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
+
