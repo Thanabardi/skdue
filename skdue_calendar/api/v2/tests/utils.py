@@ -9,7 +9,7 @@ def convert_response(data):
     data = json.dumps(data)
     return data
 
-def autenticated_client_factory(user: User) -> Client:
+def authenticated_client_factory(user: User) -> Client:
     """Return client with autentication token"""
     token, _ = Token.objects.get_or_create(user=user)
     return Client(HTTP_AUTHORIZATION='Token ' + token.key)
