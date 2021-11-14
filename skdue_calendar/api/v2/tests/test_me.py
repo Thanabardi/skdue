@@ -1,14 +1,9 @@
 from datetime import datetime, timedelta
 import json
-from logging import setLogRecordFactory
-from django.db.models.query_utils import refs_expression
-from django.http import response
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.urls.base import resolve
 from rest_framework.status import *
-from rest_framework.test import force_authenticate
 from skdue_calendar.models import *
 from skdue_calendar.serializers import *
 from skdue_calendar.utils import generate_slug
@@ -457,4 +452,3 @@ class UserMeTests(TestCase):
         # deleted event should not be exist
         with self.assertRaises(CalendarEvent.DoesNotExist):
             _ = CalendarEvent.objects.get(name=self.private_event.name)
-
