@@ -6,7 +6,7 @@
         <div class="calendar-hr">
                 <center><a style="font-size: 40px">User Setting</a></center>
 				<p></p>
-				<center><img :src="img" class="avatar"></center>
+				<center><img id="current_img" :src="img" class="avatar"></center>
                 <p></p>
                 <center>
                     <form @submit.prevent="onUpload" class="event-create-form">
@@ -30,13 +30,13 @@
 						<center><table>
 							<tr>
 								<p></p>
-								<!-- <div><center style="font-size:30px">Tag</center></div><br>
+								<div><center style="font-size:30px">Tag</center></div><br>
 								<div>
 									<p v-for="[key, color] of Object.entries(set_color)">{{ key }} 
 										<textarea>{{color}}
 										</textarea>
 									</p>
-								</div> -->
+								</div>
 							</tr>
 						</table></center>
 						<div class="event-create-footer">
@@ -88,7 +88,6 @@ export default({
 	mounted () {
 		this.getUserDetail()
 		this.getUserNameAndTag()
-		// this.onUpload()
     },
 	methods: {
         checkOwner(owner) {
@@ -139,6 +138,22 @@ export default({
 					this.display = this.user_data.setting.display_name
 					this.description = this.user_data.setting.about
 					this.img = main_url + this.user_data.setting.image
+					const toDataURL = url => fetch(url)
+						.then(response => response.blob())
+						.then(blob => new Promise((resolve, reject) => {
+						const reader = new FileReader()
+						reader.onloadend = () => resolve(reader.result)
+						reader.onerror = reject
+						reader.readAsDataURL(blob)
+					}))
+					toDataURL(this.img)
+					.then(dataUrl => {
+						console.log('Here is Base64 Url', dataUrl)
+						var fileData = this.dataURLtoFile(dataUrl, "userimage.jpg");
+						console.log("Here is JavaScript File Object",fileData)
+						this.selectedFile = fileData
+						fileArr.push(fileData)
+					})
 					for (let i=0; i<this.user_data.custom_tag.length; i++){
 						this.usertag.push(this.user_data.custom_tag[i].tag)
 						// usertag.push(this.user_data.custom_tag[i].tag)
@@ -160,16 +175,8 @@ export default({
 			apiDataForm.append("display_name", this.display)
 			apiDataForm.append("about", this.description)
 			apiDataForm.append("color", JSON.stringify({}))
-			// apiDataForm.append("color", {})
-			// const apiDataForm = {
-			// 	"file": this.selectedFile,
-			// 	"display_name": this.display,
-			// 	"about": this.description,
-			// 	// "color": JSON.stringify({})
-			// }
+			console.log("File null=",this.selectedFile)
 			console.log(apiDataForm)
-			// console.log(end_date_time)
-			// console.log(this.tag)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			axios
 				.put(`/api/v2/me/user_setting`, apiDataForm)
@@ -182,6 +189,14 @@ export default({
 					alert("Opps, " + error)
 			})
 		},
+		dataURLtoFile(dataurl, filename) {
+			var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+			bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+			while(n--){
+			u8arr[n] = bstr.charCodeAt(n);
+			}
+		return new File([u8arr], filename, {type:mime});
+		}
 	}
 })
 </script>
