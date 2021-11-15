@@ -12,15 +12,13 @@
 
 		<div v-else>
 			<h2><div class="user-detail-app-button" @click="redirectUserHome()">Skdue</div></h2>
-			<div class="user-detail-login">
-				<button class="app-button-tp" style="font-size: 22px;" 
-					@click="() => TogglePopup('buttonTrigger')">{{ this.user_name }}</button>
-				<div v-if="popupTriggers.buttonTrigger" 
-					:TogglePopup="() => TogglePopup('buttonTrigger')">
+			<div class="user-detail-login" @click="() => TogglePopup('buttonTrigger')">
+				<div>{{ this.user_name }}</div>
+				<div v-if="popupTriggers.buttonTrigger">
 					<div class="user-detail-tab">
-						<form @submit.prevent="logoutData">
-							<button class="user-detail-button-tp" >Logout</button>
-						</form>
+						<!-- <form @submit.prevent="logoutData"> -->
+						<button class="user-detail-button-tp" @click="() => logoutData()">Logout</button>
+						<!-- </form> -->
 					</div>
 				</div>
 			</div>
@@ -79,8 +77,8 @@ export default {
 			this.$router.push({ path: `/`});
 
 		},
-		logoutData(e){
-			e.preventDefault();
+		logoutData(){
+			// e.preventDefault();
 			axios.get(`/api/v2/logout`, this.dataLogout)
 				.then(response => {
 				this.clearlogout(response.data);
@@ -100,6 +98,40 @@ export default {
 
 @import './../assets/style.css';
 
+.user-detail {
+    position: absolute;
+    right: 2%;
+	top: 12px;
+}
+.user-detail-not-login {
+	display: flex;
+	justify-content: space-evenly;
+	top: 6px;
+	width: 320px;
+}
+.user-detail-login {
+	color: var(--white);
+	width: 200px;
+    border: 1px solid transparent;
+    padding: 5px;
+	font-size: 22px;
+	transform: translate(0, -20px);
+	cursor: pointer;
+}
+.user-detail-login:hover {
+	border: 1px solid var(--white-op-1);
+}
+.user-detail-tab {
+    background-color: var(--white);
+    box-shadow: 0px 0px 1px 0px var(--black-op-1), 0px 0px 40px 0px var(--black-op-2);
+    position: absolute;
+    width: 212px;
+    margin-top: 10px;
+    overflow-x: hidden;
+    right: 0;
+    border-radius: 2px;
+    text-align: left;
+}
 .user-detail-app-button {
     line-height: 0px;
     font-size: 40px;
@@ -114,37 +146,6 @@ export default {
 }
 .user-detail-app-button:active {
 	color: var(--white-dark);
-}
-.user-detail {
-    position: absolute;
-    right: 2%;
-	top: 10px;
-}
-.user-detail-not-login {
-	display: flex;
-	justify-content: space-evenly;
-	top: 6px;
-	width: 320px;
-}
-.user-detail-login {
-	width: 250px;
-    border: 1px solid transparent;
-    padding: 5px;
-	transform: translate(0, -20px);
-}
-.user-detail-login:hover {
-	border: 1px solid var(--white-op-1);
-}
-.user-detail-tab {
-    background-color: var(--white);
-    box-shadow: 0px 0px 1px 0px var(--black-op-1), 0px 0px 40px 0px var(--black-op-2);
-    position: absolute;
-    width: 262px;
-    margin-top: 10px;
-    overflow-x: hidden;
-    right: 0;
-    border-radius: 2px;
-    text-align: left;
 }
 .user-detail-button-tp {
     background: none;
