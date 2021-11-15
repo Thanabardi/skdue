@@ -31,7 +31,7 @@ def get_custom_tag(user):
 
 class UserMeView(APIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)  
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         if request.user.id:
@@ -49,7 +49,7 @@ class UserMeView(APIView):
 
 class UserMeCalendarView(APIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,) 
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, calendar_slug):
         """User calendar detail with public, private, and followed events"""
@@ -94,11 +94,11 @@ class UserMeCalendarView(APIView):
             data["tag"] = data_event.keys()
             return Response(data)
         return Response({"msg": "login required or you are not calendar owner"}, HTTP_403_FORBIDDEN)
-        
+
 
     def post(self, request, calendar_slug):
         """Create new calendar event
-        
+
         Args:
             event_data: a dict consist of,
                 - name: calendar event name
@@ -116,7 +116,7 @@ class UserMeCalendarView(APIView):
             event_data = request.data
             if CalendarEvent.is_valid(event_data, calendar_slug) and CalendarEvent.is_usable_tag(event_data["tag"], user_id=request.user.id):
                 calendar = Calendar.objects.get(slug=calendar_slug)
-                slug = generate_slug(event_data["name"]) 
+                slug = generate_slug(event_data["name"])
                 tag = CalendarTag.objects.get(tag=event_data["tag"])
                 new_event = CalendarEvent(
                     calendar = calendar,
@@ -139,12 +139,12 @@ class UserMeCalendarView(APIView):
                 return Response(data, HTTP_201_CREATED)
             else:
                 return Response({"msg": "invalid event data"}, HTTP_400_BAD_REQUEST)
-        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED) 
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)
 
 
 class UserMeFollowedView(APIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,) 
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         """Get list of user's follwed people"""
@@ -157,11 +157,13 @@ class UserMeFollowedView(APIView):
     def post(self, request):
         """User can follow another user here"""
         opt = request.data["option"]
+        user_cal = Calendar.objects.get(user=request.user)
         follow_id = request.data["follow_id"]
         followed_user = User.objects.get(id=follow_id)
+        followed_cal = Calendar.objects.get(user=followed_user)
         if opt == "follow":
             if FollowStatus.is_valid(request.user, followed_user):
-                fs = FollowStatus(user=request.user, followed=followed_user)
+                fs = FollowStatus(user=request.user, user_calendar=user_cal, followed=followed_user, followed_calendar=followed_cal)
                 fs.save()
                 return Response({"msg": "followed"}, HTTP_201_CREATED)
             else:
@@ -175,8 +177,8 @@ class UserMeFollowedView(APIView):
 
 class UserMeAddTagView(APIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,) 
-    
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request):
         """User can add new custom tag from here"""
         if request.user.id:

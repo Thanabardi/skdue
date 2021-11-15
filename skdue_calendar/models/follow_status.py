@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .calendar import Calendar
 
 class FollowStatus(models.Model):
     """USER has followed the FOLLOWED."""
@@ -9,12 +10,25 @@ class FollowStatus(models.Model):
             blank=False,
             on_delete=models.CASCADE,
             related_name='user')
+    user_calendar = models.ForeignKey(Calendar,
+                    default=None,
+                    null=True,
+                    blank=True,
+                    on_delete=models.CASCADE,
+                    related_name='user_calendar')
     followed = models.ForeignKey(
             User,
             null=False,
             blank=False,
             on_delete=models.CASCADE,
             related_name='followed')
+    followed_calendar = models.ForeignKey(Calendar,
+                        default=None,
+                        null=True,
+                        blank=True,
+                        on_delete=models.CASCADE,
+                        related_name='followed_calendar')
+
 
     @property
     def user_name(self):

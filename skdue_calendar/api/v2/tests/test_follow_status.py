@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from rest_framework.status import *
-from skdue_calendar.models import FollowStatus
+from skdue_calendar.models import FollowStatus, Calendar
 from .utils import convert_response
 
 def create_account(user, password):
@@ -19,16 +19,19 @@ class CalendarListTests(TestCase):
         # create user1
         self.user1 = create_account("patlom", "lompat-rankrank!")
         self.user1.first_name = "Patlom"
+        self.user1.calendar = Calendar.objects.get(user=self.user1)
         self.user1.save()
         # create user2
         self.user2 = create_account("harry", "hackme22")
         self.user2.first_name = "Harry"
+        self.user2.calendar = Calendar.objects.get(user=self.user2)
         self.user2.save()
         # create user3
         self.user3 = create_account("tester", "tester_pwd")
         self.user3.save()
         #follow
-        FollowStatus.objects.create(user=self.user1, followed=self.user2)
+
+        FollowStatus.objects.create(user=self.user1, user_calendar=self.user1.calendar, followed=self.user2, followed_calendar=self.user2.calendar)
 
     def test_get(self):
         """Response is the list of all follow_status in JSON form"""
@@ -37,8 +40,10 @@ class CalendarListTests(TestCase):
             data = {
                 "user": fs.user.id,
                 "user_name": fs.user.username,
+                "user_calendar": fs.user.calendar,
                 "followed": fs.followed.id,
                 "followed_name": fs.followed.username,
+                "followed_calendar": fs.followed.calendar
             }
             expect_data.append(data)
         expect_data = json.dumps(expect_data)

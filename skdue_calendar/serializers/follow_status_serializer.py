@@ -8,6 +8,8 @@ class FollowStatusSerializer(serializers.ModelSerializer):
         fields = (
             "user",
             "user_name",
+            "user_calendar"
             "followed",
             "followed_name"
+            "followed_calendar"
         )
