@@ -15,7 +15,7 @@ DEFAULT_TAG_COLOR = "white"
 
 
 class UserSettingView(APIView):
-    """user setting for public view"""
+    """User setting for public view"""
 
     def get(self, request, calendar_slug):
         try:
@@ -47,6 +47,7 @@ class UserSettingView(APIView):
 
 class UserMeSetting(APIView):
     """view class that require authentication"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)  
 
