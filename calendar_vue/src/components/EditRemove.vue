@@ -12,11 +12,11 @@
 					<form @submit.prevent="eventCreate" class="event-create-form">
 						<textarea class="event-create-textarea" type="name"
 								placeholder="Title"
-							maxlength="60" rows="1" cols="50">{{this.detail[0]}}</textarea>
+							maxlength="60" v-model="detail[0]" rows="1" cols="50"></textarea>
 						<p></p>
 						<textarea class="event-create-textarea" type="description"
 						 placeholder="Description (optional)"
-							maxlength="600" rows="5" cols="50">{{this.detail[1]}}</textarea>
+							maxlength="600" v-model="detail[1]" rows="5" cols="50"></textarea>
 						<table class="event-create-table">
 							<tr>
 								<td>Start</td>
@@ -158,11 +158,11 @@ export default {
 
         },
 		eventCreate() {
-			const start_date_time = this.start_date + " " + this.start_time + ":00"
-			const end_date_time = this.end_date + " " + this.end_time + ":00"
+			const start_date_time = this.detail[2] + " " + this.detail[3] + ":00"
+			const end_date_time = this.detail[4] + " " + this.detail[5] + ":00"
 			const event = {
-				"name" : this.name,
-				"description" : this.description,
+				"name" : this.detail[0],
+				"description" : this.detail[1],
 				"start_date" : start_date_time,
 				"end_date" : end_date_time,
 				"tag" : this.tag
@@ -174,7 +174,7 @@ export default {
 			// console.log(end_date_time)
 			// console.log(this.tag)
 
-			axios.post(`/api/v2/me/${this.user_name}`, event)
+			axios.put(`/api/v2/me/${this.user_name}/${this.detail[7]}`, event)
 				.then(function(response) {
 					console.log(response),
 					window.location.reload()

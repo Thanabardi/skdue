@@ -219,6 +219,7 @@ export default {
 
     },
     handleEventClick(clickInfo) {
+      console.log(clickInfo.event._def.extendedProps.slug)
       console.log(clickInfo.event._def.title)
       console.log(clickInfo.event._def.extendedProps.description)
       console.log(clickInfo.event._instance)
@@ -262,7 +263,8 @@ export default {
         s_time,
         e_date,
         e_time,
-        clickInfo.event._def.extendedProps.tag
+        clickInfo.event._def.extendedProps.tag,
+        clickInfo.event._def.extendedProps.slug
         )
       console.log(this.editEventList)
       this.editEvent =true;
