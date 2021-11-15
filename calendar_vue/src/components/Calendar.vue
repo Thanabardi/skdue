@@ -67,11 +67,49 @@ export default {
       modalActive: true,
       token: "",
       day_select: "",
-      day: ['Sunday','Monday','Tuesday','Wednesday',
-        'Thursday','Friday','Saturday'],
-      month: ['January','February','March','April',
+      day: [
+        'Sunday','Monday','Tuesday','Wednesday',
+        'Thursday','Friday','Saturday'
+        ],
+      month: [
+        'January','February','March','April',
         'May','June','July','August','September',
-        'October','November','December'],
+        'October','November','December'
+        ],
+      color: {"theme" : ["light", "theme-1"]},
+      app_colors: {
+        "light" : {
+          "main" : "#000000",
+          "main-1": "#646464",
+          "sub" : "#ffffff",
+          "sub-1": "#d6d6d6",
+          },
+        "dark" : {
+          "main" : "#ffffff",
+          "main-1": "#d6d6d6",
+          "sub" : "#000000",
+          "sub-1": "#646464",
+          },
+        "theme-1" : {
+          "main" : "#006664",
+          "main-dark": "#004746",
+          "sub-1" : "#3B9693",
+          "sub-2": "#c0ca35",
+          "sub-2-dark": "#aeb825",
+          },
+          "theme-2" : {
+          "main" : "#006555",
+          "main-dark": "#004554",
+          "sub-1" : "#3B9544",
+          "sub-2": "#c0ca44",
+          "sub-2-dark": "#aeb844",
+          },
+        },
+      tag_colors: {
+        "red": "#C00000",
+        "yellow": "#FFC000",
+        "blue": "#0070C0"
+        },
       dataLogout:{
         "status":"logout"
       }
@@ -155,11 +193,18 @@ export default {
 
       console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
-      axios
-        .get(`/api/v2/${calendar_type}/${calendar_slug}`)
+      axios.get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
-          console.log(response.data)
           this.setCalendarEvents(response.data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      axios.get(`/api/v2/me/user_setting`)
+        .then(response => {
+          this.color = (response.data["color"])
+          this.color["theme"] = ["light", "theme-1"]
+          console.log("drhgrgdgd",this.color)
         })
         .catch(error => {
           console.log(error)
@@ -324,8 +369,8 @@ export default {
 
 <template>
   <div>
-    <CalendarNavbar />
-    <div class='calendar-sidebar'>
+    <CalendarNavbar :color="this.color" :app_colors="this.app_colors" :tag_colors="this.tag_colors"/>
+    <div class='calendar-sidebar' :style="'background-color:'+app_colors[this.color['theme'][1]]['sub-1']">
       <Follow />
       <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
         {{ (this.day_select.substring(8, 10)) }}
@@ -333,17 +378,17 @@ export default {
         {{ (this.day_select.substring(0, 4)) }}
       </h2>
         <!-- list of all event -->
-        <div style="overflow-x: hidden; height: 76%;">
+        <div style="overflow-x: hidden; height: 76%; color; rgba(255, 255, 255, 0.6)">
           <div v-if="this.event_details.length!=0">
-            <p style="font-size: 18px; color: var(--white-op-1); text-align: center;">All-Day Event</p>
-
+            <p>All-Day Event</p>
             <!-- list of all day event -->
+            
             <div v-for="item in this.event_details">
                 <button v-if="item['allday']" class="calendar-detail-bg"
                   v-on:click.right="TogglePopup('editTrigger', $event)">
-                  <table class="calendar-table">
+                  <table class="calendar-table" :style="'color:'+app_colors[this.color['theme'][0]]['main']">
                   <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
                       {{ item["description"] }}</td></tr>
                   </table>
                 </button>
@@ -356,28 +401,28 @@ export default {
               <div v-if="!item['allday']">
                 <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg"
                   v-on:click.right="TogglePopup('editTrigger', $event)">
-                  <table class="calendar-table">
+                  <table class="calendar-table" :style="'color:'+app_colors[this.color['theme'][0]]['main']">
                   <tr><td style="width: 110px;">00:00-{{ item["end_time"] }}</td>
                     <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
                       {{ item["description"] }}</td></tr>
                   </table>
                 </button>
                 <button v-if="this.day_select < item['end_date']" class="calendar-detail-bg"
                   v-on:click.right="TogglePopup('editTrigger', $event)">
-                  <table class="calendar-table">
+                  <table class="calendar-table" :style="'color:'+app_colors[this.color['theme'][0]]['main']">
                   <tr><td style="width: 110px;">{{ item["start_time"] }}-00:00</td>
                     <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
                       {{ item["description"] }}</td></tr>
                   </table>
                 </button>
                 <button v-if="item['start_date'] == item['end_date']" class="calendar-detail-bg"
                   v-on:click.right="TogglePopup('editTrigger', $event)">
-                  <table class="calendar-table">
+                  <table class="calendar-table" :style="'color:'+app_colors[this.color['theme'][0]]['main']">
                   <tr><td style="width: 110px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
                     <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; color: var(--black-light);">
+                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
                       {{ item["description"] }}</td></tr>
                   </table>
                 </button>
@@ -397,19 +442,19 @@ export default {
       <div class="calendar-sidebar-footer">
         <hr class="calendar-hr">
         <button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp"
-          style="font-size: 20px; color: var(--white-op-1);"
+          style="color: rgba(255, 255, 255, 0.8); font-size: 20px;"
           v-on:click.left="TogglePopup('sidebarTrigger', $event)">Manage View</button>
       </div>
       <!-- side bar footer -->
 
       <!-- Tag filters -->
       <div style="text-align: center;" v-if="popupTriggers.sidebarTrigger">
-        <div class="calendar-sidebar">
+        <div class='calendar-sidebar' :style="'background-color:'+app_colors[this.color['theme'][1]]['sub-1']">
           
           <!-- My Tag filters -->
-          <p style="font-size: 20px; color: var(--white-op-1); text-align: left; padding-left: 20px;">My Tags</p>
+          <p style="font-size: 20px; text-align: left; padding-left: 20px;">My Tags</p>
           <hr class="calendar-hr">
-          <div class="filter-tag-bg" style="max-height: 20%; min-height: 0;">
+          <div class="filter-tag-bg" :style="'color:'+app_colors[this.color['theme'][0]]['main'] +';max-height: 20%;'">
             <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.tag_list" :key="tag_text">
               <input type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)" checked>
               <label v-bind:for="tag_text"> {{ tag_text }} </label><br>
@@ -418,9 +463,9 @@ export default {
           <!-- My Tag filters -->
 
           <!-- Follow Tag filters -->
-          <p style="font-size: 20px; color: var(--white-op-1); text-align: left; padding-left: 20px;">Follow</p>
+          <p style="font-size: 20px; text-align: left; padding-left: 20px;">Follow</p>
           <hr class="calendar-hr">
-          <div class="filter-tag-bg" style="max-height: 41%;">
+          <div class="filter-tag-bg" :style="'color:'+app_colors[this.color['theme'][0]]['main'] +';max-height: 41%;'">
             <!-- Fix here!!! -->
             <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.tag_list" :key="tag_text">
               <input type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)" checked>
@@ -433,7 +478,7 @@ export default {
           <div class="calendar-sidebar-footer">
             <hr class="calendar-hr">
             <button class="app-button-tp" v-on:click.left="TogglePopup('sidebarTrigger', $event)"
-              type="button" name="button" style="font-size: 20px; color: var(--white-op-1);">Back</button>
+              type="button" name="button" style="color: rgba(255, 255, 255, 0.8); font-size: 20px;">Back</button>
           </div>
         </div>
       </div>
@@ -464,8 +509,7 @@ export default {
 @import './../assets/style.css';
 
 .calendar-sidebar {
-  background: var(--main-green-light);
-  color: var(--white);
+  color: white;
   height: 100%; /* Full-height: remove this if you want "auto" height */
   width: 23%; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
@@ -476,8 +520,13 @@ export default {
   padding: 10px;
   font-size: 22px;
 }
+.calendar-sidebar p{
+  font-size: 18px;
+  text-align: center;
+  opacity: 0.8;
+}
 .calendar-detail-bg {
-  background-color: var(--white-op-1);
+  background-color: rgba(255, 255, 255, 0.6);
   border-collapse: collapse;
   padding: 5px;
   display: block;
@@ -488,11 +537,8 @@ export default {
   border: none;
   cursor: pointer;
 }
-.calendar-table {
-  // color: var(--black);
-  border-collapse: collapse;
-}
-.calendar-table td{
+.calendar-table{
+  width: 100%;
   font-size: 20px;
   padding-left: 5px;
   font-weight: 550;
@@ -506,24 +552,12 @@ export default {
   text-align: center;
 }
 .calendar-hr {
-  border: 1px solid var(--white-op-2);
+  border: 1px solid;
+  opacity: 0.8;
   width: 90%;
 }
-.logout-button {
-  background-color: #646464;
-  border: none;
-  color: var(--white);
-  padding: 13px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 8px 2px;
-  cursor: pointer;
-}
 .filter-tag-bg {
-  background-color: var(--white-op-1);
-  color: var(--black);
+  background-color: rgba(255, 255, 255, 0.6);
   padding: 10px 20px 10px 20px;
   display: block;
   margin: 20px auto 20px auto;
