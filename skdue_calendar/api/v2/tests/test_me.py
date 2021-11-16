@@ -242,7 +242,7 @@ class UserMeTests(TestCase):
     def test_me_followed_post(self):
         self.client = authenticated_client_factory(self.user)
         followed = User(username="followed", password="followed")
-        followed_cal = Calendar(
+        calendar = Calendar(
             user=followed,
             name=followed.username,
             slug=generate_slug(followed.username)
@@ -273,7 +273,7 @@ class UserMeTests(TestCase):
             data = {
                 "option": "follow",
                 "follow_id": followed.id,
-                "follow_calendar": 1
+                "follow_calendar": 1,
             }
         )
         # unfollow
@@ -282,7 +282,7 @@ class UserMeTests(TestCase):
             data = {
                 "option": "unfollow",
                 "follow_id": followed.id,
-                "follow_calendar": 1
+                "follow_calendar": 1,
             }
         )
         with self.assertRaises(FollowStatus.DoesNotExist):
