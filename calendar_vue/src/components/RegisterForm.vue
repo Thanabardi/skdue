@@ -75,6 +75,18 @@ import axios from 'axios'
         } 
       }
     },
+    mounted() {
+      var token = location.search.split('token=')[1].split('&')[0]
+      if (token != null) {
+        var slug = location.search.split('slug=')[1]
+        this.$store.commit('setToken', token)
+        axios.defaults.headers.common["Authorization"] = "Token " + token
+        localStorage.setItem("token", token)
+        console.log(token)
+
+        this.$router.push({ path: `/me/${slug}`});
+      }
+    },
     methods:{
       setData(data){
         // for register
