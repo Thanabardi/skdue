@@ -41,7 +41,6 @@ class UserSettingView(APIView):
                 t.tag_color = DEFAULT_TAG_COLOR
                 t.save()
             colors[t.tag] = t.tag_color
-        print(tags)
         data = {
             "setting": UserSettingSerializer(user_setting).data,
             "custom_tag": CalendarTagSerializer(tags, many=True).data,
