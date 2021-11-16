@@ -30,13 +30,13 @@ class FollowStatus(models.Model):
                         related_name='followed_calendar')
 
 
-    # @property
-    # def user_calendar(self):
-    #     return self.Calendar.objects.get(user=self.user)
-    #
-    # @property
-    # def followed_calendar(self):
-    #     return self.Calendar.objects.get(user=self.followed)
+    @property
+    def user_calendar_slug(self):
+        return self.user_calendar.slug
+
+    @property
+    def followed_calendar_slug(self):
+        return self.followed_calendar.slug
 
     @property
     def user_name(self):
