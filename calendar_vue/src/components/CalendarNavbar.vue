@@ -1,9 +1,9 @@
 <template>
-	<div  v-if="this.is_fetch" class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color['theme'][1]]['main']">
-        <Search :color="this.color"/>
-        <EventCreate :color="this.color"/>
-        <UserConfig :color="this.color"/>
-        <FollowedList :color="this.color"/>
+	<div  v-if="this.is_fetch" class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color_theme['name']]['main']">
+        <Search :color_theme="this.color_theme"/>
+        <EventCreate :color_theme="this.color_theme"/>
+        <UserConfig :color_theme="this.color_theme"/>
+        <FollowedList :color_theme="this.color_theme"/>
 	</div>
 </template>
 
@@ -23,19 +23,18 @@ export default {
         UserConfig,
         FollowedList
 	},
-    props: {
-        color: {},
-    },
     data() {
 		return {
             follow: '',
             tag_colors: TAG_COLORS,
             app_colors: APP_COLORS,
-            is_fetch: true,
+            is_fetch: false,
+            color_theme: {"type" : "light", "name" : "theme-1"},
 		}
 	},
     mounted () {
         this.getFollowList()
+        this.getColor()
     },
     methods: {
         getFollowList() {
@@ -43,6 +42,17 @@ export default {
             axios.get(`/api/v2/me/follow`).then( response => {
                 console.log(response.data)
             })
+        },
+        getColor() {
+            axios.get(`/api/v2/me/user_setting`)
+            .then(response => {
+                this.color_theme["type"] = response.data["setting"]["theme_type"]
+                this.color_theme["name"] = response.data["setting"]["theme_name"]
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            this.is_fetch = true
         },
 	}
 }

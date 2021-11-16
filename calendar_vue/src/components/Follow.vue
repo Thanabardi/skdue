@@ -1,11 +1,12 @@
 <template>
-<div class="follow-main" v-if="(fs != '') && this.is_fetch">
+<div class="follow-main" v-if="(fs != '')" :style="'color:'+app_colors[this.color_theme['name']]['sub-2']">
   {{ this.follow_name }}
   <div v-if="this.token != ''">
-    <button v-if="(fs == 'Unfollow') || (fs == 'UNFOLLOW')" style="background-color: var(--gray); width: 90px;"
+    <button v-if="(fs == 'Unfollow') || (fs == 'UNFOLLOW')" style="background-color: rgba(190, 190, 190, 0.8); width: 90px;"
       type="button" name="button" class="follow-button"
       @click="() => follow_button()">UNFOLLOW</button>
-    <button v-if="(fs == 'Follow') || (fs == 'FOLLOW')" style="background-color: var(--green); width: 90px;"
+    <button v-if="(fs == 'Follow') || (fs == 'FOLLOW')" :style="'width: 90px; background-color:'
+      +app_colors[this.color_theme['name']]['sub-2']"
       type="button" name="button" class="follow-button"
       @click="() => follow_button()">FOLLOW</button>
     </div>
@@ -16,6 +17,7 @@
 <script>
 import { ref } from 'vue';
 import axios from 'axios';
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
 
 export default {
 	setup () {},
@@ -29,8 +31,13 @@ export default {
       token: "",
       follow_name: "",
       is_fetch: false,
+      app_colors: APP_COLORS,
+      tag_colors: TAG_COLORS,
 		}
 	},
+    props: {
+      color_theme: {},
+  },
   mounted() {
       this.getUser()
     },
@@ -90,7 +97,6 @@ export default {
       .catch(error => {
         console.log(error)
       })
-      this.is_fetch = true
     },
     getUser() {
       const calendar_slug = this.$route.params.calendar_slug
@@ -126,13 +132,13 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 0 35px 0 35px;
-  color: var(--yellow);
+  // color: rgb(255, 192, 0);
   font-weight: 600;
 }
 .follow-button {
   border: 0;
   padding: 4px 8px;
-  color: var(--white);
+  color: white;
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;

@@ -7,9 +7,10 @@
 		<div style="text-align: center;" v-if="popupTriggers.buttonTrigger"
 		:TogglePopup="() => TogglePopup('buttonTrigger')">
 			<div class="event-create-popup-bg">
-				<div class="event-create-popup">
+				<div class="event-create-popup" :style="'background-color:'+app_colors[this.color_theme['type']]['sub-0']+
+					';color:'+app_colors[this.color_theme['type']]['main']" >
 					<h1 style="font-size: 50px;">New Event</h1>
-					<form @submit.prevent="eventCreate" class="event-create-form">
+					<form @submit.prevent="eventCreate" class="event-create-form" :style="'color:'+app_colors[this.color_theme['type']]['main']">
 						<textarea class="event-create-textarea" type="name"
 							required v-model="name"	placeholder="Title"
 							maxlength="60" rows="1" cols="50"></textarea>
@@ -58,8 +59,11 @@
 							</tr>
 						</table>
 						<div class="event-create-footer">
-							<button class="app-button-main" type="submit">Done</button>
-							<button class="app-button-gray" @click="() => TogglePopup('buttonTrigger')">Cancel</button>
+							<button class="app-button-main" type="submit" 
+								:style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']">Done</button>
+							<button class="app-button-gray" 
+								:style="'background-color:'+app_colors[this.color_theme['type']]['main-1']" 
+								@click="() => TogglePopup('buttonTrigger')">Cancel</button>
 						</div>
 					</form>
 				</div>
@@ -71,6 +75,7 @@
 <script>
 import { ref } from 'vue';
 import axios from 'axios';
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
 
 export default {
 	setup () {
@@ -92,16 +97,21 @@ export default {
 			available_tag: [],
 			name: '',
 			description: '',
-			start_date: '',
-			start_time: '',
-			end_date: '',
-			end_time: '',
+			start_date: new Date().toLocaleDateString("fr-CA"),
+			start_time: new Date().toTimeString().substring(0, 5),
+			end_date: new Date().toLocaleDateString("fr-CA"),
+			end_time: (new Date().toTimeString().substring(0, 2)) + ":" + ("0" + (Number(new Date().toTimeString().substring(3, 5))+1)).slice(-2),
 			tag: '',
 			token: "token",
 			fs: "follow",
+			tag_colors: TAG_COLORS,
+            app_colors: APP_COLORS,
 
 		}
 	},
+	props: {
+        color_theme: {},
+    },
 	mounted () {
         this.getUserName(),
 		this.getTag()
@@ -164,19 +174,24 @@ export default {
 			// console.log(end_date_time)
 			// console.log(this.tag)
 
-			if (!this.available_tag.includes(this.tag)) {
-				this.tagCreate()
+			if ((this.start_date.replace(/-/g,'') + this.start_time.replace(/:/g,'')) < 
+				(this.end_date.replace(/-/g,'') + this.end_time.replace(/:/g,''))) {
+				if (!this.available_tag.includes(this.tag)) {
+					this.tagCreate()
+				}
+				this.getTag()
+					axios.post(`/api/v2/me/${this.user_name}`, event)
+						.then(function(response) {
+							console.log("create new Event", response),
+							window.location.reload()
+						})
+						.catch(function(error) {
+							console.log(error)
+							alert("Opps, " + error)
+						})
+			} else {
+				alert("Start time must be earlier than the end time")
 			}
-			this.getTag()
-			axios.post(`/api/v2/me/${this.user_name}`, event)
-				.then(function(response) {
-					console.log("create new Event", response),
-					window.location.reload()
-				})
-				.catch(function(error) {
-					console.log(error)
-					alert("Opps, " + error)
-				})
 		},
 		tagCreate() {
 			if (this.tag == '') {
@@ -215,11 +230,8 @@ export default {
 	line-height: 10px;
 	text-align: center;
 }
-.app-button-tp:hover {
-    background-color: var(--white-op-2);
-}
 .event-create-popup-bg {
-	background-color: var(--black-op-1);
+	background-color: rgba(0, 0, 0, 0.5);
 	top: 0;
 	left: 0;
 	right: 0;
@@ -235,21 +247,20 @@ export default {
 	animation-duration: 0.5s
 }
 .event-create-popup {
-	background: var(--white);
-	color: var(--black);
+	color: black;
 	height: 100%;
 	overflow-x: hidden;
 	padding: 20px;
 }
 .event-create-form {
-	color: var(--black);
+	color: black;
 	text-align: left;
 	font-size: 20px;
 	margin: 20x;
 	padding: 10px;
 }
 .event-create-textarea {
-	background: var(--gray-light);
+	background: rgb(230, 230, 230);
 	font-size: 20px;
 	display: block;
 	padding: 10px 20px;
@@ -263,7 +274,7 @@ export default {
 	border-spacing: 20px;
 }
 .event-create-input {
-	background: var(--gray-light);
+	background: rgb(230, 230, 230);
 	font-size: 20px;
 	padding: 10px;
 	width: 200px;
@@ -271,18 +282,18 @@ export default {
 	border-radius: 8px;
 }
 .event-create-tag-bt {
-	background-color: var(--gray-light);
+	background-color: rgb(230, 230, 230);
+	color: black;
 	margin-left: 10px;
     border: 0;
     padding: 5px 10px;
     margin-bottom: 10px;
-    color: var(--black);
     font-size: 20px;
     cursor: pointer;
     border-radius: 8px;
 }
 .event-create-tag-bt:focus {
-	background-color: var(--green);
+	opacity: 0.5;
 }
 .event-create-footer {
 	display: flex;
