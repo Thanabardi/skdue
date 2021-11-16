@@ -390,6 +390,344 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2021-10-30T01:15:54.339Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "1",
+    "object_repr": "default",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2021-10-30T01:16:07.219Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "2",
+    "object_repr": "private",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2021-10-30T01:16:22.312Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "3",
+    "object_repr": "custom",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 34,
+  "fields": {
+    "action_time": "2021-10-30T02:19:02.761Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "2",
+    "object_repr": "natchanon",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 35,
+  "fields": {
+    "action_time": "2021-10-30T03:44:57.599Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "2",
+    "object_repr": "private",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 36,
+  "fields": {
+    "action_time": "2021-10-30T03:51:44.621Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "2",
+    "object_repr": "natchanon",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2021-10-30T03:54:30.819Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "3",
+    "object_repr": "pun",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 38,
+  "fields": {
+    "action_time": "2021-10-30T04:04:04.152Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "1",
+    "object_repr": "pun has FOLLOWED admin",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 39,
+  "fields": {
+    "action_time": "2021-10-30T06:03:00.898Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "24",
+    "object_repr": "sleepless night",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 40,
+  "fields": {
+    "action_time": "2021-10-30T07:54:43.891Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "4",
+    "object_repr": "holiday",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 41,
+  "fields": {
+    "action_time": "2021-10-30T10:57:47.380Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "25",
+    "object_repr": "Mockup Exam",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 42,
+  "fields": {
+    "action_time": "2021-11-04T19:30:12.118Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "5",
+    "object_repr": "Test1",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 43,
+  "fields": {
+    "action_time": "2021-11-04T19:39:42.983Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "4",
+    "object_repr": "test-1",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 44,
+  "fields": {
+    "action_time": "2021-11-04T19:39:42.990Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "6",
+    "object_repr": "test2",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 45,
+  "fields": {
+    "action_time": "2021-11-04T19:39:42.994Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "7",
+    "object_repr": "test3",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 46,
+  "fields": {
+    "action_time": "2021-11-04T19:39:42.999Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "8",
+    "object_repr": "test4",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 47,
+  "fields": {
+    "action_time": "2021-11-06T17:12:44.168Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "5",
+    "object_repr": "test-tag",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 48,
+  "fields": {
+    "action_time": "2021-11-06T17:12:55.352Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "3",
+    "object_repr": "exam",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 49,
+  "fields": {
+    "action_time": "2021-11-06T17:13:19.647Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "1",
+    "object_repr": "Holidays",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 50,
+  "fields": {
+    "action_time": "2021-11-06T17:13:19.660Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "2",
+    "object_repr": "Homework",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 51,
+  "fields": {
+    "action_time": "2021-11-06T17:13:31.548Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "9",
+    "object_repr": "test4",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 52,
+  "fields": {
+    "action_time": "2021-11-06T17:13:31.562Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "10",
+    "object_repr": "test5",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 53,
+  "fields": {
+    "action_time": "2021-11-10T18:44:54.159Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "5",
+    "object_repr": "custom-1",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 54,
+  "fields": {
+    "action_time": "2021-11-10T18:51:22.904Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "6",
+    "object_repr": "custom-2",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 55,
+  "fields": {
+    "action_time": "2021-11-16T03:25:39.889Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "1",
+    "object_repr": "pun setting",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 56,
+  "fields": {
+    "action_time": "2021-11-16T03:27:21.744Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "2",
+    "object_repr": "pun setting",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -786,11 +1124,119 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 45,
+  "fields": {
+    "name": "Can add follow status",
+    "content_type": 12,
+    "codename": "add_followstatus"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 46,
+  "fields": {
+    "name": "Can change follow status",
+    "content_type": 12,
+    "codename": "change_followstatus"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 47,
+  "fields": {
+    "name": "Can delete follow status",
+    "content_type": 12,
+    "codename": "delete_followstatus"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 48,
+  "fields": {
+    "name": "Can view follow status",
+    "content_type": 12,
+    "codename": "view_followstatus"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 49,
+  "fields": {
+    "name": "Can add calendar tag type",
+    "content_type": 13,
+    "codename": "add_calendartagtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 50,
+  "fields": {
+    "name": "Can change calendar tag type",
+    "content_type": 13,
+    "codename": "change_calendartagtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 51,
+  "fields": {
+    "name": "Can delete calendar tag type",
+    "content_type": 13,
+    "codename": "delete_calendartagtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 52,
+  "fields": {
+    "name": "Can view calendar tag type",
+    "content_type": 13,
+    "codename": "view_calendartagtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 53,
+  "fields": {
+    "name": "Can add user setting",
+    "content_type": 14,
+    "codename": "add_usersetting"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 54,
+  "fields": {
+    "name": "Can change user setting",
+    "content_type": 14,
+    "codename": "change_usersetting"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 55,
+  "fields": {
+    "name": "Can delete user setting",
+    "content_type": 14,
+    "codename": "delete_usersetting"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 56,
+  "fields": {
+    "name": "Can view user setting",
+    "content_type": 14,
+    "codename": "view_usersetting"
+  }
+},
+{
   "model": "auth.user",
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$260000$onvzso6WvtkVOFFe6Mr9fN$oidV4yaTRZUPcIDMVN3rgYwzk3UVWetMbqE5tU9fjWw=",
-    "last_login": "2021-10-28T08:23:01.067Z",
+    "last_login": "2021-11-16T03:15:13.985Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",
@@ -799,6 +1245,24 @@
     "is_staff": true,
     "is_active": true,
     "date_joined": "2021-10-11T16:52:39.891Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$dcwauDdVCJzhzxgDamfapS$uXZrj6xmHwTdl3txsnA98bg4qt+1dxUFkvvBz8MfedY=",
+    "last_login": "2021-11-05T09:20:01.454Z",
+    "is_superuser": false,
+    "username": "pun",
+    "first_name": "",
+    "last_name": "",
+    "email": "pun@test.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2021-10-30T03:52:28.345Z",
     "groups": [],
     "user_permissions": []
   }
@@ -892,11 +1356,99 @@
   }
 },
 {
+  "model": "contenttypes.contenttype",
+  "pk": 12,
+  "fields": {
+    "app_label": "skdue_calendar",
+    "model": "followstatus"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 13,
+  "fields": {
+    "app_label": "skdue_calendar",
+    "model": "calendartagtype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 14,
+  "fields": {
+    "app_label": "skdue_calendar",
+    "model": "usersetting"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "16jq9zhrxshfsbsjf31j9d2kgj0vmh2p",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSF1CgO4dN9vIMNjpGogKe3K-O_apAvd3nPOfQlP21r81vPi5yQuYhSn3y1QfOS6g3Snemsytrouc5C7Ig_a5dRSfl4P9--gUC_fGjRETc5itJzRYnY8OGvimbVzOGQYLQNpbQw6ipgYicGqEBKD0iqJ9wfWvzfX:1miXCk:i6iEc72CqqdrTv0Vsk4pTxNJxmX45hx1cQxeb0QbGRs",
+    "expire_date": "2021-11-18T07:30:34.394Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "53ia42394c2ie19kybkwmcadl15avf94",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSF1CgO4dN9vIMNjpGogKe3K-O_apAvd3nPOfQlP21r81vPi5yQuYhSn3y1QfOS6g3Snemsytrouc5C7Ig_a5dRSfl4P9--gUC_fGjRETc5itJzRYnY8OGvimbVzOGQYLQNpbQw6ipgYicGqEBKD0iqJ9wfWvzfX:1mivOD:FU3SqINi_-G6iY_DNPUcngY1ND1TBmq6gOKr61soz8Q",
+    "expire_date": "2021-11-19T09:20:01.458Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "613od95584afdmc6royludv2kj0zhfzy",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSF1CgO4dN9vIMNjpGogKe3K-O_apAvd3nPOfQlP21r81vPi5yQuYhSn3y1QfOS6g3Snemsytrouc5C7Ig_a5dRSfl4P9--gUC_fGjRETc5itJzRYnY8OGvimbVzOGQYLQNpbQw6ipgYicGqEBKD0iqJ9wfWvzfX:1mgm40:-tYo-v4odLZlXccf_fSzPELXr5R_-rceoU6HxZfGFU8",
+    "expire_date": "2021-11-13T10:58:16.388Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "7fz4zlxke0g8la9g21srhw11ss5wuwna",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlmbTfyjpOcM1tpr4wCypTipEHeHSCmgfTPzXsLTtha_9bT4mcVZWHH63QLFR6o74DvVW5Ox1XWZg9wVedAur43T83K4fweFevnWeRq1icRqGJNz4KIjDQEpEGpg5Gw4WyQAhYTZKVKjHUxmZyaIVpF4fwDq0zfU:1miiZh:kWwvCHyi2T4E1g5anD_L6mWtiLkBHePCeCgcF1ldtx0",
+    "expire_date": "2021-11-18T19:39:01.226Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "bfidqeu0pmnvdonxuyk9wv4qjhosbql4",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSF1CgO4dN9vIMNjpGogKe3K-O_apAvd3nPOfQlP21r81vPi5yQuYhSn3y1QfOS6g3Snemsytrouc5C7Ig_a5dRSfl4P9--gUC_fGjRETc5itJzRYnY8OGvimbVzOGQYLQNpbQw6ipgYicGqEBKD0iqJ9wfWvzfX:1miX1M:GmA-tHTWtIUxmnVJlxmrDHU-qUKBe4L-z6DpZoAEXK4",
+    "expire_date": "2021-11-18T07:18:48.117Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "c217outbpubtvq2vktxrveje5jarczen",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnexL-lpOcM0W7WwQFkS3FSIe4OkVJA-2bmvdRA25qHraVlmEWdFajT78Y0PlLZgdyp3Koea1mXmfWu6IM2fa2SnpfD_TvI1PK3JgHTWetRInCHPhickGICwiCRoAcC441Hz5FssIZ7dI4mdixCxqn3B78jNzo:1mmowD:-bT6HCk4bntVetpaqtullAQnrIO0rTUU92E77C4rEdI",
+    "expire_date": "2021-11-30T03:15:13.989Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "g2c7locn750wi499vwsa68yqry9o7ic6",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSF1CgO4dN9vIMNjpGogKe3K-O_apAvd3nPOfQlP21r81vPi5yQuYhSn3y1QfOS6g3Snemsytrouc5C7Ig_a5dRSfl4P9--gUC_fGjRETc5itJzRYnY8OGvimbVzOGQYLQNpbQw6ipgYicGqEBKD0iqJ9wfWvzfX:1miX5J:8Mu6u8KEw0yfSJj6kLk-ZiAXHTMo_bN1THDoYx-_7og",
+    "expire_date": "2021-11-18T07:22:53.002Z"
+  }
+},
+{
   "model": "sessions.session",
   "pk": "h6pcbhaytbajesa9optkd5ur8ztrs42e",
   "fields": {
     "session_data": ".eJxVjDkOwjAUBe_iGlnfwQumpOcM1l9sHECOFCcV4u4QKQW0b2beSyVcl5rWnuc0ijorow6_GyE_ctuA3LHdJs1TW-aR9KbonXZ9nSQ_L7v7d1Cx12_tITIxikUpQYwrcHJioymSvRswMBCgD0cQImMDwEBMORL77DEGVO8PB1c42w:1mZyXt:xKopQS0p9tCVuczK0kF-tXEA6ndfnZnPv2Fj4xdMTFM",
     "expire_date": "2021-10-25T16:53:01.187Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ieul49ay40wpu467l1zy2u8zsk5qpb2s",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSF1CgO4dN9vIMNjpGogKe3K-O_apAvd3nPOfQlP21r81vPi5yQuYhSn3y1QfOS6g3Snemsytrouc5C7Ig_a5dRSfl4P9--gUC_fGjRETc5itJzRYnY8OGvimbVzOGQYLQNpbQw6ipgYicGqEBKD0iqJ9wfWvzfX:1mihzb:dBKmgTCaq64_RUVpXclH6-WfpIefqi3Gp8kxU5FB92c",
+    "expire_date": "2021-11-18T19:01:43.360Z"
   }
 },
 {
@@ -909,6 +1461,30 @@
 },
 {
   "model": "sessions.session",
+  "pk": "ksl0fxhzaw63cbdu5nrar6x01gdt52fe",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyECXUCP3vsNBHYXqRqalPZk_Hdp0oPeJvPezFuEuK0lbI2XMJG4ChCn3y5FfHLdAT1ivc8S57ouU5K7Ig_a5DgTv26H-3dQYit9nckAJ4WsFWh_ZuIevaZsEiIhOZONG9QAFw_WGfJaRQvecc8JrRGfLwdiOEA:1miiQR:ZI_jSkzNPMA7-K6WyUyJZTLe4SwmW26BcXEfet_hVX8",
+    "expire_date": "2021-11-18T19:29:27.202Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "n6menwo2ozjtq3ja2s24t8gi58q4g8x9",
+  "fields": {
+    "session_data": ".eJxVjMsOgjAUBf-la9O0vbWAS_d8A7mvCmpKQmFl_HclYaHbMzPnZQbc1nHYqi7DJOZikjn9boT80LIDuWO5zZbnsi4T2V2xB622n0Wf18P9Oxixjt-awaWkIsGFkJoUlboEmbjNJCgZwTsCiqHhABFUfONdZu_P2ELg3Jn3B_DHOBs:1miiRK:vhxN8My_oKWFCnX1xYfbCHmKOMJn4yKhgq7vqX_wB34",
+    "expire_date": "2021-11-18T19:30:22.880Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "nzhdxzmf6onhqmh653kz3uyfk29xg1da",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSF1CgO4dN9vIMNjpGogKe3K-O_apAvd3nPOfQlP21r81vPi5yQuYhSn3y1QfOS6g3Snemsytrouc5C7Ig_a5dRSfl4P9--gUC_fGjRETc5itJzRYnY8OGvimbVzOGQYLQNpbQw6ipgYicGqEBKD0iqJ9wfWvzfX:1miXEC:SEhpJR-YLrRNOy9Q9EhrICxg-Ewwb8_ID5fZ1avgofI",
+    "expire_date": "2021-11-18T07:32:04.957Z"
+  }
+},
+{
+  "model": "sessions.session",
   "pk": "poucmij88ebob5oprr4r8fa9drqtojom",
   "fields": {
     "session_data": ".eJxVjEsOgkAQBe8yazNhfg24dO8ZJj39EdRAwsDKeHclYaHbV1XvZTJu65C3Kkse2ZyNM6ffrSA9ZNoB33G6zZbmaV3GYnfFHrTa68zyvBzu38GAdfjWXe8aikFBSRsXWIgCxFacIACH3hOoJIHoMUXsPHvvlLpWS0mJoTfvD-3uODw:1mfivg:JmAE4FuYsPTVX4AVahWVKpgufsNjMa-6D5rhR7bmcB0",
@@ -916,21 +1492,43 @@
   }
 },
 {
-  "model": "skdue_calendar.calendar",
-  "pk": 1,
+  "model": "sessions.session",
+  "pk": "q77929btds8ewftzcb4j32yt14ajgs9w",
   "fields": {
-    "name": "Holidays",
-    "slug": "holidays",
-    "user": 1
+    "session_data": ".eJxVjMsOwiAQRf-FtSHQ8hhcuvcbyDAMUjU0Ke3K-O_apAvd3nPOfYmI21rj1nmJUxZnEcTpd0tID247yHdst1nS3NZlSnJX5EG7vM6Zn5fD_Tuo2Ou3HtGxL9pYIE9cQGOC7AJ671SwwbMzoMehBOWcIkZgNASWLHprIA_i_QHjKDef:1miiaP:CeXckjSAPt03-PyilXE5Yr4OgD7fX9HiLNMRprf6QIQ",
+    "expire_date": "2021-11-18T19:39:45.670Z"
   }
 },
 {
-  "model": "skdue_calendar.calendar",
-  "pk": 2,
+  "model": "sessions.session",
+  "pk": "r5d7q1560vpqmm5yvk5c7uthdrl86tng",
   "fields": {
-    "name": "Homework",
-    "slug": "homework",
-    "user": 1
+    "session_data": ".eJxVjMsOwiAQRf-FtSF1CgO4dN9vIMNjpGogKe3K-O_apAvd3nPOfQlP21r81vPi5yQuYhSn3y1QfOS6g3Snemsytrouc5C7Ig_a5dRSfl4P9--gUC_fGjRETc5itJzRYnY8OGvimbVzOGQYLQNpbQw6ipgYicGqEBKD0iqJ9wfWvzfX:1miXBI:IfO1UvRePfzfbFHUxZ51vB4lFTs4I3sIixZnTUDtphg",
+    "expire_date": "2021-11-18T07:29:04.024Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "s9ibc7knw1h0duc5r5tkxu6mjuo571qd",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnexL-lpOcM0W7WwQFkS3FSIe4OkVJA-2bmvdRA25qHraVlmEWdFajT78Y0PlLZgdyp3Koea1mXmfWu6IM2fa2SnpfD_TvI1PK3JgHTWetRInCHPhickGICwiCRoAcC441Hz5FssIZ7dI4mdixCxqn3B78jNzo:1mj1EP:scrbgARl1ja--xG0h-inlapuZ-HDYASD3a0Fuz_v_Ak",
+    "expire_date": "2021-11-19T15:34:17.906Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "vh0czrat1diw2dnmxnsy9u8eyicne8mj",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSHDW1y67zeQYQCpGkhKuzL-uzbpQrf3nHNfLOC21rCNvIQ5sQtz7PS7RaRHbjtId2y3zqm3dZkj3xV-0MGnnvLzerh_BxVH_dZFam2Qkhcoo6JcbAKvC1iySAqspeIgC9DohaFz8kU6rRToLJ0Bi-z9AfFWN5g:1miiRl:bVxSqzHg212UQgF97R9jFHYPDs-iILFVDqawMwFFNNk",
+    "expire_date": "2021-11-18T19:30:49.796Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "7b07de42942386c8f5bb315ee080c0a4676da721",
+  "fields": {
+    "user": 3,
+    "created": "2021-11-04T17:38:48.561Z"
   }
 },
 {
@@ -943,50 +1541,90 @@
   }
 },
 {
+  "model": "skdue_calendar.calendar",
+  "pk": 4,
+  "fields": {
+    "name": "pun",
+    "slug": "pun",
+    "user": 3
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 1,
+  "fields": {
+    "tag_type": "default"
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 2,
+  "fields": {
+    "tag_type": "private"
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 3,
+  "fields": {
+    "tag_type": "custom"
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 4,
+  "fields": {
+    "tag_type": "google"
+  }
+},
+{
   "model": "skdue_calendar.calendartag",
   "pk": 1,
   "fields": {
     "user": 1,
-    "tag": "event"
+    "tag": "event",
+    "tag_type": 1,
+    "tag_color": null
   }
 },
 {
-  "model": "skdue_calendar.calendarevent",
-  "pk": 1,
-  "fields": {
-    "calendar": 1,
-    "name": "Halloween",
-    "slug": "halloween",
-    "description": "Happy halloween!",
-    "start_date": "2021-10-31T00:00:00Z",
-    "end_date": "2021-10-31T23:59:59Z",
-    "tag": 1
-  }
-},
-{
-  "model": "skdue_calendar.calendarevent",
+  "model": "skdue_calendar.calendartag",
   "pk": 2,
   "fields": {
-    "calendar": 1,
-    "name": "Columbus Day",
-    "slug": "columbus-day",
-    "description": "Happy Columbus Day!",
-    "start_date": "2021-10-11T00:00:00Z",
-    "end_date": "2021-10-11T23:59:59Z",
-    "tag": 1
+    "user": 1,
+    "tag": "private",
+    "tag_type": 2,
+    "tag_color": null
   }
 },
 {
-  "model": "skdue_calendar.calendarevent",
-  "pk": 3,
+  "model": "skdue_calendar.calendartag",
+  "pk": 4,
   "fields": {
-    "calendar": 2,
-    "name": "Math homework 1",
-    "slug": "math-homework-1",
-    "description": "Don't forget to submit math homework number 1 on this day",
-    "start_date": "2021-10-20T00:00:00Z",
-    "end_date": "2021-10-20T23:59:59Z",
-    "tag": 1
+    "user": 1,
+    "tag": "holiday",
+    "tag_type": 1,
+    "tag_color": null
+  }
+},
+{
+  "model": "skdue_calendar.calendartag",
+  "pk": 5,
+  "fields": {
+    "user": 3,
+    "tag": "custom-1",
+    "tag_type": 3,
+    "tag_color": "white"
+  }
+},
+{
+  "model": "skdue_calendar.calendartag",
+  "pk": 6,
+  "fields": {
+    "user": 3,
+    "tag": "custom-2",
+    "tag_type": 3,
+    "tag_color": "white"
   }
 },
 {
@@ -999,7 +1637,7 @@
     "description": "",
     "start_date": "2021-01-01T00:00:00Z",
     "end_date": "2021-01-01T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1012,7 +1650,7 @@
     "description": "",
     "start_date": "2021-02-12T00:00:00Z",
     "end_date": "2021-02-12T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1025,7 +1663,7 @@
     "description": "",
     "start_date": "2021-02-26T00:00:00Z",
     "end_date": "2021-02-26T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1038,7 +1676,7 @@
     "description": "",
     "start_date": "2021-04-06T00:00:00Z",
     "end_date": "2021-04-06T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1051,7 +1689,7 @@
     "description": "",
     "start_date": "2021-04-12T00:00:00Z",
     "end_date": "2021-04-15T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1064,7 +1702,7 @@
     "description": "",
     "start_date": "2021-05-03T00:00:00Z",
     "end_date": "2021-05-03T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1077,7 +1715,7 @@
     "description": "",
     "start_date": "2021-05-04T00:00:00Z",
     "end_date": "2021-05-04T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1090,7 +1728,7 @@
     "description": "",
     "start_date": "2021-05-10T00:00:00Z",
     "end_date": "2021-05-10T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1103,7 +1741,7 @@
     "description": "",
     "start_date": "2021-05-26T00:00:00Z",
     "end_date": "2021-05-26T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1116,7 +1754,7 @@
     "description": "",
     "start_date": "2021-06-03T00:00:00Z",
     "end_date": "2021-06-03T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1129,7 +1767,7 @@
     "description": "",
     "start_date": "2021-07-25T00:00:00Z",
     "end_date": "2021-07-25T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1142,7 +1780,7 @@
     "description": "",
     "start_date": "2021-07-26T00:00:00Z",
     "end_date": "2021-07-26T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1155,7 +1793,7 @@
     "description": "",
     "start_date": "2021-07-28T00:00:00Z",
     "end_date": "2021-07-28T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1168,7 +1806,7 @@
     "description": "",
     "start_date": "2021-08-12T00:00:00Z",
     "end_date": "2021-08-12T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1181,7 +1819,7 @@
     "description": "",
     "start_date": "2021-09-24T00:00:00Z",
     "end_date": "2021-09-24T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1194,7 +1832,7 @@
     "description": "",
     "start_date": "2021-10-13T00:00:00Z",
     "end_date": "2021-10-13T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1207,7 +1845,7 @@
     "description": "",
     "start_date": "2021-10-22T00:00:00Z",
     "end_date": "2021-10-22T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1220,7 +1858,7 @@
     "description": "",
     "start_date": "2021-12-05T00:00:00Z",
     "end_date": "2021-12-05T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1233,7 +1871,7 @@
     "description": "",
     "start_date": "2021-12-10T00:00:00Z",
     "end_date": "2021-12-10T23:59:59Z",
-    "tag": 1
+    "tag": 4
   }
 },
 {
@@ -1246,7 +1884,40 @@
     "description": "",
     "start_date": "2021-12-31T00:00:00Z",
     "end_date": "2021-12-31T23:59:59Z",
-    "tag": 1
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 24,
+  "fields": {
+    "calendar": 4,
+    "name": "sleepless night",
+    "slug": "sleepless-night",
+    "description": "I want to sleep. Don't wake me up.",
+    "start_date": "2021-10-30T00:00:00Z",
+    "end_date": "2021-10-30T06:00:00Z",
+    "tag": 2
+  }
+},
+{
+  "model": "skdue_calendar.followstatus",
+  "pk": 4,
+  "fields": {
+    "user": 3,
+    "followed": 1
+  }
+},
+{
+  "model": "skdue_calendar.usersetting",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "display_name": "pun",
+    "image": "/images/default.jpg",
+    "about": "",
+    "theme_type": "light",
+    "theme_name": "theme-1"
   }
 }
 ]

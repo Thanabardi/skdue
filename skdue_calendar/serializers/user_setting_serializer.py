@@ -9,5 +9,7 @@ class UserSettingSerializer(serializers.ModelSerializer):
             'user',
             'display_name', 
             'image',
-            'about'
+            'about',
+            'theme_type',
+            'theme_name'
         )
