@@ -15,6 +15,10 @@
           <div class="overlay-right">
             <h1>Welcome Back!</h1>
             <p>Please login to see what's going to happen next on your calendar.</p>
+            <a title="Google" class="google-button" href="http://127.0.0.1:8000/accounts/google/login/?process=login/">
+              <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                Login with google
+            </a>
             <div style="display: flex;">New to Skdue?
               <button style="color: var(--green); font-size: 18px;" class="app-button-tp"
                 id="signUp" @click="signUp = !signUp">SIGN UP</button>
@@ -36,7 +40,6 @@
         <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
         <a class="app-button-tp" style="text-decoration: none; color: var(--black);" 
           href="#">Forgot your password?</a>
-          <a title="Google" class="socialaccount_provider google" href="http://127.0.0.1:8000/accounts/google/login/?process=login/">Google</a>
         <button class="register-button">Continue</button>
       </form>
     </div>
@@ -231,6 +234,26 @@ import axios from 'axios'
 //   margin: 15px 0;
 //   font-size: 20px;
 // }
+.google-button{
+  appearance: button;
+  text-decoration: none;
+  width: 70%;
+  border-radius: 20px;
+  border: none;
+  background-color: var(--green);
+  color: var(--white);
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 40px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .1s ease-in;
+  &:active {
+    transform: scale(.98);
+    background-color: var(--green-dark)
+  }
+}
 .register-button {
   width: 100%;
   border-radius: 20px;
