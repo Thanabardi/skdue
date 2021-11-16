@@ -1,7 +1,8 @@
 <template>
     <div class="follow-list" @click="() => TogglePopup('buttonTrigger')">
-		<div>{{ this.calendar_slug }}</div>
-		<div v-if="popupTriggers.buttonTrigger && this.user_name == ''">
+		<div v-if="this.calendar_slug == this.user_name">Home</div>
+        <div v-else>{{ this.calendar_slug }}</div>
+		<div v-if="popupTriggers.buttonTrigger && this.user_name != ''">
 		    <div class="follow-list-tab">
 				<button v-for="name in followed_name" :key="name" @click="redirectFollowedCalendar(name)" 
                     class="follow-list-button-tp"> {{ name }}</button>
@@ -47,6 +48,7 @@ export default ({
             const calendar_slug = this.$route.params.calendar_slug
             this.calendar_slug = calendar_slug.replace(/-/g,' ')
             axios.get(`/api/v2/me/follow`).then( response => {
+                this.user_name = response.data[0]["user_name"]
                 response.data.forEach(elements => {
 				this.followed_name.push(elements["followed_name"])
 					})

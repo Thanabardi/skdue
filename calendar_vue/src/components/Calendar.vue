@@ -8,6 +8,7 @@ import EventCreate from './EventCreate'
 import Follow from './Follow'
 import Search from './search'
 import EventDetails from './EventDetails'
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
 import {ref} from 'vue'
 import axios from 'axios'
 export default {
@@ -76,40 +77,10 @@ export default {
         'May','June','July','August','September',
         'October','November','December'
         ],
-      color: {"theme" : ["light", "theme-1"]},
-      app_colors: {
-        "light" : {
-          "main" : "#000000",
-          "main-1": "#646464",
-          "sub" : "#ffffff",
-          "sub-1": "#d6d6d6",
-          },
-        "dark" : {
-          "main" : "#ffffff",
-          "main-1": "#d6d6d6",
-          "sub" : "#000000",
-          "sub-1": "#646464",
-          },
-        "theme-1" : {
-          "main" : "#006664",
-          "main-dark": "#004746",
-          "sub-1" : "#3B9693",
-          "sub-2": "#c0ca35",
-          "sub-2-dark": "#aeb825",
-          },
-          "theme-2" : {
-          "main" : "#006555",
-          "main-dark": "#004554",
-          "sub-1" : "#3B9544",
-          "sub-2": "#c0ca44",
-          "sub-2-dark": "#aeb844",
-          },
-        },
-      tag_colors: {
-        "red": "#C00000",
-        "yellow": "#FFC000",
-        "blue": "#0070C0"
-        },
+      color: {},
+      is_fetch: false,
+      app_colors: APP_COLORS,
+      tag_colors: TAG_COLORS,
       dataLogout:{
         "status":"logout"
       }
@@ -135,6 +106,7 @@ export default {
   },
   mounted() {
     this.getCalendarEvents()
+    this.getColor()
   },
   methods: {
     setTodayEvents() {
@@ -190,7 +162,6 @@ export default {
 
       this.token = localStorage.token
 
-
       console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
       axios.get(`/api/v2/${calendar_type}/${calendar_slug}`)
@@ -200,15 +171,18 @@ export default {
         .catch(error => {
           console.log(error)
         })
+
+    },
+    getColor() {
       axios.get(`/api/v2/me/user_setting`)
-        .then(response => {
-          this.color = (response.data["color"])
-          this.color["theme"] = ["light", "theme-1"]
-          console.log("drhgrgdgd",this.color)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      .then(response => {
+        this.color = (response.data["color"])
+        this.color["theme"] = ["light", "theme-3"]
+        this.is_fetch = true
+      })
+      .catch(error => {
+        console.log(error)
+      })  
     },
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
@@ -368,17 +342,17 @@ export default {
 
 
 <template>
-  <div>
-    <CalendarNavbar :color="this.color" :app_colors="this.app_colors" :tag_colors="this.tag_colors"/>
+  <div v-if="this.is_fetch">
+    <CalendarNavbar :color="this.color"/>
     <div class='calendar-sidebar' :style="'background-color:'+app_colors[this.color['theme'][1]]['sub-1']">
-      <Follow />
+      <Follow :color="this.color"/>
       <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
         {{ (this.day_select.substring(8, 10)) }}
         {{ this.month[new Date(this.day_select).getMonth()] }}
         {{ (this.day_select.substring(0, 4)) }}
       </h2>
         <!-- list of all event -->
-        <div style="overflow-x: hidden; height: 76%; color; rgba(255, 255, 255, 0.6)">
+        <div style="overflow-x: hidden; height: 73%; color; rgba(255, 255, 255, 0.6)">
           <div v-if="this.event_details.length!=0">
             <p>All-Day Event</p>
             <!-- list of all day event -->
@@ -494,7 +468,7 @@ export default {
     </div>
     <!-- edit event -->
 
-    <FullCalendar class="calendar-app-main" :options="calendarOptions">
+    <FullCalendar class="calendar-app-main" :options="calendarOptions" :color="this.color">
       <template v-slot:eventContent="arg">
         <b>{{ arg.timeText }}</b>
         <i>{{ arg.event.title }}</i>
@@ -526,7 +500,7 @@ export default {
   opacity: 0.8;
 }
 .calendar-detail-bg {
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.5);
   border-collapse: collapse;
   padding: 5px;
   display: block;

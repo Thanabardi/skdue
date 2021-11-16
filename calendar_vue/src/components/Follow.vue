@@ -1,5 +1,5 @@
 <template>
-<div class="follow-main" v-if="(fs != '')">
+<div class="follow-main" v-if="(fs != '') && this.is_fetch">
   {{ this.follow_name }}
   <div v-if="this.token != ''">
     <button v-if="(fs == 'Unfollow') || (fs == 'UNFOLLOW')" style="background-color: var(--gray); width: 90px;"
@@ -10,6 +10,7 @@
       @click="() => follow_button()">FOLLOW</button>
     </div>
 </div>
+<div v-else style="padding: 14px;"></div>
 </template>
 
 <script>
@@ -26,7 +27,8 @@ export default {
       fs:"Follow",
       calendar_slug: "",
       token: "",
-      follow_name: ""
+      follow_name: "",
+      is_fetch: false,
 		}
 	},
   mounted() {
@@ -56,7 +58,7 @@ export default {
       }
     },
     setCalendarOwner(data) {
-          //set owner_id
+    //set owner_id
     this.owner_id = data.user.id
     console.log('owner_id=',this.owner_id,'id_type',typeof this.owner_id)
     // check follow status
@@ -84,11 +86,11 @@ export default {
           console.log('user',user.user)
           console.log('owner',this.owner_id)
         })
-
       })
       .catch(error => {
         console.log(error)
       })
+      this.is_fetch = true
     },
     getUser() {
       const calendar_slug = this.$route.params.calendar_slug

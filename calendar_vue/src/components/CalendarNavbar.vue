@@ -1,9 +1,9 @@
 <template>
-	<div class="calendar-navbar-bg">
-        <Search />
-        <EventCreate />
-        <UserConfig />
-        <FollowedList />
+	<div  v-if="this.is_fetch" class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color['theme'][1]]['main']">
+        <Search :color="this.color"/>
+        <EventCreate :color="this.color"/>
+        <UserConfig :color="this.color"/>
+        <FollowedList :color="this.color"/>
 	</div>
 </template>
 
@@ -14,6 +14,7 @@ import Search from './search'
 import EventCreate from './EventCreate'
 import UserConfig from './UserConfig'
 import FollowedList from './FollowedList'
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
 
 export default {
     components: {
@@ -22,9 +23,15 @@ export default {
         UserConfig,
         FollowedList
 	},
+    props: {
+        color: {},
+    },
     data() {
 		return {
             follow: '',
+            tag_colors: TAG_COLORS,
+            app_colors: APP_COLORS,
+            is_fetch: true,
 		}
 	},
     mounted () {
@@ -46,7 +53,6 @@ export default {
 @import './../assets/style.css';
 
 .calendar-navbar-bg {
-    background: var(--main-green);
     height: 65px;
     z-index: 5;
     position: fixed !important;
