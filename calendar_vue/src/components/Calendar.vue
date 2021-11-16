@@ -375,7 +375,7 @@ export default {
             <p>All-Day Event</p>
             <!-- list of all day event -->
             
-            <div v-for="item in this.event_details">
+            <div v-for="item in this.event_details" :key="item">
                 <button v-if="item['allday']" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
                   v-on:click.right="TogglePopup('editTrigger', $event)">
@@ -390,7 +390,7 @@ export default {
 
             <!-- list of other event -->
             <hr class="calendar-hr">
-            <div v-for="item in this.event_details">
+            <div v-for="item in this.event_details" :key="item">
               <div v-if="!item['allday']">
                 <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg" 
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
