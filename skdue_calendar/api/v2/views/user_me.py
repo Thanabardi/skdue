@@ -178,7 +178,8 @@ class UserMeFollowedView(APIView):
         followed_cal = Calendar.objects.get(user=followed_user)
         if opt == "follow":
             if FollowStatus.is_valid(request.user, followed_user):
-                fs = FollowStatus(user=request.user, user_calendar=user_cal, followed=followed_user, followed_calendar=followed_cal)
+                # fs = FollowStatus(user=request.user, followed=followed_user)
+                fs = FollowStatus(user=request.user, followed=followed_user, user_calendar=user_cal, followed_calendar=followed_cal)
                 fs.save()
                 return Response({"msg": "followed"}, HTTP_201_CREATED)
             else:
@@ -242,7 +243,7 @@ class UserMeEventView(APIView):
 
     def put(self, request, calendar_slug, event_slug):
         """Change calendar event
-        
+
         Args:
             requset.data: a dict consist of,
                 - name: calendar event name
@@ -302,7 +303,7 @@ class UserMeEventView(APIView):
                     {
                         "msg": "changed event detail",
                         "new_url": reverse('api_v2:me_event', args=[calendar_slug, new_slug])
-                    }, 
+                    },
                     HTTP_200_OK
                 )
         else:
@@ -317,4 +318,3 @@ class UserMeEventView(APIView):
             return Response({"msg": "event deleted"}, HTTP_200_OK)
         else:
             return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
-

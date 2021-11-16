@@ -10,18 +10,18 @@ class FollowStatus(models.Model):
             blank=False,
             on_delete=models.CASCADE,
             related_name='user')
-    user_calendar = models.ForeignKey(Calendar,
-                    default=None,
-                    null=True,
-                    blank=True,
-                    on_delete=models.CASCADE,
-                    related_name='user_calendar')
     followed = models.ForeignKey(
             User,
             null=False,
             blank=False,
             on_delete=models.CASCADE,
             related_name='followed')
+    user_calendar = models.ForeignKey(Calendar,
+                        default=None,
+                        null=True,
+                        blank=True,
+                        on_delete=models.CASCADE,
+                        related_name='user_calendar')
     followed_calendar = models.ForeignKey(Calendar,
                         default=None,
                         null=True,
@@ -29,6 +29,14 @@ class FollowStatus(models.Model):
                         on_delete=models.CASCADE,
                         related_name='followed_calendar')
 
+
+    # @property
+    # def user_calendar(self):
+    #     return self.Calendar.objects.get(user=self.user)
+    #
+    # @property
+    # def followed_calendar(self):
+    #     return self.Calendar.objects.get(user=self.followed)
 
     @property
     def user_name(self):
