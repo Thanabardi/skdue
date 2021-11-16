@@ -1,0 +1,30 @@
+[
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 1,
+  "fields": {
+    "tag_type": "default"
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 2,
+  "fields": {
+    "tag_type": "private"
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 3,
+  "fields": {
+    "tag_type": "custom"
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 4,
+  "fields": {
+    "tag_type": "google"
+  }
+}
+]
