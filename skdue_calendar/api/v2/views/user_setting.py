@@ -11,6 +11,8 @@ from skdue_calendar.serializers import *
 from skdue_calendar.models import *
 
 DEFAULT_IMAGE = "/images/default.jpg"
+DEFAULT_THEME_TYPE = "light"
+DEFAULT_THEME_NAME = "theme-1"
 DEFAULT_TAG_COLOR = "white"
 
 
@@ -27,7 +29,10 @@ class UserSettingView(APIView):
             user=calendar.user,
             defaults={
                 "display_name": user.username,
-                "image": DEFAULT_IMAGE})
+                "image": DEFAULT_IMAGE,
+                "theme_type": DEFAULT_THEME_TYPE,
+                "theme_name": DEFAULT_THEME_NAME
+            })
         tags = CalendarTag.objects.filter(user=user)
         colors = {}
         for t in tags:
@@ -56,7 +61,9 @@ class UserMeSetting(APIView):
             user=request.user,
             defaults={
                 "display_name": request.user.username,
-                "image": DEFAULT_IMAGE
+                "image": DEFAULT_IMAGE,
+                "theme_type": DEFAULT_THEME_TYPE,
+                "theme_name": DEFAULT_THEME_NAME
             }
         )
         tags = CalendarTag.objects.filter(user=request.user)
