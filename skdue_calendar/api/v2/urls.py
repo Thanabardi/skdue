@@ -22,6 +22,7 @@ urlpatterns = [
     path('me/add_new_tag', UserMeAddTagView.as_view(), name="me_add_new_tag"),
     path('me/user_setting', views.UserMeSetting.as_view(), name="me_user_setting"),
     path('me/<calendar_slug>', UserMeCalendarView.as_view(), name="me_calendar"),
+    path('me/<calendar_slug>/<event_slug>', UserMeEventView.as_view(), name="me_event"),
 
     path('get-auth-token', GetAuthToken.as_view(), name="get_auth_token"),
 ]

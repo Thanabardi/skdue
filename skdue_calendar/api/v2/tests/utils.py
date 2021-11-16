@@ -1,6 +1,6 @@
 import json
 from rest_framework.authtoken.models import Token
-from django.test import Client
+from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 
 def convert_response(data):
@@ -9,7 +9,7 @@ def convert_response(data):
     data = json.dumps(data)
     return data
 
-def autenticated_client_factory(user: User) -> Client:
+def authenticated_client_factory(user: User) -> APIClient:
     """Return client with autentication token"""
     token, _ = Token.objects.get_or_create(user=user)
-    return Client(HTTP_AUTHORIZATION='Token ' + token.key)
+    return APIClient(HTTP_AUTHORIZATION='Token ' + token.key)
