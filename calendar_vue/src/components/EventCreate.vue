@@ -97,7 +97,7 @@ export default {
 			end_date: '',
 			end_time: '',
 			tag: '',
-			token: "asdad",
+			token: "token",
 			fs: "follow",
 
 		}
@@ -167,13 +167,14 @@ export default {
 			if (!this.available_tag.includes(this.tag)) {
 				this.tagCreate()
 			}
+			this.getTag()
 			axios.post(`/api/v2/me/${this.user_name}`, event)
 				.then(function(response) {
 					console.log("create new Event", response),
 					window.location.reload()
 				})
 				.catch(function(error) {
-					console.log(error),
+					console.log(error)
 					alert("Opps, " + error)
 				})
 		},
@@ -181,10 +182,10 @@ export default {
 			if (this.tag == '') {
 				alert("Tag can't be blank")
 			} else if (!this.available_tag.includes(this.tag)) {
+				this.available_tag.push(this.tag)
 				axios.post(`/api/v2/me/add_new_tag`, {"tag":this.tag})
 					.then(function(response) {
-						console.log("create new Tag", response),
-						this.available_tag.push(this.tag)
+						console.log("create new Tag", response)
 					})
 			} else {
 				alert("This tag already exists")
@@ -192,6 +193,7 @@ export default {
 		},
 		TagEdit(e) {
 			alert("EditTag")
+			this.getTag()
 			e.preventDefault()
 		}
 	},
