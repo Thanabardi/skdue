@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework.status import *
 from skdue_calendar.models import FollowStatus, Calendar
 from .utils import convert_response
+from skdue_calendar.utils import generate_slug
 
 def create_account(user, password):
     """To create Mockup user."""
@@ -14,25 +15,34 @@ def create_account(user, password):
                      email=f"{user}@mail.com")
 
 
-class CalendarListTests(TestCase):
+class FollowStatusTests(TestCase):
     def setUp(self):
         # create user1
         self.user1 = create_account("patlom", "lompat-rankrank!")
         self.user1.first_name = "Patlom"
-        self.user1.calendar = Calendar.objects.get(user=self.user1)
+        self.user1_calendar = Calendar(
+            user=self.user1,
+            name=self.user1.username,
+            slug=generate_slug(self.user1.username)
+        )
         self.user1.save()
+        self.user1_calendar.save()
         # create user2
         self.user2 = create_account("harry", "hackme22")
         self.user2.first_name = "Harry"
-        self.user2.calendar = Calendar.objects.get(user=self.user2)
+        self.user2_calendar = Calendar(
+            user=self.user2,
+            name=self.user2.username,
+            slug=generate_slug(self.user2.username)
+        )
         self.user2.save()
+        self.user2_calendar.save()
         # create user3
         self.user3 = create_account("tester", "tester_pwd")
         self.user3.save()
         #follow
 
-        FollowStatus.objects.create(user=self.user1, user_calendar=self.user1.calendar, followed=self.user2, followed_calendar=self.user2.calendar)
-
+        FollowStatus.objects.create(user=self.user1, followed=self.user2, followed_calendar=self.user2_calendar)
     def test_get(self):
         """Response is the list of all follow_status in JSON form"""
         expect_data = []
@@ -40,10 +50,10 @@ class CalendarListTests(TestCase):
             data = {
                 "user": fs.user.id,
                 "user_name": fs.user.username,
-                "user_calendar": fs.user.calendar,
                 "followed": fs.followed.id,
                 "followed_name": fs.followed.username,
-                "followed_calendar": fs.followed.calendar
+                "followed_calendar": fs.followed_calendar.id,
+                "followed_calendar_slug": fs.followed_calendar.slug,
             }
             expect_data.append(data)
         expect_data = json.dumps(expect_data)

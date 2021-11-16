@@ -16,23 +16,13 @@ class FollowStatus(models.Model):
             blank=False,
             on_delete=models.CASCADE,
             related_name='followed')
-    user_calendar = models.ForeignKey(Calendar,
-                        default=None,
-                        null=True,
-                        blank=True,
-                        on_delete=models.CASCADE,
-                        related_name='user_calendar')
     followed_calendar = models.ForeignKey(Calendar,
                         default=None,
-                        null=True,
-                        blank=True,
+                        null=False,
+                        blank=False,
                         on_delete=models.CASCADE,
                         related_name='followed_calendar')
 
-
-    @property
-    def user_calendar_slug(self):
-        return self.user_calendar.slug
 
     @property
     def followed_calendar_slug(self):
@@ -56,11 +46,11 @@ class FollowStatus(models.Model):
         return f'{self.user.username} has UNFOLLOWED {self.followed.username}'
 
     @classmethod
-    def is_valid(self, user, followed):
+    def is_valid(self, user, followed, fsc):
         # A user can't follow himself
         if user == followed:
             return False
         # A user must follow another exist user
-        if len(FollowStatus.objects.filter(user=user, followed=followed)) != 0:
+        if len(FollowStatus.objects.filter(user=user, followed=followed, followed_calendar=fsc)) != 0:
             return False
         return True
