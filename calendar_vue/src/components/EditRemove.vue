@@ -4,12 +4,13 @@
 			@click="() => TogglePopup('buttonTrigger')">+</button> -->
 
 		<div style="text-align: center;" v-if="this.popup && (this.token!='') && (this.fs!='')" >
-
+<!--  -->
 			<div class="event-create-popup-bg">
-				<div class="event-create-popup">
+				<div class="event-create-popup" :style="'background-color:'+app_colors[this.color_theme['type']]['sub-0']+
+					';color:'+app_colors[this.color_theme['type']]['main']" >
 					<h1 style="font-size: 50px;">Edit Event</h1>
 
-					<form @submit.prevent="eventCreate" class="event-create-form">
+					<form @submit.prevent="eventCreate" class="event-create-form" :style="'color:'+app_colors[this.color_theme['type']]['main']">
 						<textarea class="event-create-textarea" type="name"
 								placeholder="Title"
 							maxlength="60" v-model="detail[0]" rows="1" cols="50"></textarea>
@@ -40,10 +41,11 @@
 							</tr>
 							<tr>
 								<td>Tag    <i>(origin is `{{this.detail[6]}}`)</i></td>
-								<td style="width: 400px;">
+								<td style="width: 300px;">
                   <button type="button" v-for="tag in available_tag" :key="tag"
 										class="event-create-tag-bt"  @click="() => this.tag = tag">
 										{{ tag }}</button>
+
 
                   <!-- <div class="tag-button"  v-for="tag in available_tag" :key="tag">
                     <button type="button" class="event-create-tag-bt" autofocus  @click="() => this.tag = tag">
@@ -54,8 +56,14 @@
 							</tr>
 						</table>
 						<div class="event-create-footer">
-							<button class="app-button-main" type="submit">Done</button>
-							<button class="app-button-gray" @click="() => close()">Cancel</button>
+							<button class="app-button-main" type="submit"
+							:style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']">Done</button>
+							<button class="app-button-gray"
+							:style="'background-color:'+app_colors[this.color_theme['type']]['main-1']"
+							 @click="() => close()">Cancel</button><br>
+							 <button class="app-button-red" type="submit"
+							 :style="'background-color:'+app_colors[this.color_theme['type']]['main-1']"
+							 @click="() => deleteEvent()">Delete</button>
 						</div>
 					</form>
 				</div>
@@ -67,11 +75,13 @@
 <script>
 import { ref } from 'vue';
 import axios from 'axios';
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
 
 export default {
   props: {
     popup: Boolean,
-    detail: Object
+    detail: Object,
+		color_theme: {},
   },
 	setup (props) {
     console.log('popup',props.popup)
@@ -102,6 +112,8 @@ export default {
 			tag: '',
 			token: "asdad",
 			fs: "follow",
+			tag_colors: TAG_COLORS,
+			app_colors: APP_COLORS,
 		}
 	},
 	mounted () {
@@ -112,9 +124,7 @@ export default {
     log() {
     },
     close() {
-      console.log('here',this.detail)
-      this.$emit('closed','clicked close')
-      console.log(this.popup)
+      this.$emit('closed')
     },
 		checkOwner(owner) {
 			axios
@@ -157,6 +167,27 @@ export default {
 			})
 
         },
+		deleteEvent() {
+			const start_date_time = this.detail[2] + " " + this.detail[3] + ":00"
+			const end_date_time = this.detail[4] + " " + this.detail[5] + ":00"
+			const event = {
+				"name" : this.detail[0],
+				"description" : this.detail[1],
+				"start_date" : start_date_time,
+				"end_date" : end_date_time,
+				"tag" : this.tag
+			}
+			
+			axios.delete(`/api/v2/me/${this.user_name}/${this.detail[7]}`)
+				.then(function(response) {
+					console.log(response),
+					window.location.reload()
+					})
+				.catch(function(error) {
+					console.log(error),
+					alert("Opps, " + error)
+					})
+		},
 		eventCreate() {
 			const start_date_time = this.detail[2] + " " + this.detail[3] + ":00"
 			const end_date_time = this.detail[4] + " " + this.detail[5] + ":00"
@@ -203,11 +234,8 @@ export default {
 	line-height: 10px;
 	text-align: center;
 }
-.app-button-tp:hover {
-    background-color: var(--white-op-2);
-}
 .event-create-popup-bg {
-	background-color: var(--black-op-1);
+	background-color: rgba(0, 0, 0, 0.5);
 	top: 0;
 	left: 0;
 	right: 0;
@@ -223,21 +251,20 @@ export default {
 	animation-duration: 0.5s
 }
 .event-create-popup {
-	background: var(--white);
-	color: var(--black);
+	color: black;
 	height: 100%;
 	overflow-x: hidden;
 	padding: 20px;
 }
 .event-create-form {
-	color: var(--black);
+	color: black;
 	text-align: left;
 	font-size: 20px;
 	margin: 20x;
 	padding: 10px;
 }
 .event-create-textarea {
-	background: var(--gray-light);
+	background: rgb(230, 230, 230);
 	font-size: 20px;
 	display: block;
 	padding: 10px 20px;
@@ -247,11 +274,11 @@ export default {
 }
 .event-create-table {
 	width: 104%;
-	text-align: end;
+	text-align: start;
 	border-spacing: 20px;
 }
 .event-create-input {
-	background: var(--gray-light);
+	background: rgb(230, 230, 230);
 	font-size: 20px;
 	padding: 10px;
 	width: 200px;
@@ -259,21 +286,24 @@ export default {
 	border-radius: 8px;
 }
 .event-create-tag-bt {
-	background-color: var(--gray-light);
+	background-color: rgb(230, 230, 230);
+	color: black;
 	margin-left: 10px;
     border: 0;
     padding: 5px 10px;
-    margin-top: 20px;
-    color: var(--black);
+    margin-bottom: 10px;
     font-size: 20px;
     cursor: pointer;
     border-radius: 8px;
 }
 .event-create-tag-bt:focus {
-	background-color: var(--green);
+	opacity: 0.5;
 }
 .event-create-footer {
 	display: flex;
 	justify-content: space-evenly;
+}
+::-webkit-scrollbar {
+    display: none;
 }
 </style>
