@@ -33,7 +33,7 @@
 								<div><center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">Tag</center></div><br>
 								<div>
 									<!-- <p v-for="[key, color] of Object.entries(set_color)" :style="'font-size:22px; color:'+app_colors[this.color_theme['type']]['main']"> -->
-									<a v-if="0<this.tag_name.length">{{ this.tag_name[0] }}
+									<a v-if="0<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[0]]">{{ this.tag_name[0] }}</center>
 									<div class="flex-container">
 										<div @click="userColorTag1('red')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag1('yellow')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -44,7 +44,7 @@
 										<div @click="userColorTag1('white')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
 									</div>
 									</a> 
-									<a v-if="1<this.tag_name.length">{{ this.tag_name[1] }}
+									<a v-if="1<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[1]]">{{ this.tag_name[1] }}</center>
 									<div class="flex-container">
 										<div @click="userColorTag2('red')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag2('yellow')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -55,7 +55,7 @@
 										<div @click="userColorTag2('white')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
 									</div>
 									</a>
-									<a  v-if="2<this.tag_name.length">{{ this.tag_name[2] }}
+									<a  v-if="2<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[2]]">{{ this.tag_name[2] }}</center>
 									<div class="flex-container">
 										<div @click="userColorTag3('red')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag3('yellow')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -66,7 +66,7 @@
 										<div @click="userColorTag3('white')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
 									</div>
 									</a>
-									<a v-if="3<this.tag_name.length">{{ this.tag_name[3] }}
+									<a v-if="3<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[3]]">{{ this.tag_name[3] }}</center>
 									<div class="flex-container">
 										<div @click="userColorTag4('red')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag4('yellow')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -77,7 +77,7 @@
 										<div @click="userColorTag4('white')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
 									</div>
 									</a>
-									<a v-if="4<this.tag_name.length">{{ this.tag_name[4] }}
+									<a v-if="4<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[4]]">{{ this.tag_name[4] }}</center>
 									<div class="flex-container">
 										<div @click="userColorTag5('red')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag5('yellow')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -249,7 +249,7 @@ export default({
 				.put(`/api/v2/me/user_setting`, apiDataForm)
 				.then(response => {
 					console.log(response.data)
-					// window.location.reload()
+					window.location.reload()
 					})
 				.catch(function(error) {
 					console.log(error),
