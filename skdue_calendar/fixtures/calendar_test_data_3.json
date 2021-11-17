@@ -1,0 +1,1303 @@
+[
+{
+  "model": "sites.site",
+  "pk": 1,
+  "fields": {
+    "domain": "example.com",
+    "name": "example.com"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add site",
+    "content_type": 1,
+    "codename": "add_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change site",
+    "content_type": 1,
+    "codename": "change_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete site",
+    "content_type": 1,
+    "codename": "delete_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can view site",
+    "content_type": 1,
+    "codename": "view_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can add email address",
+    "content_type": 2,
+    "codename": "add_emailaddress"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can change email address",
+    "content_type": 2,
+    "codename": "change_emailaddress"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can delete email address",
+    "content_type": 2,
+    "codename": "delete_emailaddress"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can view email address",
+    "content_type": 2,
+    "codename": "view_emailaddress"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can add email confirmation",
+    "content_type": 3,
+    "codename": "add_emailconfirmation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can change email confirmation",
+    "content_type": 3,
+    "codename": "change_emailconfirmation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can delete email confirmation",
+    "content_type": 3,
+    "codename": "delete_emailconfirmation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can view email confirmation",
+    "content_type": 3,
+    "codename": "view_emailconfirmation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add social account",
+    "content_type": 4,
+    "codename": "add_socialaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change social account",
+    "content_type": 4,
+    "codename": "change_socialaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete social account",
+    "content_type": 4,
+    "codename": "delete_socialaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can view social account",
+    "content_type": 4,
+    "codename": "view_socialaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can add social application",
+    "content_type": 5,
+    "codename": "add_socialapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can change social application",
+    "content_type": 5,
+    "codename": "change_socialapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can delete social application",
+    "content_type": 5,
+    "codename": "delete_socialapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can view social application",
+    "content_type": 5,
+    "codename": "view_socialapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can add social application token",
+    "content_type": 6,
+    "codename": "add_socialtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can change social application token",
+    "content_type": 6,
+    "codename": "change_socialtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can delete social application token",
+    "content_type": 6,
+    "codename": "delete_socialtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can view social application token",
+    "content_type": 6,
+    "codename": "view_socialtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 7,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 7,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 7,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": 7,
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 29,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 8,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 30,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 8,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 31,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 8,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 32,
+  "fields": {
+    "name": "Can view permission",
+    "content_type": 8,
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 33,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 9,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 34,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 9,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 35,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 9,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 36,
+  "fields": {
+    "name": "Can view group",
+    "content_type": 9,
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 37,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 10,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 38,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 10,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 39,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 10,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 40,
+  "fields": {
+    "name": "Can view user",
+    "content_type": 10,
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 41,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 11,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 42,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 11,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 43,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 11,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 44,
+  "fields": {
+    "name": "Can view content type",
+    "content_type": 11,
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 45,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 12,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 46,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 12,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 47,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 12,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 48,
+  "fields": {
+    "name": "Can view session",
+    "content_type": 12,
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 49,
+  "fields": {
+    "name": "Can add Token",
+    "content_type": 13,
+    "codename": "add_token"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 50,
+  "fields": {
+    "name": "Can change Token",
+    "content_type": 13,
+    "codename": "change_token"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 51,
+  "fields": {
+    "name": "Can delete Token",
+    "content_type": 13,
+    "codename": "delete_token"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 52,
+  "fields": {
+    "name": "Can view Token",
+    "content_type": 13,
+    "codename": "view_token"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 53,
+  "fields": {
+    "name": "Can add token",
+    "content_type": 14,
+    "codename": "add_tokenproxy"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 54,
+  "fields": {
+    "name": "Can change token",
+    "content_type": 14,
+    "codename": "change_tokenproxy"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 55,
+  "fields": {
+    "name": "Can delete token",
+    "content_type": 14,
+    "codename": "delete_tokenproxy"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 56,
+  "fields": {
+    "name": "Can view token",
+    "content_type": 14,
+    "codename": "view_tokenproxy"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 57,
+  "fields": {
+    "name": "Can add calendar",
+    "content_type": 15,
+    "codename": "add_calendar"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 58,
+  "fields": {
+    "name": "Can change calendar",
+    "content_type": 15,
+    "codename": "change_calendar"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 59,
+  "fields": {
+    "name": "Can delete calendar",
+    "content_type": 15,
+    "codename": "delete_calendar"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 60,
+  "fields": {
+    "name": "Can view calendar",
+    "content_type": 15,
+    "codename": "view_calendar"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 61,
+  "fields": {
+    "name": "Can add calendar event",
+    "content_type": 16,
+    "codename": "add_calendarevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 62,
+  "fields": {
+    "name": "Can change calendar event",
+    "content_type": 16,
+    "codename": "change_calendarevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 63,
+  "fields": {
+    "name": "Can delete calendar event",
+    "content_type": 16,
+    "codename": "delete_calendarevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 64,
+  "fields": {
+    "name": "Can view calendar event",
+    "content_type": 16,
+    "codename": "view_calendarevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 65,
+  "fields": {
+    "name": "Can add calendar tag",
+    "content_type": 17,
+    "codename": "add_calendartag"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 66,
+  "fields": {
+    "name": "Can change calendar tag",
+    "content_type": 17,
+    "codename": "change_calendartag"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 67,
+  "fields": {
+    "name": "Can delete calendar tag",
+    "content_type": 17,
+    "codename": "delete_calendartag"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 68,
+  "fields": {
+    "name": "Can view calendar tag",
+    "content_type": 17,
+    "codename": "view_calendartag"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 69,
+  "fields": {
+    "name": "Can add follow status",
+    "content_type": 18,
+    "codename": "add_followstatus"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 70,
+  "fields": {
+    "name": "Can change follow status",
+    "content_type": 18,
+    "codename": "change_followstatus"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 71,
+  "fields": {
+    "name": "Can delete follow status",
+    "content_type": 18,
+    "codename": "delete_followstatus"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 72,
+  "fields": {
+    "name": "Can view follow status",
+    "content_type": 18,
+    "codename": "view_followstatus"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 73,
+  "fields": {
+    "name": "Can add calendar tag type",
+    "content_type": 19,
+    "codename": "add_calendartagtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 74,
+  "fields": {
+    "name": "Can change calendar tag type",
+    "content_type": 19,
+    "codename": "change_calendartagtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 75,
+  "fields": {
+    "name": "Can delete calendar tag type",
+    "content_type": 19,
+    "codename": "delete_calendartagtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 76,
+  "fields": {
+    "name": "Can view calendar tag type",
+    "content_type": 19,
+    "codename": "view_calendartagtype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 77,
+  "fields": {
+    "name": "Can add user setting",
+    "content_type": 20,
+    "codename": "add_usersetting"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 78,
+  "fields": {
+    "name": "Can change user setting",
+    "content_type": 20,
+    "codename": "change_usersetting"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 79,
+  "fields": {
+    "name": "Can delete user setting",
+    "content_type": 20,
+    "codename": "delete_usersetting"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 80,
+  "fields": {
+    "name": "Can view user setting",
+    "content_type": 20,
+    "codename": "view_usersetting"
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$onvzso6WvtkVOFFe6Mr9fN$oidV4yaTRZUPcIDMVN3rgYwzk3UVWetMbqE5tU9fjWw=",
+    "last_login": "2021-11-17T15:10:57.317Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@test.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2021-10-11T16:52:39.891Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$dcwauDdVCJzhzxgDamfapS$uXZrj6xmHwTdl3txsnA98bg4qt+1dxUFkvvBz8MfedY=",
+    "last_login": "2021-11-05T09:20:01.454Z",
+    "is_superuser": false,
+    "username": "pun",
+    "first_name": "",
+    "last_name": "",
+    "email": "pun@test.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2021-10-30T03:52:28.345Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 1,
+  "fields": {
+    "app_label": "sites",
+    "model": "site"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 2,
+  "fields": {
+    "app_label": "account",
+    "model": "emailaddress"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 3,
+  "fields": {
+    "app_label": "account",
+    "model": "emailconfirmation"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 4,
+  "fields": {
+    "app_label": "socialaccount",
+    "model": "socialaccount"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 5,
+  "fields": {
+    "app_label": "socialaccount",
+    "model": "socialapp"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 6,
+  "fields": {
+    "app_label": "socialaccount",
+    "model": "socialtoken"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 7,
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 8,
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 9,
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 10,
+  "fields": {
+    "app_label": "auth",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 11,
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 12,
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 13,
+  "fields": {
+    "app_label": "authtoken",
+    "model": "token"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 14,
+  "fields": {
+    "app_label": "authtoken",
+    "model": "tokenproxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 15,
+  "fields": {
+    "app_label": "skdue_calendar",
+    "model": "calendar"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 16,
+  "fields": {
+    "app_label": "skdue_calendar",
+    "model": "calendarevent"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 17,
+  "fields": {
+    "app_label": "skdue_calendar",
+    "model": "calendartag"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 18,
+  "fields": {
+    "app_label": "skdue_calendar",
+    "model": "followstatus"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 19,
+  "fields": {
+    "app_label": "skdue_calendar",
+    "model": "calendartagtype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 20,
+  "fields": {
+    "app_label": "skdue_calendar",
+    "model": "usersetting"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "snnwul7uexyxegnmzym8w48dtg5kb0z7",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnexL-lpOcM0W7WwQFkS3FSIe4OkVJA-2bmvdRA25qHraVlmEWdFajT78Y0PlLZgdyp3Koea1mXmfWu6IM2fa2SnpfD_TvI1PK3JgHTWetRInCHPhickGICwiCRoAcC441Hz5FssIZ7dI4mdixCxqn3B78jNzo:1mnMaP:CJx9R4D7_rTPPuYmscsO7Z28hh_BYwlgCLs8pcK8j7I",
+    "expire_date": "2021-12-01T15:10:57.322Z"
+  }
+},
+{
+  "model": "skdue_calendar.calendar",
+  "pk": 3,
+  "fields": {
+    "name": "Thai National Holidays 2021",
+    "slug": "thai-national-holidays-2021",
+    "user": 1
+  }
+},
+{
+  "model": "skdue_calendar.calendar",
+  "pk": 4,
+  "fields": {
+    "name": "pun",
+    "slug": "pun",
+    "user": 3
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 1,
+  "fields": {
+    "tag_type": "default"
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 2,
+  "fields": {
+    "tag_type": "private"
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 3,
+  "fields": {
+    "tag_type": "custom"
+  }
+},
+{
+  "model": "skdue_calendar.calendartagtype",
+  "pk": 4,
+  "fields": {
+    "tag_type": "google"
+  }
+},
+{
+  "model": "skdue_calendar.calendartag",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "tag": "event",
+    "tag_type": 1,
+    "tag_color": null
+  }
+},
+{
+  "model": "skdue_calendar.calendartag",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "tag": "private",
+    "tag_type": 2,
+    "tag_color": null
+  }
+},
+{
+  "model": "skdue_calendar.calendartag",
+  "pk": 4,
+  "fields": {
+    "user": 1,
+    "tag": "holiday",
+    "tag_type": 1,
+    "tag_color": null
+  }
+},
+{
+  "model": "skdue_calendar.calendartag",
+  "pk": 5,
+  "fields": {
+    "user": 3,
+    "tag": "custom-1",
+    "tag_type": 3,
+    "tag_color": "white"
+  }
+},
+{
+  "model": "skdue_calendar.calendartag",
+  "pk": 6,
+  "fields": {
+    "user": 3,
+    "tag": "custom-2",
+    "tag_type": 3,
+    "tag_color": "white"
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 4,
+  "fields": {
+    "calendar": 3,
+    "name": "New Year's Day",
+    "slug": "new-years-day",
+    "description": "",
+    "start_date": "2021-01-01T00:00:00Z",
+    "end_date": "2021-01-01T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 5,
+  "fields": {
+    "calendar": 3,
+    "name": "Chinese New Year",
+    "slug": "chinese-new-year",
+    "description": "",
+    "start_date": "2021-02-12T00:00:00Z",
+    "end_date": "2021-02-12T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 6,
+  "fields": {
+    "calendar": 3,
+    "name": "Makha Bucha",
+    "slug": "makha-bucha",
+    "description": "",
+    "start_date": "2021-02-26T00:00:00Z",
+    "end_date": "2021-02-26T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 7,
+  "fields": {
+    "calendar": 3,
+    "name": "Chakri Day",
+    "slug": "chakri-day",
+    "description": "",
+    "start_date": "2021-04-06T00:00:00Z",
+    "end_date": "2021-04-06T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 8,
+  "fields": {
+    "calendar": 3,
+    "name": "Songkran Holidays",
+    "slug": "songkran-holidays",
+    "description": "",
+    "start_date": "2021-04-12T00:00:00Z",
+    "end_date": "2021-04-15T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 9,
+  "fields": {
+    "calendar": 3,
+    "name": "Labour Day",
+    "slug": "labour-day",
+    "description": "",
+    "start_date": "2021-05-03T00:00:00Z",
+    "end_date": "2021-05-03T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 10,
+  "fields": {
+    "calendar": 3,
+    "name": "H.M. King's Coronation",
+    "slug": "hm-kings-coronation",
+    "description": "",
+    "start_date": "2021-05-04T00:00:00Z",
+    "end_date": "2021-05-04T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 11,
+  "fields": {
+    "calendar": 3,
+    "name": "Royal Ploughing Ceremony",
+    "slug": "royal-ploughing-ceremony",
+    "description": "",
+    "start_date": "2021-05-10T00:00:00Z",
+    "end_date": "2021-05-10T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 12,
+  "fields": {
+    "calendar": 3,
+    "name": "Visakha Bucha Day",
+    "slug": "visakha-bucha-day",
+    "description": "",
+    "start_date": "2021-05-26T00:00:00Z",
+    "end_date": "2021-05-26T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 13,
+  "fields": {
+    "calendar": 3,
+    "name": "H.M. Queen's Birthday",
+    "slug": "hm-queens-birthday",
+    "description": "",
+    "start_date": "2021-06-03T00:00:00Z",
+    "end_date": "2021-06-03T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 14,
+  "fields": {
+    "calendar": 3,
+    "name": "Buddhist Lent",
+    "slug": "buddhist-lent",
+    "description": "",
+    "start_date": "2021-07-25T00:00:00Z",
+    "end_date": "2021-07-25T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 15,
+  "fields": {
+    "calendar": 3,
+    "name": "Asahna Bucha Day",
+    "slug": "asahna-bucha-day",
+    "description": "",
+    "start_date": "2021-07-26T00:00:00Z",
+    "end_date": "2021-07-26T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 16,
+  "fields": {
+    "calendar": 3,
+    "name": "H.M. King's Birthday",
+    "slug": "hm-kings-birthday",
+    "description": "",
+    "start_date": "2021-07-28T00:00:00Z",
+    "end_date": "2021-07-28T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 17,
+  "fields": {
+    "calendar": 3,
+    "name": "H.M. Queen Mother's Birthday",
+    "slug": "hm-queen-mothers-birthday",
+    "description": "",
+    "start_date": "2021-08-12T00:00:00Z",
+    "end_date": "2021-08-12T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 18,
+  "fields": {
+    "calendar": 3,
+    "name": "Prince Mahidol Day",
+    "slug": "prince-mahidol-day",
+    "description": "",
+    "start_date": "2021-09-24T00:00:00Z",
+    "end_date": "2021-09-24T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 19,
+  "fields": {
+    "calendar": 3,
+    "name": "The passing of King Bhumibol",
+    "slug": "the-passing-of-king-bhumibol",
+    "description": "",
+    "start_date": "2021-10-13T00:00:00Z",
+    "end_date": "2021-10-13T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 20,
+  "fields": {
+    "calendar": 3,
+    "name": "Chulalongkorn Day",
+    "slug": "chulalongkorn-day",
+    "description": "",
+    "start_date": "2021-10-22T00:00:00Z",
+    "end_date": "2021-10-22T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 21,
+  "fields": {
+    "calendar": 3,
+    "name": "King Bhumibol's Birthday",
+    "slug": "king-bhumibols-birthday",
+    "description": "",
+    "start_date": "2021-12-05T00:00:00Z",
+    "end_date": "2021-12-05T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 22,
+  "fields": {
+    "calendar": 3,
+    "name": "Thailand Constitution Day",
+    "slug": "thailand-constitution-day",
+    "description": "",
+    "start_date": "2021-12-10T00:00:00Z",
+    "end_date": "2021-12-10T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 23,
+  "fields": {
+    "calendar": 3,
+    "name": "New Year's Eve",
+    "slug": "new-years-eve",
+    "description": "",
+    "start_date": "2021-12-31T00:00:00Z",
+    "end_date": "2021-12-31T23:59:59Z",
+    "tag": 4
+  }
+},
+{
+  "model": "skdue_calendar.calendarevent",
+  "pk": 24,
+  "fields": {
+    "calendar": 4,
+    "name": "sleepless night",
+    "slug": "sleepless-night",
+    "description": "I want to sleep. Don't wake me up.",
+    "start_date": "2021-10-30T00:00:00Z",
+    "end_date": "2021-10-30T06:00:00Z",
+    "tag": 2
+  }
+}
+]
