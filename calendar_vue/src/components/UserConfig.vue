@@ -68,7 +68,6 @@ export default {
         getUserName() {
             // const calendar_slug = this.$route.params.calendar_slug
 			this.token = localStorage.token
-			console.log("this is setting token=" ,this.token)
 			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
             axios.get(`/api/v2/me`)

@@ -32,20 +32,68 @@
 								<p></p>
 								<div><center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">Tag</center></div><br>
 								<div>
-									<p v-for="[key, color] of Object.entries(set_color)" :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">
-										{{ key }} 
-										<div class="flex-container">
-											<div style="background-color: var(--green);">.</div>
-											<div style="background-color: var(--black);">.</div>
-											<div style="background-color: var(--yellow);">.</div>
-										</div>
-									</p>
+									<!-- <p v-for="[key, color] of Object.entries(set_color)" :style="'font-size:22px; color:'+app_colors[this.color_theme['type']]['main']"> -->
+									<a v-if="0<this.tag_name.length">{{ this.tag_name[0] }}
+									<div class="flex-container">
+										<div @click="userColorTag1('red')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+										<div @click="userColorTag1('yellow')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+										<div @click="userColorTag1('blue')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+										<div @click="userColorTag1('green')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+										<div @click="userColorTag1('pink')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+										<div @click="userColorTag1('purple')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+										<div @click="userColorTag1('white')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+									</div>
+									</a> 
+									<a v-if="1<this.tag_name.length">{{ this.tag_name[1] }}
+									<div class="flex-container">
+										<div @click="userColorTag2('red')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+										<div @click="userColorTag2('yellow')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+										<div @click="userColorTag2('blue')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+										<div @click="userColorTag2('green') " id="color2" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+										<div @click="userColorTag2('pink')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+										<div @click="userColorTag2('purple')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+										<div @click="userColorTag2('white')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+									</div>
+									</a>
+									<a  v-if="2<this.tag_name.length">{{ this.tag_name[2] }}
+									<div class="flex-container">
+										<div @click="userColorTag3('red')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+										<div @click="userColorTag3('yellow')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+										<div @click="userColorTag3('blue')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+										<div @click="userColorTag3('green')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+										<div @click="userColorTag3('pink')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+										<div @click="userColorTag3('purple')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+										<div @click="userColorTag3('white')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+									</div>
+									</a>
+									<a v-if="3<this.tag_name.length">{{ this.tag_name[3] }}
+									<div class="flex-container">
+										<div @click="userColorTag4('red')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+										<div @click="userColorTag4('yellow')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+										<div @click="userColorTag4('blue')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+										<div @click="userColorTag4('green')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+										<div @click="userColorTag4('pink')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+										<div @click="userColorTag4('purple')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+										<div @click="userColorTag4('white')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+									</div>
+									</a>
+									<a v-if="4<this.tag_name.length">{{ this.tag_name[4] }}
+									<div class="flex-container">
+										<div @click="userColorTag5('red')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+										<div @click="userColorTag5('yellow')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+										<div @click="userColorTag5('blue')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+										<div @click="userColorTag5('green')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+										<div @click="userColorTag5('pink')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+										<div @click="userColorTag5('purple')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+										<div @click="userColorTag5('white')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+									</div>
+									</a>
+									<!-- </p> -->
 								</div>
 							</tr>
 						</table></center>
 						<div class="event-create-footer">
 							<button class="app-button-main" :style="'background-color:'+app_colors[this.color_theme['name']]['main']" type="submit">Done</button>
-							<button class="app-button-gray" @click="() => TogglePopup('buttonTrigger')">Cancel</button>
 						</div>
 					</form>
                     </center>
@@ -93,6 +141,8 @@ export default({
 			color_tag: {},
 			app_colors: APP_COLORS,
 			tag_colors: TAG_COLORS,
+			tag_name: [],
+			color_item: {}
 		}
 	},
 	mounted () {
@@ -104,7 +154,6 @@ export default({
 			axios
 				.get(`/api/v2/me`)
 				.then(response => {
-					// console.log(response.data.user.id == owner)
 					if (response.data.user.id == owner) {
 						this.fs = 'follow';
 					}
@@ -120,8 +169,6 @@ export default({
 			const calendar_slug = this.$route.params.calendar_slug
 			const calendar_type = this.$route.params.calendar_type
 			this.token = localStorage.token
-			console.log("this is setting token=" ,this.token)
-			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			axios
 				.get(`/api/v2/${calendar_type}/${calendar_slug}`)
@@ -136,12 +183,10 @@ export default({
 				response.data["available_tag"].forEach(elements => {
                 this.available_tag.push(elements["tag"])
 				})
-				// console.log('avaliable',this.available_tag)
 			})
         },
 		getUserDetail(){
 			this.token = localStorage.token
-			console.log("this is setting token=" ,this.token)
 			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			const main_url = "http://127.0.0.1:8000"
@@ -155,7 +200,11 @@ export default({
 					this.img = main_url + this.user_data.setting.image
 					this.color_theme["type"] = response.data["setting"]["theme_type"]
        	 			this.color_theme["name"] = response.data["setting"]["theme_name"]
-        			this.color_tag = response.data["color"]
+        			this.color_tag = this.user_data.color
+					console.log("color tag=", this.color_tag)
+					this.color_item = this.color_tag
+					console.log(this.color_item)
+					console.log("color", this.tag_colors)
 					// img url to base64
 					const toDataURL = url => fetch(url)
 						.then(response => response.blob())
@@ -179,29 +228,28 @@ export default({
 						// usertag.push(this.user_data.custom_tag[i].tag)
 					}
 					this.set_color = this.user_data.color
+					for (let j=0; j<this.user_data.custom_tag.length; j++){
+						this.tag_name.push((Object.entries(this.set_color)[j][0]))
+					}
+					console.log(this.tag_name.length)
 					this.is_fetch = true
-					// console.log(this.usertag)
-					// console.log(this.set_color)
-					// console.log(this.img)
-					// console.log(this.user_id)
 				})
 		},
         onFileSelected(event) {
 			this.selectedFile = event.target.files[0]
-			// console.log('file img= ', this.selectedFile)
         },
         onUpload() {
 			var apiDataForm = new FormData()
 			apiDataForm.append("file", this.selectedFile)
 			apiDataForm.append("display_name", this.display)
 			apiDataForm.append("about", this.description)
-			apiDataForm.append("color", JSON.stringify({}))
+			apiDataForm.append("color", JSON.stringify(this.color_item))
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			axios
 				.put(`/api/v2/me/user_setting`, apiDataForm)
 				.then(response => {
 					console.log(response.data)
-					window.location.reload()
+					// window.location.reload()
 					})
 				.catch(function(error) {
 					console.log(error),
@@ -216,6 +264,21 @@ export default({
 			u8arr[n] = bstr.charCodeAt(n);
 			}
 		return new File([u8arr], filename, {type:mime});
+		},
+		userColorTag1(color){
+			this.color_item[this.tag_name[0]]=color
+		},
+		userColorTag2(color){
+			this.color_item[this.tag_name[1]]=color
+		},
+		userColorTag3(color){
+			this.color_item[this.tag_name[2]]=color
+		},
+		userColorTag4(color){
+			this.color_item[this.tag_name[3]]=color
+		},
+		userColorTag5(color){
+			this.color_item[this.tag_name[4]]=color
 		},
 	}
 })
@@ -321,9 +384,13 @@ export default({
 .flex-container {
   display: flex;
   flex-wrap: nowrap;
+  background-color: rgb(230, 230, 230);
+  border-radius: 8px;
 }
 
 .flex-container > div {
+  vertical-align: middle;
+  border-radius: 50%;
   background-color: #f1f1f1;
   width: 25px;
   height: 25px;
