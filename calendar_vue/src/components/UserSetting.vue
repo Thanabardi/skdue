@@ -23,7 +23,7 @@
                             <div>
                                 <a style="font-size: 28px">Upload profile image</a><br>
                                 <p></p>
-                                <input type="file" @change="onFileSelected">
+                                <input type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png">
                             </div>
                         </center>
 						<!-- End -->
@@ -32,9 +32,13 @@
 								<p></p>
 								<div><center style="font-size:30px">Tag</center></div><br>
 								<div>
-									<p v-for="[key, color] of Object.entries(set_color)">{{ key }} 
-										<textarea>{{color}}
-										</textarea>
+									<p v-for="[key, color] of Object.entries(set_color)">
+										{{ key }} 
+										<div class="flex-container">
+											<div style="background-color: var(--green);">.</div>
+											<div style="background-color: var(--black);">.</div>
+											<div style="background-color: var(--yellow);">.</div>
+										</div>
 									</p>
 								</div>
 							</tr>
@@ -138,21 +142,23 @@ export default({
 					this.display = this.user_data.setting.display_name
 					this.description = this.user_data.setting.about
 					this.img = main_url + this.user_data.setting.image
+					// img url to base64
 					const toDataURL = url => fetch(url)
 						.then(response => response.blob())
 						.then(blob => new Promise((resolve, reject) => {
 						const reader = new FileReader()
 						reader.onloadend = () => resolve(reader.result)
 						reader.onerror = reject
+						// base64
 						reader.readAsDataURL(blob)
 					}))
+					// base64 to file object for axios put
 					toDataURL(this.img)
 					.then(dataUrl => {
 						console.log('Here is Base64 Url', dataUrl)
 						var fileData = this.dataURLtoFile(dataUrl, "userimage.jpg");
 						console.log("Here is JavaScript File Object",fileData)
 						this.selectedFile = fileData
-						fileArr.push(fileData)
 					})
 					for (let i=0; i<this.user_data.custom_tag.length; i++){
 						this.usertag.push(this.user_data.custom_tag[i].tag)
@@ -161,13 +167,13 @@ export default({
 					this.set_color = this.user_data.color
 					console.log(this.usertag)
 					console.log(this.set_color)
-					console.log(this.img)
-					console.log(this.user_id)
+					// console.log(this.img)
+					// console.log(this.user_id)
 				})
 		},
         onFileSelected(event) {
 			this.selectedFile = event.target.files[0]
-			console.log('file img= ', this.selectedFile)
+			// console.log('file img= ', this.selectedFile)
         },
         onUpload() {
 			var apiDataForm = new FormData()
@@ -175,8 +181,6 @@ export default({
 			apiDataForm.append("display_name", this.display)
 			apiDataForm.append("about", this.description)
 			apiDataForm.append("color", JSON.stringify({}))
-			console.log("File null=",this.selectedFile)
-			console.log(apiDataForm)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			axios
 				.put(`/api/v2/me/user_setting`, apiDataForm)
@@ -190,13 +194,14 @@ export default({
 			})
 		},
 		dataURLtoFile(dataurl, filename) {
+			// create a file object of url image that was transformed as base64
 			var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
 			bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
 			while(n--){
 			u8arr[n] = bstr.charCodeAt(n);
 			}
 		return new File([u8arr], filename, {type:mime});
-		}
+		},
 	}
 })
 </script>
@@ -298,5 +303,20 @@ export default({
   width: 250px;
   height: 250px;
   border-radius: 50%;
+}
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.flex-container > div {
+  background-color: #f1f1f1;
+  width: 25px;
+  height: 25px;
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+  text-indent: -9999px;
 }
 </style>
