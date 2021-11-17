@@ -79,7 +79,7 @@ export default {
 		},
 
 		logoutData(e){
-			e.preventDefault();
+			// e.preventDefault();
 			axios.delete(`/api/v2/logout`, this.dataLogout)
 				.then(response => {
 				this.clearlogout(response.data);

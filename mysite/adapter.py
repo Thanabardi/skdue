@@ -19,11 +19,15 @@ class MyAccountAdapter(DefaultAccountAdapter):
                 "name": new_user.username,
                 "slug": generate_slug(new_user.username)})
         token, created = Token.objects.get_or_create(user=new_user)
-
-        # path = "{fornt_end_path}/me/{username}/"
-
-        # return path.format(fornt_end_path=CORS_ALLOWED_ORIGINS[0], username=new_user.username)
-
         return CORS_ALLOWED_ORIGINS[0] + f"?token={token.key}&slug={user_calendar.slug}"
 
-        # return Response({"msg": "Hi there!"})
+    def get_signup_redirect_url(self, request):
+        new_user = request.user
+        user_calendar, created = Calendar.objects.get_or_create(
+            user = User.objects.get(username=new_user.username),
+            defaults={
+                "name": new_user.username,
+                "slug": generate_slug(new_user.username)})
+        token, created = Token.objects.get_or_create(user=new_user)
+        return CORS_ALLOWED_ORIGINS[0] + f"?token={token.key}&slug={user_calendar.slug}"
+
