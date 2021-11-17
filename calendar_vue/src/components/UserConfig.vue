@@ -1,27 +1,23 @@
 <template>
 	<div class="user-detail">
 		
-		<div v-if="this.user_name == ''" class="user-detail-not-login">
+		<div v-if="(this.user_name == '')" class="user-detail-not-login">
 			<h2><router-link class="user-detail-app-button"
             	to=/>Skdue</router-link></h2>
-			<!-- <router-link class="user-detail-button" style=" background: none; border: 2px solid var(--white);" 
+			<!-- <router-link class="user-detail-button" style=" background: none; border: 2px solid white;" 
             	to=/>Login</router-link> -->
-			<router-link class="user-detail-button" style=" background: var(--green); border: 2px solid var(--green);" 
+			<router-link class="user-detail-button" :style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']" 
             	to=/>Login</router-link>
 		</div>
 
 		<div v-else>
 			<h2><div class="user-detail-app-button" @click="redirectUserHome()">Skdue</div></h2>
-			<div class="user-detail-login">
-				<button class="app-button-tp" style="font-size: 22px;" 
-					@click="() => TogglePopup('buttonTrigger')"><img :src="img" class="avatar"> {{ this.display_name }}</button>
-				<div v-if="popupTriggers.buttonTrigger" 
-					:TogglePopup="() => TogglePopup('buttonTrigger')">
+			<div class="user-detail-login" @click="() => TogglePopup('buttonTrigger')">
+				<div><img :src="img" class="avatar"> {{ this.display_name }}</div>
+				<div v-if="popupTriggers.buttonTrigger">
 					<div class="user-detail-tab">
 						<button class="user-detail-button-tp" @click="settingRoute">Setting</button>
-						<form @submit.prevent="logoutData">
-							<button class="user-detail-button-tp" >Logout</button>
-						</form>
+						<button class="user-detail-button-tp" @click="() => logoutData()">Logout</button>
 					</div>
 				</div>
 			</div>
@@ -33,6 +29,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import Calendar from '../components/Calendar.vue'
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
 
 export default {
 	setup () {
@@ -56,8 +53,13 @@ export default {
 			},
 			display_name: '',
 			img: '',
+			tag_colors: TAG_COLORS,
+            app_colors: APP_COLORS,
 		}
 	},
+	props: {
+		color_theme: {},
+    },
     mounted () {
         this.getUserName()
 		this.getUserDetail()
@@ -83,8 +85,8 @@ export default {
 			this.$router.push({ path: `/`});
 
 		},
-		logoutData(e){
-			e.preventDefault();
+		logoutData(){
+			// e.preventDefault();
 			axios.get(`/api/v2/logout`, this.dataLogout)
 				.then(response => {
 				this.clearlogout(response.data);
@@ -119,25 +121,10 @@ export default {
 
 @import './../assets/style.css';
 
-.user-detail-app-button {
-    line-height: 0px;
-    font-size: 40px;
-    font-weight: 500px;
-    position: fixed;
-    left: 2%;
-    background: none;
-    border: none;
-    color: var(--white);
-    cursor: pointer;
-    text-decoration: none;
-}
-.user-detail-app-button:active {
-	color: var(--white-dark);
-}
 .user-detail {
     position: absolute;
     right: 2%;
-	top: 10px;
+	top: 12px;
 }
 .user-detail-not-login {
 	display: flex;
@@ -146,29 +133,46 @@ export default {
 	width: 320px;
 }
 .user-detail-login {
-	width: 250px;
+	color: white;
+	width: 200px;
     border: 1px solid transparent;
     padding: 5px;
+	font-size: 22px;
 	transform: translate(0, -20px);
+	cursor: pointer;
 }
 .user-detail-login:hover {
-	border: 1px solid var(--white-op-1);
+	border: 1px solid rgba(255, 255, 255, 0.5);
 }
 .user-detail-tab {
-    background-color: var(--white);
-    box-shadow: 0px 0px 1px 0px var(--black-op-1), 0px 0px 40px 0px var(--black-op-2);
+    background-color: rgb(240, 240, 240);
+  	box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.5), 0px 0px 40px 0px rgba(0, 0, 0, 0.2);
     position: absolute;
-    width: 262px;
+    width: 212px;
     margin-top: 10px;
     overflow-x: hidden;
     right: 0;
     border-radius: 2px;
     text-align: left;
 }
+.user-detail-app-button {
+    line-height: 0px;
+    font-size: 40px;
+    font-weight: 500px;
+    position: fixed;
+    left: 2%;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+.user-detail-app-button:hover {
+	opacity: 0.8;
+}
 .user-detail-button-tp {
     background: none;
     border: none;
-    color: var(--black);
     cursor: pointer;
     font-size: 18px;
     width: 100%;
@@ -176,11 +180,10 @@ export default {
     text-align: left;
 }
 .user-detail-button-tp:hover {
-    background-color: var(--green);
-    color: var(--white);
+    background-color: rgb(220, 220, 220);
 }
 .user-detail-button {
-    color: var(--white);
+    color: white;
     cursor: pointer;
     font-size: 22px;
     width: 100px;

@@ -11,11 +11,13 @@ from skdue_calendar.serializers import *
 from skdue_calendar.models import *
 
 DEFAULT_IMAGE = "/images/default.jpg"
+DEFAULT_THEME_TYPE = "light"
+DEFAULT_THEME_NAME = "theme-1"
 DEFAULT_TAG_COLOR = "white"
 
 
 class UserSettingView(APIView):
-    """user setting for public view"""
+    """User setting for public view"""
 
     def get(self, request, calendar_slug):
         try:
@@ -27,7 +29,10 @@ class UserSettingView(APIView):
             user=calendar.user,
             defaults={
                 "display_name": user.username,
-                "image": DEFAULT_IMAGE})
+                "image": DEFAULT_IMAGE,
+                "theme_type": DEFAULT_THEME_TYPE,
+                "theme_name": DEFAULT_THEME_NAME
+            })
         tags = CalendarTag.objects.filter(user=user)
         colors = {}
         for t in tags:
@@ -36,7 +41,6 @@ class UserSettingView(APIView):
                 t.tag_color = DEFAULT_TAG_COLOR
                 t.save()
             colors[t.tag] = t.tag_color
-        print(tags)
         data = {
             "setting": UserSettingSerializer(user_setting).data,
             "custom_tag": CalendarTagSerializer(tags, many=True).data,
@@ -47,6 +51,7 @@ class UserSettingView(APIView):
 
 class UserMeSetting(APIView):
     """view class that require authentication"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)  
 
@@ -55,7 +60,9 @@ class UserMeSetting(APIView):
             user=request.user,
             defaults={
                 "display_name": request.user.username,
-                "image": DEFAULT_IMAGE
+                "image": DEFAULT_IMAGE,
+                "theme_type": DEFAULT_THEME_TYPE,
+                "theme_name": DEFAULT_THEME_NAME
             }
         )
         tags = CalendarTag.objects.filter(user=request.user)
