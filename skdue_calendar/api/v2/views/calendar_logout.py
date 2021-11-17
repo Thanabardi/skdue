@@ -9,12 +9,8 @@ class Logout(APIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,) 
 
-    # def get(self, request):
-    #     logout(request)
-    #     data = {"status": "logged out"}
-    #     return Response(data)
-
     def delete(self, request):
         token = Token.objects.get(user=request.user)
         token.delete()
         return Response({"msg": "token expired"})
+
