@@ -1,7 +1,7 @@
 <template>
 	<div class="user-detail">
 		
-		<div v-if="(this.user_name == '')" class="user-detail-not-login">
+		<div v-if="(this.token == '')" class="user-detail-not-login">
 			<h2><router-link class="user-detail-app-button"
             	to=/>Skdue</router-link></h2>
 			<!-- <router-link class="user-detail-button" style=" background: none; border: 2px solid white;" 
@@ -67,6 +67,10 @@ export default {
 	methods: {
         getUserName() {
             // const calendar_slug = this.$route.params.calendar_slug
+			this.token = localStorage.token
+			console.log("this is setting token=" ,this.token)
+			// console.log("slug =", calendar_slug)
+			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
             axios.get(`/api/v2/me`)
 			.then( response => {
 				// console.log(response.data)
@@ -198,4 +202,7 @@ export default {
   height: 35px;
   border-radius: 50%;
 }
+// .avatar img {
+//     padding: -10px 0px 0px -180px;
+// }
 </style>
