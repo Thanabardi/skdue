@@ -242,38 +242,41 @@ class UserMeTests(TestCase):
     def test_me_followed_post(self):
         self.client = authenticated_client_factory(self.user)
         followed = User(username="followed", password="followed")
+        followed.save()
         calendar = Calendar(
             user=followed,
             name=followed.username,
             slug=generate_slug(followed.username)
         )
-        followed.save()
+        calendar.save()
         response = self.client.post(
             reverse('api_v2:me_follow'),
             data = {
                 "option": "follow",
                 "follow_id": followed.id,
-                "follow_calendar": 1,
+                "follow_calendar": calendar.id
                 }
         )
         self.assertEqual(HTTP_201_CREATED, response.status_code)
 
     def test_me_unfollowed_post(self):
         self.client = authenticated_client_factory(self.user)
+
         # follow
         followed = User(username="followed", password="followed")
+        followed.save()
         calendar = Calendar(
             user=followed,
             name=followed.username,
             slug=generate_slug(followed.username)
         )
-        followed.save()
+        calendar.save()
         self.client.post(
             reverse('api_v2:me_follow'),
             data = {
                 "option": "follow",
                 "follow_id": followed.id,
-                "follow_calendar": 1,
+                "follow_calendar": calendar.id,
             }
         )
         # unfollow
@@ -282,7 +285,7 @@ class UserMeTests(TestCase):
             data = {
                 "option": "unfollow",
                 "follow_id": followed.id,
-                "follow_calendar": 1,
+                "follow_calendar": calendar.id,
             }
         )
         with self.assertRaises(FollowStatus.DoesNotExist):
