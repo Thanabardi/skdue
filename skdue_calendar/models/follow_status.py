@@ -51,6 +51,8 @@ class FollowStatus(models.Model):
         if user == followed:
             return False
         # A user must follow another exist user
+        if fsc.user != followed:
+            return False
         if len(FollowStatus.objects.filter(user=user, followed=followed, followed_calendar=fsc)) != 0:
             return False
         return True
