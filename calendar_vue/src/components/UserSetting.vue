@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div :style="'left:0px; height: 100%; width: 100%; position: fixed; overflow-x: hidden; background-color:' + app_colors[this.color_theme['type']]['sub']">
         <div>
             <CalendarNavbar />
         </div>
-        <div class="calendar-hr">
+        <div class="calendar-hr" :style="'color:'+app_colors[this.color_theme['type']]['main']">
                 <center><a style="font-size: 40px">User Setting</a></center>
 				<p></p>
 				<center><img id="current_img" :src="img" class="avatar"></center>
@@ -21,7 +21,7 @@
                         <!-- Upload Img -->
                         <center>
                             <div>
-                                <a style="font-size: 28px">Upload profile image</a><br>
+                                <a :style="'font-size: 28px;  color:'+app_colors[this.color_theme['type']]['main']">Upload profile image</a><br>
                                 <p></p>
                                 <input type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png">
                             </div>
@@ -30,9 +30,9 @@
 						<center><table>
 							<tr>
 								<p></p>
-								<div><center style="font-size:30px">Tag</center></div><br>
+								<div><center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">Tag</center></div><br>
 								<div>
-									<p v-for="[key, color] of Object.entries(set_color)">
+									<p v-for="[key, color] of Object.entries(set_color)" :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">
 										{{ key }} 
 										<div class="flex-container">
 											<div style="background-color: var(--green);">.</div>
@@ -44,7 +44,7 @@
 							</tr>
 						</table></center>
 						<div class="event-create-footer">
-							<button class="app-button-main" type="submit">Done</button>
+							<button class="app-button-main" :style="'background-color:'+app_colors[this.color_theme['name']]['main']" type="submit">Done</button>
 							<button class="app-button-gray" @click="() => TogglePopup('buttonTrigger')">Cancel</button>
 						</div>
 					</form>
@@ -57,6 +57,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import CalendarNavbar from './CalendarNavbar.vue'
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
 
 export default({
     components: {
@@ -87,6 +88,11 @@ export default({
             token: "asdad",
 			fs: "follow",
             selectedFile: null,
+			color_theme: {"type" : "light", "name" : "theme-1"},
+			is_fetch: false,
+			color_tag: {},
+			app_colors: APP_COLORS,
+			tag_colors: TAG_COLORS,
 		}
 	},
 	mounted () {
@@ -114,6 +120,7 @@ export default({
 			const calendar_slug = this.$route.params.calendar_slug
 			const calendar_type = this.$route.params.calendar_type
 			this.token = localStorage.token
+			console.log("this is setting token=" ,this.token)
 			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			axios
@@ -133,6 +140,10 @@ export default({
 			})
         },
 		getUserDetail(){
+			this.token = localStorage.token
+			console.log("this is setting token=" ,this.token)
+			// console.log("slug =", calendar_slug)
+			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			const main_url = "http://127.0.0.1:8000"
 			axios
 				.get(`/api/v2/me/user_setting`)
@@ -142,6 +153,9 @@ export default({
 					this.display = this.user_data.setting.display_name
 					this.description = this.user_data.setting.about
 					this.img = main_url + this.user_data.setting.image
+					this.color_theme["type"] = response.data["setting"]["theme_type"]
+       	 			this.color_theme["name"] = response.data["setting"]["theme_name"]
+        			this.color_tag = response.data["color"]
 					// img url to base64
 					const toDataURL = url => fetch(url)
 						.then(response => response.blob())
@@ -155,9 +169,9 @@ export default({
 					// base64 to file object for axios put
 					toDataURL(this.img)
 					.then(dataUrl => {
-						console.log('Here is Base64 Url', dataUrl)
+						// console.log('Here is Base64 Url', dataUrl)
 						var fileData = this.dataURLtoFile(dataUrl, "userimage.jpg");
-						console.log("Here is JavaScript File Object",fileData)
+						// console.log("Here is JavaScript File Object",fileData)
 						this.selectedFile = fileData
 					})
 					for (let i=0; i<this.user_data.custom_tag.length; i++){
@@ -165,8 +179,9 @@ export default({
 						// usertag.push(this.user_data.custom_tag[i].tag)
 					}
 					this.set_color = this.user_data.color
-					console.log(this.usertag)
-					console.log(this.set_color)
+					this.is_fetch = true
+					// console.log(this.usertag)
+					// console.log(this.set_color)
 					// console.log(this.img)
 					// console.log(this.user_id)
 				})
@@ -225,11 +240,8 @@ export default({
 	line-height: 10px;
 	text-align: center;
 }
-.app-button-tp:hover {
-    background-color: var(--white-op-2);
-}
 .event-create-popup-bg {
-	background-color: var(--black-op-1);
+	background-color: rgba(0, 0, 0, 0.5);
 	top: 0;
 	left: 0;
 	right: 0;
@@ -245,21 +257,20 @@ export default({
 	animation-duration: 0.5s
 }
 .event-create-popup {
-	background: var(--white);
-	color: var(--black);
+	color: black;
 	height: 100%;
 	overflow-x: hidden;
 	padding: 20px;
 }
 .event-create-form {
-	color: var(--black);
+	color: black;
 	text-align: left;
 	font-size: 20px;
 	margin: 20x;
 	padding: 10px;
 }
 .event-create-textarea {
-	background: var(--gray-light);
+	background: rgb(230, 230, 230);
 	font-size: 20px;
 	display: block;
 	padding: 10px 20px;
@@ -268,12 +279,12 @@ export default({
 	resize: vertical;
 }
 .event-create-table {
-	width: 100%;
+	width: 104%;
 	text-align: end;
 	border-spacing: 20px;
 }
 .event-create-input {
-	background: var(--gray-light);
+	background: rgb(230, 230, 230);
 	font-size: 20px;
 	padding: 10px;
 	width: 200px;
@@ -281,18 +292,18 @@ export default({
 	border-radius: 8px;
 }
 .event-create-tag-bt {
-	background-color: var(--gray-light);
+	background-color: rgb(230, 230, 230);
+	color: black;
 	margin-left: 10px;
     border: 0;
     padding: 5px 10px;
-    margin-top: 20px;
-    color: var(--black);
+    margin-bottom: 10px;
     font-size: 20px;
     cursor: pointer;
     border-radius: 8px;
 }
 .event-create-tag-bt:focus {
-	background-color: var(--green);
+	opacity: 0.5;
 }
 .event-create-footer {
 	display: flex;
@@ -303,6 +314,9 @@ export default({
   width: 250px;
   height: 250px;
   border-radius: 50%;
+}
+.avatar img {
+	margin: -10px 0px 0px -180px;
 }
 .flex-container {
   display: flex;
