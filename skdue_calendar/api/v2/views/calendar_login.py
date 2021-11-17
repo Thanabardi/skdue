@@ -1,4 +1,4 @@
-from django.http.response import Http404
+from rest_framework.status import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from skdue_calendar.models import Calendar
@@ -25,4 +25,4 @@ class Login(APIView):
             login(request, user)
             return Response(data)
         else:
-            raise Http404
+            return Response({"msg": "user not found"}, HTTP_404_NOT_FOUND)

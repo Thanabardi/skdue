@@ -1,9 +1,13 @@
-from copy import error
 from itertools import chain
+from datetime import datetime
+from django.urls import reverse
+from django.shortcuts import redirect
+from django.http.response import Http404, HttpResponseRedirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.status import *
 
 from django.contrib.auth.models import User
 from skdue_calendar.serializers import *
@@ -29,6 +33,8 @@ def get_custom_tag(user):
 
 
 class UserMeView(APIView):
+    """View of user's information"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)  
 
@@ -43,16 +49,24 @@ class UserMeView(APIView):
                 "available_tag": CalendarTagSerializer(get_available_tag(user, is_private=True), many=True).data
             }
             return Response(data)
-        return Response({"msg": "login required"}, 403)
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)
 
 
 class UserMeCalendarView(APIView):
+    """View of user's specific calendar information"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,) 
 
     def get(self, request, calendar_slug):
         """User calendar detail with public, private, and followed events"""
-        if request.user.id == Calendar.objects.get(slug=calendar_slug).user.id:
+
+        try:
+            calendar = Calendar.objects.get(slug=calendar_slug)
+        except Calendar.DoesNotExist:
+            raise Http404
+
+        if request.user.id == calendar.user.id:
             user = request.user
             # load follow status
             follow_status = FollowStatus.objects.filter(user=user)
@@ -92,14 +106,14 @@ class UserMeCalendarView(APIView):
                             data_event[tag.tag] = CalendarEventSerializer(events, many=True).data
             data["tag"] = data_event.keys()
             return Response(data)
-        return Response({"msg": "login required"}, 403)
+        return Response({"msg": "login required or you are not calendar owner"}, HTTP_403_FORBIDDEN)
         
 
     def post(self, request, calendar_slug):
         """Create new calendar event
         
         Args:
-            event_data: a dict consist of,
+            requset.data: a dict consist of,
                 - name: calendar event name
                 - description: description of event
                 - start_date: format (YYYY-MM-DD hh:mm:ss)
@@ -135,13 +149,15 @@ class UserMeCalendarView(APIView):
                 data["status"] = "success"
                 data["msg"] = "calendar event created"
                 # id of event will be null when `is_test` == true
-                return Response(data, 201)
+                return Response(data, HTTP_201_CREATED)
             else:
-                return Response({"msg": "invalid event data"}, 400)
-        return Response({"msg": "login required"}, 403) 
+                return Response({"msg": "invalid event data"}, HTTP_400_BAD_REQUEST)
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED) 
 
 
 class UserMeFollowedView(APIView):
+    """View for user's follow status with follow/unfollow option"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,) 
 
@@ -151,7 +167,7 @@ class UserMeFollowedView(APIView):
             user = request.user
             follow_status = FollowStatus.objects.filter(user=user)
             return Response(FollowStatusSerializer(follow_status, many=True).data)
-        return Response({"msg": "login required"}, 403)
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)
 
     def post(self, request):
         """User can follow another user here"""
@@ -162,17 +178,19 @@ class UserMeFollowedView(APIView):
             if FollowStatus.is_valid(request.user, followed_user):
                 fs = FollowStatus(user=request.user, followed=followed_user)
                 fs.save()
-                return Response({"msg": "followed"}, 201)
+                return Response({"msg": "followed"}, HTTP_201_CREATED)
             else:
-                return Response({"msg": "invalid follow status"}, 400)
+                return Response({"msg": "invalid follow status"}, HTTP_400_BAD_REQUEST)
         elif opt == "unfollow":
             fs = FollowStatus.objects.get(user=request.user, followed=followed_user)
             fs.unfollow()
-            return Response({"msg": "unfollowed"}, 200)
-        return Response({"msg": "option not found"}, 404)
+            return Response({"msg": "unfollowed"}, HTTP_200_OK)
+        return Response({"msg": "option not found"}, HTTP_404_NOT_FOUND)
 
 
 class UserMeAddTagView(APIView):
+    """View for adding new custom tag"""
+
     authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,) 
     
@@ -187,7 +205,114 @@ class UserMeAddTagView(APIView):
                     tag_type = CalendarTagType.objects.get(tag_type="custom")
                 )
                 new_custom_tag.save()
-                return Response(CalendarTagSerializer(new_custom_tag).data)
+                return Response(CalendarTagSerializer(new_custom_tag).data, HTTP_201_CREATED)
             else:
-                return Response({"msg": f"tag: {request.data['tag']} is already exist"}, 400)
-        return Response({"msg": "login required"}, 403)
+                return Response({"msg": f"tag: {request.data['tag']} is already exist"}, HTTP_400_BAD_REQUEST)
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)
+
+
+class UserMeEventView(APIView):
+    """View for user's calendar event with ability to editing event's detail"""
+
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def is_owner(self, user, calendar_slug) -> bool:
+        try:
+            calendar = Calendar.objects.get(slug=calendar_slug)
+            return user.id == calendar.user.id
+        except Calendar.DoesNotExist:
+            raise Http404
+
+    def get_event(self, calendar_slug, event_slug) -> CalendarEvent:
+        try:
+            event = CalendarEvent.objects.get(calendar__slug=calendar_slug, slug=event_slug)
+            return event
+        except CalendarEvent.DoesNotExist:
+            raise Http404
+
+    def get(self, request, calendar_slug, event_slug):
+        if self.is_owner(request.user, calendar_slug):
+            event = self.get_event(calendar_slug, event_slug)
+            serializer = CalendarEventSerializer(event)
+            return Response(serializer.data, HTTP_200_OK)
+        return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
+
+    def put(self, request, calendar_slug, event_slug):
+        """Change calendar event
+        
+        Args:
+            requset.data: a dict consist of,
+                - name: calendar event name
+                - description: description of event
+                - start_date: format (YYYY-MM-DD hh:mm:ss)
+                - end_date: same format as start_date
+                - tag: name of event tag
+                - optional:
+                    - is_test: True for testing, False otherwise
+
+        Returns:
+            dict: response data consist of,
+                - msg
+                - new_url (when event detail is successfully changed)
+        """
+        if self.is_owner(request.user, calendar_slug):
+            event = self.get_event(calendar_slug, event_slug)
+
+            # check tag availability
+            try:
+                changed_tag = CalendarTag.objects.get(tag=request.data["tag"])
+            except CalendarTag.DoesNotExist:
+                raise Http404
+            if changed_tag.id in [t.id for t in get_available_tag(request.user, is_private=True)]:
+                event.tag = changed_tag
+            else:
+                return Response({"msg": "invalid tag"}, HTTP_400_BAD_REQUEST)
+
+            # check name availability
+            if event.name != request.data["name"]:
+                try:
+                    check_event = CalendarEvent.objects.get(
+                        calendar__slug=calendar_slug,
+                        name=request.data["name"]
+                        )
+                    print(check_event)
+                    return Response({"msg": "the event name that you want to change is already exist in your calendar event"}, HTTP_400_BAD_REQUEST)
+                except CalendarEvent.DoesNotExist:
+                    event.name = request.data["name"]
+
+            # check start and end date
+            start_date = datetime.strptime(request.data["start_date"], "%Y-%m-%d %H:%M:%S")
+            end_date = datetime.strptime(request.data["end_date"], "%Y-%m-%d %H:%M:%S")
+            if start_date < end_date:
+                event.start_date = request.data["start_date"]
+                event.end_date = request.data["end_date"]
+            else:
+                return Response({"msg": "invalid datetime"}, HTTP_400_BAD_REQUEST)
+
+            new_slug = generate_slug(request.data["name"])
+            event.slug = new_slug
+            event.description = request.data["description"]
+
+            event.save()
+
+            return Response(
+                    {
+                        "msg": "changed event detail",
+                        "new_url": reverse('api_v2:me_event', args=[calendar_slug, new_slug])
+                    }, 
+                    HTTP_200_OK
+                )
+        else:
+            return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
+
+    def delete(self, request, calendar_slug, event_slug):
+        """Delete requested event"""
+        if self.is_owner(request.user, calendar_slug):
+            event = self.get_event(calendar_slug, event_slug)
+            print(event)
+            event.delete()
+            return Response({"msg": "event deleted"}, HTTP_200_OK)
+        else:
+            return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
+

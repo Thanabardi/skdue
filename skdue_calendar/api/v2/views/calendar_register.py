@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.status import *
 from skdue_calendar.models import Calendar
 from skdue_calendar.utils import generate_slug
 from skdue_calendar.serializers import CalendarSerializer
@@ -49,5 +50,5 @@ class Register(APIView):
             login(request, user)
             return Response(data)
         else:
-            return Response({"status": "failed", "msg": "Account created fail"})
+            return Response({"status": "failed", "msg": "Account created fail"}, HTTP_400_BAD_REQUEST)
         
