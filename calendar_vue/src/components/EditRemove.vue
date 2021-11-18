@@ -40,12 +40,25 @@
 									v-model="detail[5]"></td>
 							</tr>
 							<tr>
-								<td>Tag    <i>(origin is `{{this.detail[6]}}`)</i></td>
-								<td style="width: 300px;">
-                  <button type="button" v-for="tag in available_tag" :key="tag"
-										class="event-create-tag-bt"  @click="() => this.tag = tag">
-										{{ tag }}</button>
+								<td>Tag    </td>
 
+								<td>
+									<input style="width: 250px;" class="event-create-input"
+										 maxlength="10" required v-model="detail[6]">
+								</td>
+							</tr>
+							<tr>
+								<td v-if="this.available_tag.length > 5"
+									style="vertical-align: top; padding-top: 10px;">Tag</td>
+								<td v-else></td>
+
+								<td style="width: 400px;">
+                  <!-- <button type="button" v-for="tag in available_tag" :key="tag"
+										class="event-create-tag-bt"  @click="() => this.tag = tag">
+										{{ tag }}</button> -->
+										<button type="button" v-for="tag in available_tag" :key="tag"
+											class="event-create-tag-bt" v-on:click.left="this.detail[6] = tag"
+											v-on:click.right="TagEdit($event)">{{ tag }}</button>
 
                   <!-- <div class="tag-button"  v-for="tag in available_tag" :key="tag">
                     <button type="button" class="event-create-tag-bt" autofocus  @click="() => this.tag = tag">
@@ -55,18 +68,27 @@
                   </td>
 							</tr>
 						</table>
+
+
+
 						<div class="event-create-footer">
 							<button class="app-button-main" type="submit"
 							:style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']">Done</button>
 							<button class="app-button-gray"
 							:style="'background-color:'+app_colors[this.color_theme['type']]['main-1']"
-							 @click="() => close()">Cancel</button><br>
-							 <button class="app-button-red" type="submit"
-							 :style="'background-color:'+app_colors[this.color_theme['type']]['main-1']"
-							 @click="() => deleteEvent()">Delete</button>
+							 @click="() => close()">Cancel</button>
+							 <div class="app-button-main"
+							 style="background-color:red; text-align:center; "
+							 @click="() => deleteEvent()">Delete</div>
+
 						</div>
+
 					</form>
+
+
+
 				</div>
+
 			</div>
 		</div>
 	</div>
@@ -161,7 +183,9 @@ export default {
 					.then( response => {
 					this.user_name = response.data["user"]["username"]
 					response.data["available_tag"].forEach(elements => {
-					this.available_tag.push(elements["tag"])
+						if (elements["user"] == response.data["user"]["id"]) {
+							this.available_tag.push(elements["tag"])
+						}
 						})
 					console.log('avaliable',this.available_tag)
 			})
@@ -177,7 +201,7 @@ export default {
 				"end_date" : end_date_time,
 				"tag" : this.tag
 			}
-			
+
 			axios.delete(`/api/v2/me/${this.user_name}/${this.detail[7]}`)
 				.then(function(response) {
 					console.log(response),
@@ -187,6 +211,7 @@ export default {
 					console.log(error),
 					alert("Opps, " + error)
 					})
+
 		},
 		eventCreate() {
 			const start_date_time = this.detail[2] + " " + this.detail[3] + ":00"
@@ -274,7 +299,7 @@ export default {
 }
 .event-create-table {
 	width: 104%;
-	text-align: start;
+	text-align: end;
 	border-spacing: 20px;
 }
 .event-create-input {

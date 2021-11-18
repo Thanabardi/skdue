@@ -1,12 +1,12 @@
 <template>
 	<div class="user-detail">
-		
+
 		<div v-if="(this.user_name == '')" class="user-detail-not-login">
 			<h2><router-link class="user-detail-app-button"
             	to=/>Skdue</router-link></h2>
-			<!-- <router-link class="user-detail-button" style=" background: none; border: 2px solid white;" 
+			<!-- <router-link class="user-detail-button" style=" background: none; border: 2px solid white;"
             	to=/>Login</router-link> -->
-			<router-link class="user-detail-button" :style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']" 
+			<router-link class="user-detail-button" :style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']"
             	to=/>Login</router-link>
 		</div>
 
@@ -48,6 +48,7 @@ export default {
 	},
 	data() {
 		return {
+			slug: '',
 			user_name: '',
 			dataLogout:{
 				"status":"logout"
@@ -68,13 +69,15 @@ export default {
             axios.get(`/api/v2/me`)
 			.then( response => {
 				// console.log(response.data)
+								console.log(response.data)
                 this.user_name = response.data["user"]["username"]
-				console.log(response.data)
+								this.slug = response.data.calendar[0].slug
+								console.log('slug',this.slug)
             })
         },
 		async redirectUserHome() {
 			await this.$router.push({ path: `/me/` })
-			await this.$router.replace({ path: `/me/${this.user_name}` })
+			await this.$router.replace({ path: `/me/${this.slug}` })
 			// this.$router.go()
 			Calendar.components.FullCalendar.calendar.currentData.calendarApi.refetchEvents()
         },
@@ -94,7 +97,7 @@ export default {
 				.catch(error => {
 				console.log(error)
 			})
-		},		
+		},
 	}
 }
 

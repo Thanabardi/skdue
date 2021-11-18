@@ -75,6 +75,7 @@ export default {
       follow_tag_list: [], // store follow tag name
       event_details: [],
       modalActive: true,
+      calendar_id: Number,
       token: "",
       day_select: "",
       day: [
@@ -105,8 +106,13 @@ export default {
     select_event: {},
   });
   const TogglePopup = (trigger, e=0, item=0) => {
-    console.log(typeof e)
+    //handle edit followed event
+    if (trigger == 'editTrigger' && item.is_mine == false){
+      return
+    }
+    else {
     e.preventDefault()
+    console.log('is_this_mine',item)
     popupTriggers.value[trigger] = !popupTriggers.value[trigger]
     popupTriggers.value["select_event"]= [
         item.name,
@@ -118,7 +124,7 @@ export default {
         item.tag,
         item.slug
       ]
-    console.log('phum',popupTriggers.value["select_event"])
+    }
   }
   return {
     modalActive,
@@ -151,6 +157,7 @@ export default {
       });
     },
     setCalendarEvents(data){
+      this.calendar_id = data.calendar.id
       console.log(data.event)
       let tag = data.tag
       this.tag_list = data.tag // check this line
@@ -173,7 +180,8 @@ export default {
             end: d[i].end_date,
             description: d[i].description,
             slug: d[i].slug,
-            tag : d[i].tag_text
+            tag : d[i].tag_text,
+            from_calendar_id: d[i].calendar,
           })
         }
       }
@@ -359,6 +367,9 @@ export default {
       else if ((start_date_check == end_date_check) && (start_time == "00:00") && (end_time == "23:59")) {
         allday = true
       }
+
+      let is_mine = events.from_calendar_id == this.calendar_id
+
       return {
 				"name" : events.title,
 				"description" : events.description,
@@ -368,7 +379,8 @@ export default {
         "end_time" : end_time,
         "tag" : events.tag,
         "allday" : allday,
-        "slug" : events.slug
+        "slug" : events.slug,
+        "is_mine" : is_mine
 			}
     },
     clearData(data){
