@@ -91,6 +91,12 @@
 									<!-- </p> -->
 								</div>
 							</tr>
+							<tr>
+								<div>Theme</div>
+								<div :style="'cursor: pointer; background-color:'+tag_colors['green']" @click="defalutTheme">defalut theme</div>
+								<div style="cursor: pointer; background-color: black; color:white;" @click="darkTheme">dark theme</div>
+								<div :style="'cursor: pointer; background-color:'+tag_colors['purple']" @click="purpleTheme">purple theme</div>
+							</tr>
 						</table></center>
 						<div class="event-create-footer">
 							<button class="app-button-main" :style="'background-color:'+app_colors[this.color_theme['name']]['main']" type="submit">Done</button>
@@ -142,7 +148,9 @@ export default({
 			app_colors: APP_COLORS,
 			tag_colors: TAG_COLORS,
 			tag_name: [],
-			color_item: {}
+			color_item: {},
+			name_theme: "",
+			type_theme: "",
 		}
 	},
 	mounted () {
@@ -201,10 +209,12 @@ export default({
 					this.color_theme["type"] = response.data["setting"]["theme_type"]
        	 			this.color_theme["name"] = response.data["setting"]["theme_name"]
         			this.color_tag = this.user_data.color
-					console.log("color tag=", this.color_tag)
+					console.log("color tag=", this.color_theme)
 					this.color_item = this.color_tag
 					console.log(this.color_item)
 					console.log("color", this.tag_colors)
+					this.name_theme = "theme-1"
+					this.type_theme = "light"
 					// img url to base64
 					const toDataURL = url => fetch(url)
 						.then(response => response.blob())
@@ -244,6 +254,8 @@ export default({
 			apiDataForm.append("display_name", this.display)
 			apiDataForm.append("about", this.description)
 			apiDataForm.append("color", JSON.stringify(this.color_item))
+			apiDataForm.append("theme_name", this.name_theme)
+			apiDataForm.append("theme_type", this.type_theme)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			axios
 				.put(`/api/v2/me/user_setting`, apiDataForm)
@@ -280,6 +292,18 @@ export default({
 		userColorTag5(color){
 			this.color_item[this.tag_name[4]]=color
 		},
+		darkTheme(){
+			this.name_theme = "theme-2"
+			this.type_theme = "dark"
+		},
+		defalutTheme(){
+			this.name_theme = "theme-1"
+			this.type_theme = "light"
+		},
+		purpleTheme(){
+			this.name_theme = "theme-3"
+			this.type_theme = "light"
+		}
 	}
 })
 </script>

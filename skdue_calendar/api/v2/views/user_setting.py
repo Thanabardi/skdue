@@ -13,7 +13,7 @@ from skdue_calendar.models import *
 DEFAULT_IMAGE = "/images/default.jpg"
 DEFAULT_THEME_TYPE = "light"
 DEFAULT_THEME_NAME = "theme-1"
-DEFAULT_TAG_COLOR = "white"
+DEFAULT_TAG_COLOR = "blue"
 
 
 class UserSettingView(APIView):
@@ -90,6 +90,8 @@ class UserMeSetting(APIView):
                 - about: str
                 - color: a dict (in json) of color which key is tag name, 
                          value is color you want to change
+                - theme_type: str
+                - theme_name: str
         """
         user_setting = UserSetting.objects.get(user=request.user)
         old_img = user_setting.image
@@ -99,7 +101,8 @@ class UserMeSetting(APIView):
             user_setting.image = request.data["file"]
             user_setting.display_name = request.data["display_name"]
             user_setting.about = request.data["about"]
-
+            user_setting.theme_type = request.data["theme_type"]
+            user_setting.theme_name = request.data["theme_name"]
             colors = json.loads(request.data["color"])
             tags = []
             for k in colors:
