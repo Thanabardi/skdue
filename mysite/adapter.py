@@ -11,7 +11,7 @@ from django.urls import reverse
 class MyAccountAdapter(DefaultAccountAdapter):
 
     def get_login_redirect_url(self, request):
-        print(request)
+        # print(request.__dict__)
         new_user = request.user
         user_calendar, created = Calendar.objects.get_or_create(
             user = User.objects.get(username=new_user.username),
