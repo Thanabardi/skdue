@@ -48,6 +48,7 @@ export default {
 	data() {
 		return {
 			user_name: '',
+			// slug:'',
 			dataLogout:{
 				"status":"logout"
 			}
@@ -62,7 +63,9 @@ export default {
             axios.get(`/api/v2/me`)
 			.then( response => {
 				// console.log(response.data)
-                this.user_name = response.data["user"]["username"]
+                // this.user_name = response.data["calendar"]["username"]
+				// this.slug = response.data["calendar"][0]["slug"]
+				this.user_name = response.data["calendar"][0]["slug"]
 				console.log(response.data)
             })
         },
