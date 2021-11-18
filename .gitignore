@@ -1,3 +1,7 @@
+# google api files
+mysite/credentials.json
+token.json
+
 # media
 media/*/
 
