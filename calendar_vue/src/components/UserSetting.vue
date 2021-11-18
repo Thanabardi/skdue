@@ -92,10 +92,12 @@
 								</div>
 							</tr>
 							<tr>
-								<div>Theme</div>
-								<div :style="'cursor: pointer; background-color:'+tag_colors['green']" @click="defalutTheme">defalut theme</div>
-								<div style="cursor: pointer; background-color: black; color:white;" @click="darkTheme">dark theme</div>
-								<div :style="'cursor: pointer; background-color:'+tag_colors['purple']" @click="purpleTheme">purple theme</div>
+								<center><div>Theme</div></center>
+								<center><div class="theme-container">
+									<div style="cursor: pointer;" @click="defalutTheme">defalut</div>
+									<div style="cursor: pointer; background-color: black;" @click="darkTheme">dark</div>
+									<div :style="'cursor: pointer; background-color:'+tag_colors['purple']" @click="purpleTheme">purple</div>
+								</div></center>
 							</tr>
 						</table></center>
 						<div class="event-create-footer">
@@ -423,5 +425,25 @@ export default({
   line-height: 75px;
   font-size: 30px;
   text-indent: -9999px;
+}
+.theme-container {
+  width: 63%;
+  display: flex;
+  flex-wrap: nowrap;
+  background-color: rgb(230, 230, 230);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: 'justify';
+}
+
+.theme-container > div {
+  vertical-align: middle;
+  border-radius: 50%;
+  background-color: #006664;
+  width: 25px;
+  height: 25px;
+  margin: 20px;
+  line-height: 75px;
+  font-size: 15px;
 }
 </style>
