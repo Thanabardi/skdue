@@ -502,7 +502,7 @@ export default {
           +tag_colors[this.color_tag[tag_text]]" v-if="this.tag_status[tag_text]"> {{ tag_text }} </label><br>
       </div>
       <div style="display: inline-block; padding-top: 8px;" v-for="tag_text in this.follow_tag_list" :key="tag_text">
-        <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; background-color: #f2f2f2; color:'+
+        <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; background-color: rgba(200, 200, 200, 0.5); color:'+
           app_colors[this.color_theme['type']]['main-0']"
           v-if="this.tag_status[tag_text]"> {{ tag_text }} </label><br>
       </div>
