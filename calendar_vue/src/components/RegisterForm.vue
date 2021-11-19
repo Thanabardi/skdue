@@ -15,6 +15,10 @@
           <div class="overlay-right">
             <h1>Welcome Back!</h1>
             <p>Please login to see what's going to happen next on your calendar.</p>
+            <button title="Google" class="google-button"  @click.prevent="googleLogin">
+              <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                Login with google
+            </button>
             <div style="display: flex;">New to Skdue?
               <button style="color: var(--green); font-size: 18px;" class="app-button-tp"
                 id="signUp" @click="signUp = !signUp">SIGN UP</button>
@@ -71,10 +75,24 @@ import axios from 'axios'
         dataLogIn:{
           username: null,
           password: null
-        } 
+        },
       }
     },
     methods:{
+      googleLoginData(data){
+        // for login
+        console.log(data);
+
+        // auth setting
+        let token = data.token
+        this.$store.commit('setToken', token)            
+        axios.defaults.headers.common["Authorization"] = "Token " + token
+        localStorage.setItem("token", token)
+
+        this.slug = data.user_info.given_name
+        this.$router.push({ path: `/me/${this.slug}`});
+
+      },
       setData(data){
         // for register
         console.log(data);
@@ -100,6 +118,18 @@ import axios from 'axios'
 
         this.slug = data.calendar.slug
         this.$router.push({ path: `/me/${this.slug}`});
+      },
+      googleLogin(e){
+        e.preventDefault();
+        axios.get(`/oauth/login/`)
+                .then(response => {
+                this.googleLoginData(response.data);
+                // console.log(response.data);
+                // console.log(response.data.slug);
+                })
+                .catch(error => {
+                console.log(error)
+            })
       },
       getData(e){
         e.preventDefault();
@@ -138,6 +168,25 @@ import axios from 'axios'
 <style lang='scss' scoped>
 
 @import './../assets/style.css';
+
+.google-button{
+  width: 70%;
+  border-radius: 20px;
+  border: none;
+  background-color: var(--green);
+  color: var(--white);
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 40px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .1s ease-in;
+  &:active {
+    transform: scale(.98);
+    background-color: var(--green-dark)
+  }
+}
 
 .register-header {
   color: var(--main-green);

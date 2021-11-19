@@ -22,6 +22,8 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from requests.structures import CaseInsensitiveDict
 import json
+from skdue_calendar.utils import generate_slug
+from skdue_calendar.models import Calendar
 
 
 CREDENTIALS_PATH = os.path.join(BASE_DIR, 'google_oauth', 'credentials.json')
@@ -93,6 +95,12 @@ class GoogleLogin(APIView):
                 last_name=user_info["family_name"],
                 email=user_info["email"]
             )
+            calendar = Calendar.objects.create(
+                user = user,
+                slug = generate_slug(user.username),
+                name = user.username
+            )
+
         # create backend access token
         token, created = Token.objects.get_or_create(
             user=User.objects.get(username=google_account.linked_username)
@@ -120,7 +128,7 @@ class GoogleLoginSuccess(APIView):
 
 class GoogleLogout(APIView):
     # comment line below if you want to test only in back-end
-    # authentication_classes = (BasicAuthentication, TokenAuthentication)
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def delete(self, request):
