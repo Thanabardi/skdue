@@ -47,9 +47,6 @@ def get_user_info(credentials) -> Mapping:
     print(user_info)
     return user_info
 
-def sync_event(credentials):
-    # sync event here!
-    pass
 
 def generate_new_username(username: str) -> str:
     # check that username is available
@@ -113,6 +110,16 @@ class GoogleLogin(APIView):
         })
 
 
+class GoogleLogout(APIView):
+    # authentication_classes = (BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request):
+        token = Token.objects.get(user=request.user)
+        token.delete()
+        return Response({"msg": "token expired"})
+
+
 class GoogleSyncEvent(APIView):
     # authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
@@ -128,6 +135,9 @@ class GoogleSyncEvent(APIView):
             if not creds.valid:
                 if creds and creds.expired and creds.refresh_token:
                     creds.refresh(Request())
+                    # save new token
+                    google_account.token = creds.to_json()
+                    google_account.save()
                 else:
                     flow = InstalledAppFlow(cred_path, SCOPES)
                     creds = flow.run_local_server(port=8040)
@@ -137,6 +147,7 @@ class GoogleSyncEvent(APIView):
             all_events = []
             events = calendar_service.events().list(calendarId='primary', singleEvents=True, orderBy='startTime').execute()
             all_events.append(events)
+
             # DEBUG: pls remove this after you implement the sync data
             for i in all_events:
                 for j in i['items']:
@@ -149,32 +160,3 @@ class GoogleSyncEvent(APIView):
 
             return Response({"msg": all_events})
         return Response({"msg": "you are not logged in"}, HTTP_401_UNAUTHORIZED)
-
-# class GoogleLogin(APIView):
-#     def get(self, request):
-#         all_events = []
-#         cred_path = CREDENTIALS_PATH
-#         creds = None
-#         if os.path.exists('token.json'):
-#             creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-#         if not creds or not creds.valid:
-#             if creds and creds.expired and creds.refresh_token:
-#                 creds.refresh(Request())
-#             else:
-#                 flow = InstalledAppFlow.from_client_secrets_file(cred_path, SCOPES)
-#                 creds = flow.run_local_server(port=8040)
-#             with open('token.json', 'w') as token:
-#                 token.write(creds.to_json())
-#         service = build('calendar', 'v3', credentials=creds)
-#         now = datetime.datetime.utcnow().isoformat() + 'z'
-#         # events = service.events().list(calendarId='primary', timeMin=now, singleEvents=True, orderBy='startTime').execute()
-#         events = service.events().list(calendarId='primary', singleEvents=True, orderBy='startTime').execute()
-#         all_events.append(events)
-#         for i in all_events:
-#             for j in i['items']:
-#                 print(j['summary'])
-#                 print(j['start'])
-#                 print(j['end'])
-#         # redirect with token
-#         return Response({"msg": creds.to_json()})
-
