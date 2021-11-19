@@ -4,6 +4,11 @@
         <EventCreate />
         <UserConfig />
         <FollowedList />
+
+				<div class="sync">
+							<GoogleCalSync />
+				</div>
+
 	</div>
 </template>
 
@@ -14,13 +19,15 @@ import Search from './search'
 import EventCreate from './EventCreate'
 import UserConfig from './UserConfig'
 import FollowedList from './FollowedList'
+import GoogleCalSync from './GoogleCalSync'
 
 export default {
     components: {
         Search,
         EventCreate,
         UserConfig,
-        FollowedList
+        FollowedList,
+				GoogleCalSync
 	},
     data() {
 		return {
@@ -53,6 +60,9 @@ export default {
     top: 0px;
     left: 0px;
     right: 0px;
+}
+.sync {
+	margin-left: 10px;
 }
 // .user-detail {
 //     position: absolute;

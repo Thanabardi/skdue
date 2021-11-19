@@ -38,7 +38,7 @@
         <h2>Login</h2>
         <input class="register-input" type="username" v-model="dataLogIn.username" placeholder="Username" required />
         <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
-        <a class="app-button-tp" style="text-decoration: none; color: var(--black);" 
+        <a class="app-button-tp" style="text-decoration: none; color: var(--black);"
           href="#">Forgot your password?</a>
         <button class="register-button">Continue</button>
       </form>
@@ -50,7 +50,7 @@
       <h2 style="color: var(--gray-dark);">Anyway, if you want to create your own calendar check
       <router-link class="app-button-tp" style="text-decoration: none; color: var(--green);"
         to=/create_calendar>this</router-link>
-      out to see how our Skdue works, or if you want to take a look at the existing Skdue try 
+      out to see how our Skdue works, or if you want to take a look at the existing Skdue try
       <router-link class="app-button-tp" style="text-decoration: none; color: var(--green);"
         to=/calendar/holidays>this</router-link>.</h2>
     </div> -->
@@ -85,7 +85,7 @@ import axios from 'axios'
 
         // auth setting
         let token = data.token
-        this.$store.commit('setToken', token)            
+        this.$store.commit('setToken', token)
         axios.defaults.headers.common["Authorization"] = "Token " + token
         localStorage.setItem("token", token)
 
@@ -99,7 +99,7 @@ import axios from 'axios'
 
         // auth setting
         let token = data.token
-        this.$store.commit('setToken', token)            
+        this.$store.commit('setToken', token)
         axios.defaults.headers.common["Authorization"] = "Token " + token
         localStorage.setItem("token", token)
 
@@ -112,7 +112,7 @@ import axios from 'axios'
 
         // auth setting
         let token = data.token
-        this.$store.commit('setToken', token)            
+        this.$store.commit('setToken', token)
         axios.defaults.headers.common["Authorization"] = "Token " + token
         localStorage.setItem("token", token)
 
@@ -193,7 +193,7 @@ import axios from 'axios'
   font-size: 80px;
   font-weight: 500px;
   text-align: center;
-    
+
 }
 .container {
     position: relative;
@@ -305,8 +305,8 @@ form {
   //   width: calc(100% - 30px);
   //   border-radius: 8px;
   //   border-bottom: 1px solid #ddd;
-  //   // box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4), 
-  //   //                   0 -1px 1px #fff, 
+  //   // box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4),
+  //   //                   0 -1px 1px #fff,
   //   //                   0 1px 0 #fff;
   //   overflow: hidden;
   //   &:focus {
