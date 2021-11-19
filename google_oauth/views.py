@@ -3,7 +3,7 @@ from django.http.response import HttpResponseRedirect
 from django.urls.base import reverse
 from django.views.generic.base import View
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -110,6 +110,14 @@ class GoogleLogin(APIView):
         })
 
 
+class GoogleLoginSuccess(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        token, created = Token.objects.get_or_create(user=request.user)
+        return Response({"token": token.key})
+
+
 class GoogleLogout(APIView):
     # comment line below if you want to test only in back-end
     # authentication_classes = (BasicAuthentication, TokenAuthentication)
@@ -118,6 +126,7 @@ class GoogleLogout(APIView):
     def delete(self, request):
         token = Token.objects.get(user=request.user)
         token.delete()
+        logout(request)
         return Response({"msg": "token expired"})
 
 
