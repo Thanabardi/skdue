@@ -23,7 +23,7 @@
                         <center>
                             <div>
                                 <a :style="'font-size: 28px;  color:'+app_colors[this.color_theme['type']]['main']">Upload profile image</a><br>
-                                <p></p>
+                                <p style="display: none" onload="this.style.display=''"></p>
 								<img class="avatar" id="image_preview" style="display: none" onload="this.style.display=''"/><br>
 								<p></p>
                                 <input :style="'color:'+app_colors[this.color_theme['type']]['main']" type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png" class="inputfile">
@@ -255,6 +255,7 @@ export default({
 		},
         onFileSelected(event) {
 			this.selectedFile = event.target.files[0]
+			// render image preview
 			var fr = new FileReader()
 			fr.readAsDataURL(this.selectedFile)
 			fr.onload = function(e) {
@@ -344,28 +345,6 @@ export default({
 	line-height: 10px;
 	text-align: center;
 }
-.event-create-popup-bg {
-	background-color: rgba(0, 0, 0, 0.5);
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 1;
-	position: fixed;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 50px;
-
-	animation-name: fade;
-	animation-duration: 0.5s
-}
-.event-create-popup {
-	color: black;
-	height: 100%;
-	overflow-x: hidden;
-	padding: 20px;
-}
 .event-create-form {
 	color: black;
 	text-align: left;
@@ -381,33 +360,6 @@ export default({
 	border: none;
 	border-radius: 8px;
 	resize: vertical;
-}
-.event-create-table {
-	width: 104%;
-	text-align: end;
-	border-spacing: 20px;
-}
-.event-create-input {
-	background: rgb(230, 230, 230);
-	font-size: 20px;
-	padding: 10px;
-	width: 200px;
-	border: none;
-	border-radius: 8px;
-}
-.event-create-tag-bt {
-	background-color: rgb(230, 230, 230);
-	color: black;
-	margin-left: 10px;
-    border: 0;
-    padding: 5px 10px;
-    margin-bottom: 10px;
-    font-size: 20px;
-    cursor: pointer;
-    border-radius: 8px;
-}
-.event-create-tag-bt:focus {
-	opacity: 0.5;
 }
 .event-create-footer {
 	display: flex;
@@ -521,9 +473,9 @@ export default({
     margin: 27mm 16mm 27mm 16mm;
 }
 html {
-    height: 220%;
+    height: 235%;
 }
 body {
-    min-height: 220%;
+    min-height: 235%;
 }
 </style>
