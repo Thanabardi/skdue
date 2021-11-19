@@ -3,10 +3,13 @@ from django.http.response import HttpResponseRedirect
 from django.urls.base import reverse
 from django.views.generic.base import View
 from django.contrib.auth.models import User
+from django.contrib.auth import login
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from rest_framework.status import *
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 import os
 import requests
@@ -30,19 +33,23 @@ SCOPES = [
 
 
 def get_user_info(credentials) -> Mapping:
-        """Get user info from authorized accont
-        
-        Args:
-            credentials: authenticated account credential
+    """Get user info from authorized accont
+    
+    Args:
+        credentials: authenticated account credential
 
-        Returns:
-            Mapping: a dict with keys
-                - id, name, given_name, family_name, picture, locale
-        """
-        user_info_service = build('oauth2', 'v2', credentials=credentials)
-        user_info = user_info_service.userinfo().get().execute()
-        print(user_info)
-        return user_info
+    Returns:
+        Mapping: a dict with keys
+            - id, name, given_name, family_name, picture, locale
+    """
+    user_info_service = build('oauth2', 'v2', credentials=credentials)
+    user_info = user_info_service.userinfo().get().execute()
+    print(user_info)
+    return user_info
+
+def sync_event(credentials):
+    # sync event here!
+    pass
 
 def generate_new_username(username: str) -> str:
     # check that username is available
@@ -78,7 +85,7 @@ class GoogleLogin(APIView):
         )
         google_account.token = creds.to_json()
         google_account.save()
-        # if created new account
+        # if new account is created
         if created_new_user:
             # create new User instance
             google_account.linked_username = generate_new_username(google_account.username)
@@ -93,6 +100,11 @@ class GoogleLogin(APIView):
         token, created = Token.objects.get_or_create(
             user=User.objects.get(username=google_account.linked_username)
         )
+        # login to the backend system
+        user = User.objects.get(username=google_account.linked_username)
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        # return response
         return Response({
             "user_info": user_info,
             "created": created_new_user,
@@ -102,7 +114,41 @@ class GoogleLogin(APIView):
 
 
 class GoogleSyncEvent(APIView):
-    pass
+    # authentication_classes = (BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, requset):
+        if requset.user:
+            cred_path = CREDENTIALS_PATH
+            # try to get existed token from google account data
+            google_account = GoogleAccount.objects.get(
+                linked_username=requset.user.username
+            )
+            creds = Credentials.from_authorized_user_info(json.loads(google_account.token), SCOPES)
+            if not creds.valid:
+                if creds and creds.expired and creds.refresh_token:
+                    creds.refresh(Request())
+                else:
+                    flow = InstalledAppFlow(cred_path, SCOPES)
+                    creds = flow.run_local_server(port=8040)
+            # build service
+            calendar_service = build('calendar', 'v3', credentials=creds)
+            # load event data
+            all_events = []
+            events = calendar_service.events().list(calendarId='primary', singleEvents=True, orderBy='startTime').execute()
+            all_events.append(events)
+            # DEBUG: pls remove this after you implement the sync data
+            for i in all_events:
+                for j in i['items']:
+                    print(j['summary'])
+                    print(j['start'])
+                    print(j['end'])
+                    
+
+            # TODO: implement sync data function here (using `google` event tag to create new events)
+
+            return Response({"msg": all_events})
+        return Response({"msg": "you are not logged in"}, HTTP_401_UNAUTHORIZED)
 
 # class GoogleLogin(APIView):
 #     def get(self, request):
