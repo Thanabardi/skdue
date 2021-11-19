@@ -188,19 +188,26 @@ class GoogleSyncEvent(APIView):
                 except KeyError:
                     list.append('no description')
                 all_events.append(list)
-
-                DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
-                DEFAULT_TAG_TYPE.save()
-                #delete old tag
-                try:
-                    old_tag = CalendarTag.objects.get(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
-                    old_tag.delete()
-                except:
-                    pass
-                test_tag = CalendarTag.objects.create(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
-                test_tag.save()
+                #
+                # DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
+                # DEFAULT_TAG_TYPE.save()
+                # #delete old tag
+                # try:
+                #     old_tag = CalendarTag.objects.get(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
+                #     old_tag.delete()
+                # except:
+                #     pass
+                # test_tag = CalendarTag.objects.create(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
+                # test_tag.save()
+                #
+                # user_cal = Calendar.objects.get(name=request.user.username)
 
                 user_cal = Calendar.objects.get(name=request.user.username)
+                test_tag=CalendarTag.objects.get(tag="google")
+                old_event = CalendarEvent.objects.filter(calendar=user_cal, tag=test_tag)
+                print(old_event)
+                old_event.delete()
+
                 for i in range(len(all_events)):
                     try:
                         start_time = all_events[i][1]['date'][:19]
