@@ -23,7 +23,7 @@ from google.oauth2.credentials import Credentials
 from requests.structures import CaseInsensitiveDict
 import json
 from skdue_calendar.utils import generate_slug
-from skdue_calendar.models import Calendar
+from skdue_calendar.models import *
 
 
 CREDENTIALS_PATH = os.path.join(BASE_DIR, 'google_oauth', 'credentials.json')
@@ -36,7 +36,7 @@ SCOPES = [
 
 def get_user_info(credentials) -> Mapping:
     """Get user info from authorized accont
-    
+
     Args:
         credentials: authenticated account credential
 
@@ -67,7 +67,7 @@ def generate_new_username(username: str) -> str:
 
 
 class GoogleLogin(APIView):
-    
+
     def get(self, request):
         # setup cred and api service
         os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
@@ -143,15 +143,18 @@ class GoogleSyncEvent(APIView):
     # authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
-    def get(self, requset):
-        if requset.user:
+    def get(self, request):
+
+        if request.user:
+
             cred_path = CREDENTIALS_PATH
             # try to get existed token from google account data
             try:
                 google_account = GoogleAccount.objects.get(
-                    linked_username=requset.user.username
+                    linked_username=request.user.username
                 )
             except GoogleAccount.DoesNotExist:
+
                 return Response({"msg": "This account is not Google Account"}, HTTP_400_BAD_REQUEST)
             # load credentials
             creds = Credentials.from_authorized_user_info(json.loads(google_account.token), SCOPES)
@@ -164,20 +167,66 @@ class GoogleSyncEvent(APIView):
                 else:
                     flow = InstalledAppFlow(cred_path, SCOPES)
                     creds = flow.run_local_server(port=8040)
+
             # build service
             calendar_service = build('calendar', 'v3', credentials=creds)
             # load event data
             all_events = []
             events = calendar_service.events().list(calendarId='primary', singleEvents=True, orderBy='startTime').execute()
-            all_events.append(events)
+
+            print(request.user.username)
 
             # DEBUG: pls remove this after you implement the sync data
-            for i in all_events:
-                for j in i['items']:
-                    print(j['summary'])
-                    print(j['start'])
-                    print(j['end'])
-                    
+            # convert google -> skdue
+            for j in events['items']:
+                list =[]
+                list.append(j['summary'])
+                list.append(j['start'])
+                list.append(j['end'])
+                try:
+                    list.append(j['description'])
+                except KeyError:
+                    list.append('no description')
+                all_events.append(list)
+
+                DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
+                DEFAULT_TAG_TYPE.save()
+                #delete old tag
+                try:
+                    old_tag = CalendarTag.objects.get(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
+                    old_tag.delete()
+                except:
+                    pass
+                test_tag = CalendarTag.objects.create(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
+                test_tag.save()
+
+                user_cal = Calendar.objects.get(name=request.user.username)
+                for i in range(len(all_events)):
+                    try:
+                        start_time = all_events[i][1]['date'][:19]
+                        end_time = all_events[i][2]['date'][:19]
+                    except:
+                        start_time = all_events[i][1]['dateTime'][:19]
+                        end_time = all_events[i][2]['dateTime'][:19]
+
+                    if all_events[i][3] != 'no description':
+                        desc = all_events[i][3]
+                    else:
+                        desc = ''
+
+                    event = CalendarEvent.objects.create(
+                    calendar=user_cal,
+                    name=all_events[i][0],
+                    slug=generate_slug(all_events[i][0]),
+                        description=desc,
+                        start_date = start_time,
+                        end_date = end_time,
+                        tag = test_tag
+                    )
+
+
+
+
 
             # TODO: implement sync data function here (using `google` event tag to create new events)
 
