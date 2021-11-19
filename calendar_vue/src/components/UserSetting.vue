@@ -3,6 +3,7 @@
         <div>
             <CalendarNavbar />
         </div>
+		<body>
         <div class="calendar-hr" :style="'color:'+app_colors[this.color_theme['type']]['main']">
                 <center><a style="font-size: 40px">User Setting</a></center>
 				<p></p>
@@ -12,7 +13,7 @@
                     <form @submit.prevent="onUpload" class="event-create-form">
 						<center><textarea class="event-create-textarea" type="name"
 							required v-model="display"	placeholder="Display name"
-							maxlength="60" rows="1" cols="50"></textarea></center>
+							maxlength="20" rows="1" cols="50"></textarea></center>
 						<p></p>
 						<center><textarea class="event-create-textarea" type="description"
 							v-model="description" placeholder="Description (optional)"
@@ -23,7 +24,8 @@
                             <div>
                                 <a :style="'font-size: 28px;  color:'+app_colors[this.color_theme['type']]['main']">Upload profile image</a><br>
                                 <p></p>
-                                <input type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png">
+                                <input :style="'color:'+app_colors[this.color_theme['type']]['main']" type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png" class="inputfile">
+								<label for="file">Choose an image</label>
                             </div>
                         </center>
 						<!-- End -->
@@ -92,7 +94,7 @@
 								</div>
 							</tr>
 							<tr>
-								<center><div>Theme</div></center>
+								<center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']"><div :style="'color:'+color_font_theme">Theme</div></center>
 								<center><div class="theme-container">
 									<div style="cursor: pointer;" @click="defalutTheme">defalut</div>
 									<div style="cursor: pointer; background-color: black;" @click="darkTheme">dark</div>
@@ -104,8 +106,9 @@
 							<button class="app-button-main" :style="'background-color:'+app_colors[this.color_theme['name']]['main']" type="submit">Done</button>
 						</div>
 					</form>
-                    </center>
-        </div>
+                </center>
+        	</div>
+		</body>
     </div>
 </template>
 
@@ -153,6 +156,7 @@ export default({
 			color_item: {},
 			name_theme: "",
 			type_theme: "",
+			color_font_theme: ""
 		}
 	},
 	mounted () {
@@ -215,8 +219,8 @@ export default({
 					this.color_item = this.color_tag
 					console.log(this.color_item)
 					console.log("color", this.tag_colors)
-					this.name_theme = "theme-1"
-					this.type_theme = "light"
+					this.name_theme = this.color_theme["name"]
+					this.type_theme = this.color_theme["type"]
 					// img url to base64
 					const toDataURL = url => fetch(url)
 						.then(response => response.blob())
@@ -297,14 +301,17 @@ export default({
 		darkTheme(){
 			this.name_theme = "theme-2"
 			this.type_theme = "dark"
+			this.color_font_theme = "#262626"
 		},
 		defalutTheme(){
 			this.name_theme = "theme-1"
 			this.type_theme = "light"
+			this.color_font_theme = "#006664"
 		},
 		purpleTheme(){
 			this.name_theme = "theme-3"
 			this.type_theme = "light"
+			this.color_font_theme = "#4D3D9E"
 		}
 	}
 })
@@ -445,5 +452,70 @@ export default({
   margin: 20px;
   line-height: 75px;
   font-size: 15px;
+}
+.inputfile {
+	width: 150px;
+	height: 30px;
+	opacity: 0;
+	// overflow: hidden;
+	position: absolute;
+	// z-index: -1;
+}
+.inputfile + label {
+    font-family: 'Heebo', sans-serif;
+	font-size: 0.75rem;
+	font-weight: 500;
+	letter-spacing: 0.025rem;
+	font-style: normal;
+	text-transform: uppercase;
+	color: #EF2D56;
+	background-color: #FFFFFF;
+	border-radius: 1.25rem;
+	-webkit-border-radius: 1.25rem;
+	-moz-border-radius: 1.25rem;
+	padding: 0.35rem 0.75rem;
+	border-style: solid;
+	border-width: 0.125rem;
+	border-color: #EF2D56;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-box-shadow: none;
+	width: 200px;
+}
+
+.inputfile:focus + label{
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
+.inputfile + label:hover {
+    background-color: red;
+}
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
+}
+@page {
+    size: 11.7in 16.5in;
+    margin: 27mm 16mm 27mm 16mm;
+}
+html {
+    height: 180%;
+}
+body {
+    min-height: 180%;
 }
 </style>
