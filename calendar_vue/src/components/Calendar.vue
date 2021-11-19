@@ -370,7 +370,8 @@ export default {
         {{ (this.day_select.substring(0, 4)) }}
       </h2>
         <!-- list of all event -->
-        <div style="overflow-x: hidden; height: 73%; color; rgba(255, 255, 255, 0.6)">
+        <div style="position: absolute; overflow-x: hidden; 
+          top: 140px; bottom: 140px; color; rgba(255, 255, 255, 0.6); width: 95%;">
           <div v-if="this.event_details.length!=0">
             <p>All-Day Event</p>
             <!-- list of all day event -->
