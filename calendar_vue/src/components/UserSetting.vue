@@ -24,6 +24,8 @@
                             <div>
                                 <a :style="'font-size: 28px;  color:'+app_colors[this.color_theme['type']]['main']">Upload profile image</a><br>
                                 <p></p>
+								<img class="avatar" id="image_preview" style="display: none" onload="this.style.display=''"/><br>
+								<p></p>
                                 <input :style="'color:'+app_colors[this.color_theme['type']]['main']" type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png" class="inputfile">
 								<label for="file">Choose an image</label>
                             </div>
@@ -253,6 +255,12 @@ export default({
 		},
         onFileSelected(event) {
 			this.selectedFile = event.target.files[0]
+			var fr = new FileReader()
+			fr.readAsDataURL(this.selectedFile)
+			fr.onload = function(e) {
+			var img = document.getElementById('image_preview')
+			img.src = this.result
+			} 
         },
         onUpload() {
 			var apiDataForm = new FormData()
@@ -312,7 +320,7 @@ export default({
 			this.name_theme = "theme-3"
 			this.type_theme = "light"
 			this.color_font_theme = "#4D3D9E"
-		}
+		},
 	}
 })
 </script>
@@ -513,9 +521,9 @@ export default({
     margin: 27mm 16mm 27mm 16mm;
 }
 html {
-    height: 180%;
+    height: 220%;
 }
 body {
-    min-height: 180%;
+    min-height: 220%;
 }
 </style>
