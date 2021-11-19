@@ -52,8 +52,8 @@ export default {
 			    })
 
         },
-		syncGoogleCalEvent() {
-      axios.get(`/oauth/sync-event/`)
+		async syncGoogleCalEvent() {
+      await axios.get(`/oauth/sync-event/`)
               .then(response => {
 
               console.log('sync-event',response.data);
@@ -62,6 +62,7 @@ export default {
               .catch(error => {
               console.log(error)
               })
+      window.location.reload()
 		}
 	},
 }

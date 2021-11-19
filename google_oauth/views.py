@@ -82,10 +82,11 @@ class GoogleLogin(APIView):
                 "username": user_info["given_name"]
             }
         )
-        google_account.token = creds.to_json()
-        google_account.save()
+        # google_account.token = creds.to_json()
+        # google_account.save()
         # if new account is created
         if created_new_user:
+            google_account.token = creds.to_json()
             # create new User instance
             google_account.linked_username = generate_new_username(google_account.username)
             google_account.save()
@@ -140,7 +141,7 @@ class GoogleLogout(APIView):
 
 class GoogleSyncEvent(APIView):
     # comment line below if you want to test only in back-end
-    # authentication_classes = (BasicAuthentication, TokenAuthentication)
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
@@ -189,8 +190,7 @@ class GoogleSyncEvent(APIView):
                     list.append('no description')
                 all_events.append(list)
                 #
-                # DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
-                # DEFAULT_TAG_TYPE.save()
+                DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
                 # #delete old tag
                 # try:
                 #     old_tag = CalendarTag.objects.get(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
@@ -201,11 +201,10 @@ class GoogleSyncEvent(APIView):
                 # test_tag.save()
                 #
                 # user_cal = Calendar.objects.get(name=request.user.username)
-
+                admin = User.objects.get(id=1)
                 user_cal = Calendar.objects.get(name=request.user.username)
-                test_tag=CalendarTag.objects.get(tag="google")
+                test_tag, _ = CalendarTag.objects.get_or_create(tag="google", user=admin, tag_type=DEFAULT_TAG_TYPE)
                 old_event = CalendarEvent.objects.filter(calendar=user_cal, tag=test_tag)
-                print(old_event)
                 old_event.delete()
 
                 for i in range(len(all_events)):
