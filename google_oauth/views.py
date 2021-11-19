@@ -111,7 +111,8 @@ class GoogleLogin(APIView):
 
 
 class GoogleLogout(APIView):
-    # authentication_classes = (BasicAuthentication, TokenAuthentication)
+    # comment line below if you want to test only in back-end
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def delete(self, request):
@@ -121,7 +122,8 @@ class GoogleLogout(APIView):
 
 
 class GoogleSyncEvent(APIView):
-    # authentication_classes = (BasicAuthentication, TokenAuthentication)
+    # comment line below if you want to test only in back-end
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def get(self, requset):
