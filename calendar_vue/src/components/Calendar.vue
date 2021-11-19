@@ -366,7 +366,7 @@ export default {
       <Follow :color_theme="this.color_theme"/>
       <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
         {{ (this.day_select.substring(8, 10)) }}
-        {{ this.month[new Date(this.day_select).getMonth()] }}
+        {{ this.month[new Date(this.day_select).getMonth()] }} 
         {{ (this.day_select.substring(0, 4)) }}
       </h2>
         <!-- list of all event -->
@@ -488,7 +488,7 @@ export default {
     </div>
     <!-- edit event -->
 
-    <FullCalendar class="calendar-app-main" :options="calendarOptions" :color_theme="this.color_theme">
+    <FullCalendar class="calendar-app-main" :options="calendarOptions" :color_theme="this.color_theme" :style="'color:'+app_colors[this.color_theme['type']]['main']">
       <template v-slot:eventContent="arg">
         <b>{{ arg.timeText }}</b>
         <i>{{ arg.event.title }}</i>
