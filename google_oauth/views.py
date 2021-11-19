@@ -112,7 +112,7 @@ class GoogleLogin(APIView):
 
 class GoogleLogout(APIView):
     # comment line below if you want to test only in back-end
-    authentication_classes = (BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def delete(self, request):
@@ -123,16 +123,20 @@ class GoogleLogout(APIView):
 
 class GoogleSyncEvent(APIView):
     # comment line below if you want to test only in back-end
-    authentication_classes = (BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def get(self, requset):
         if requset.user:
             cred_path = CREDENTIALS_PATH
             # try to get existed token from google account data
-            google_account = GoogleAccount.objects.get(
-                linked_username=requset.user.username
-            )
+            try:
+                google_account = GoogleAccount.objects.get(
+                    linked_username=requset.user.username
+                )
+            except GoogleAccount.DoesNotExist:
+                return Response({"msg": "This account is not Google Account"}, HTTP_400_BAD_REQUEST)
+            # load credentials
             creds = Credentials.from_authorized_user_info(json.loads(google_account.token), SCOPES)
             if not creds.valid:
                 if creds and creds.expired and creds.refresh_token:
