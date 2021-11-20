@@ -30,7 +30,6 @@ export default {
       calendar_slug: "",
       token: "",
       follow_name: "",
-      is_fetch: false,
       app_colors: APP_COLORS,
       tag_colors: TAG_COLORS,
       calendar_id: 0,

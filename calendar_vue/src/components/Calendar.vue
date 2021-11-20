@@ -80,7 +80,6 @@ export default {
         'October','November','December'
         ],
       color_theme: {"type" : "light", "name" : "theme-1"},
-      is_fetch: false,
       color_tag: {},
       app_colors: APP_COLORS,
       tag_colors: TAG_COLORS,
@@ -187,13 +186,12 @@ export default {
       .catch(error => {
         console.log(error)
       })
-      this.is_fetch = true
     },
     getTag() {
 			axios.get(`/api/v2/me`)
 				.then( response => {
 					response.data["available_tag"].forEach(elements => {
-						if (elements["user"] == response.data["user"]["id"]) {
+						if ((elements["user"] == response.data["user"]["id"]) || (elements["user"] == 1)) {
 							this.my_tag_list.push(elements["tag"])
 						} else {
               this.follow_tag_list.push(elements["tag"])
@@ -359,7 +357,7 @@ export default {
 
 
 <template>
-  <div v-if="this.is_fetch" :style="'height: 100%; width: 100%; position: fixed; background-color:'
+  <div :style="'height: 100%; width: 100%; position: fixed; background-color:'
     +app_colors[this.color_theme['type']]['sub']">
     <CalendarNavbar :color_theme="this.color_theme"/>
     <div class='calendar-sidebar' :style="'background-color:'+app_colors[this.color_theme['name']]['sub-1']">

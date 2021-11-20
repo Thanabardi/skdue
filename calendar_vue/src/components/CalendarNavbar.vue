@@ -1,5 +1,5 @@
 <template>
-	<div  v-if="this.is_fetch" class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color_theme['name']]['main']">
+	<div class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color_theme['name']]['main']">
         <Search :color_theme="this.color_theme"/>
         <EventCreate :color_theme="this.color_theme"/>
         <UserConfig :color_theme="this.color_theme"/>
@@ -28,7 +28,6 @@ export default {
             follow: '',
             tag_colors: TAG_COLORS,
             app_colors: APP_COLORS,
-            is_fetch: false,
             color_theme: {"type" : "light", "name" : "theme-1"},
 		}
 	},
@@ -55,7 +54,6 @@ export default {
             .catch(error => {
                 console.log(error)
             })
-            this.is_fetch = true
         },
 	}
 }

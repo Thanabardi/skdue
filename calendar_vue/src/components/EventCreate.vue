@@ -151,7 +151,7 @@ export default {
 				.then( response => {
 					// this.user_name = response.data["user"]["username"]
 					response.data["available_tag"].forEach(elements => {
-						if (elements["user"] == response.data["user"]["id"]) {
+						if ((elements["user"] == response.data["user"]["id"]) || (elements["user"] == 1)) {
 							this.available_tag.push(elements["tag"])
 						}
 					})

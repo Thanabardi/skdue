@@ -150,7 +150,6 @@ export default({
 			fs: "follow",
             selectedFile: null,
 			color_theme: {"type" : "light", "name" : "theme-1"},
-			is_fetch: false,
 			color_tag: {},
 			app_colors: APP_COLORS,
 			tag_colors: TAG_COLORS,
@@ -250,7 +249,6 @@ export default({
 						this.tag_name.push((Object.entries(this.set_color)[j][0]))
 					}
 					console.log(this.tag_name.length)
-					this.is_fetch = true
 				})
 		},
         onFileSelected(event) {
