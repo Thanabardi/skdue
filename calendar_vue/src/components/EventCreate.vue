@@ -54,7 +54,8 @@
 								<td style="width: 400px;">
 									<button type="button" v-for="tag in available_tag" :key="tag"
 										class="event-create-tag-bt" v-on:click.left="this.tag = tag"
-										v-on:click.right="TagEdit($event)">{{ tag }}</button>
+										v-on:click.right="TagEdit($event)" :style="'background-color:'
+										+ this.tag_colors[color_tag[tag]]">{{ tag }}</button>
 								</td>
 							</tr>
 						</table>
@@ -112,6 +113,7 @@ export default {
 	},
 	props: {
         color_theme: {},
+		color_tag: {},
     },
 	mounted () {
         this.getUserName(),
@@ -147,17 +149,18 @@ export default {
 				})
         },
 		getTag() {
-			this.available_tag = []
 			axios.get(`/api/v2/me`)
 				.then( response => {
-					// this.user_name = response.data["user"]["username"]
 					response.data["available_tag"].forEach(elements => {
-						if ((elements["user"] == response.data["user"]["id"]) || (elements["user"] == 1)) {
+						if (elements["user"] == response.data["user"]["id"]) {
 							this.available_tag.push(elements["tag"])
+						} else if (elements["user"] == 1) {
+							this.available_tag.push(elements["tag"])
+							this.color_tag[elements['tag']] = "default"
 						}
 					})
 				})
-        },
+    	},
 		eventCreate() {
 			const start_date_time = this.start_date + " " + this.start_time + ":00"
 			const end_date_time = this.end_date + " " + this.end_time + ":00"
@@ -207,11 +210,11 @@ export default {
 				alert("This tag already exists")
 			}
 		},
-		TagEdit(e) {
-			alert("EditTag")
-			this.getTag()
-			e.preventDefault()
-		}
+		// TagEdit(e) {
+		// 	alert("EditTag")
+		// 	this.getTag()
+		// 	e.preventDefault()
+		// }
 	},
 }
 
@@ -283,8 +286,8 @@ export default {
 	border-radius: 8px;
 }
 .event-create-tag-bt {
-	background-color: rgb(230, 230, 230);
-	color: black;
+	background-color: #3788d8;
+	color: white;
 	margin-left: 10px;
     border: 0;
     padding: 5px 10px;

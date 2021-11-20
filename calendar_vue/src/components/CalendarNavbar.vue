@@ -1,7 +1,7 @@
 <template>
 	<div class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color_theme['name']]['main']">
         <Search :color_theme="this.color_theme"/>
-        <EventCreate :color_theme="this.color_theme"/>
+        <EventCreate :color_theme="this.color_theme" :color_tag="this.color_tag"/>
         <UserConfig :color_theme="this.color_theme"/>
         <FollowedList :color_theme="this.color_theme"/>
 	</div>
@@ -29,6 +29,7 @@ export default {
             tag_colors: TAG_COLORS,
             app_colors: APP_COLORS,
             color_theme: {"type" : "light", "name" : "theme-1"},
+            color_tag: {},
 		}
 	},
     mounted () {
@@ -50,6 +51,7 @@ export default {
             .then(response => {
                 this.color_theme["type"] = response.data["setting"]["theme_type"]
                 this.color_theme["name"] = response.data["setting"]["theme_name"]
+                this.color_tag = response.data["color"]
             })
             .catch(error => {
                 console.log(error)
