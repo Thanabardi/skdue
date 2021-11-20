@@ -1,5 +1,5 @@
 <template>
-    <div :style="'left:0px; height: 100%; width: 100%; position: fixed; overflow-x: hidden; background-color:' + app_colors[this.color_theme['type']]['sub']">
+    <div :style="'left:0px; height: 100%; width: 106%; position: fixed; overflow-x: hidden; background-color:' + app_colors[this.color_theme['type']]['sub']">
         <div>
             <CalendarNavbar />
         </div>
@@ -82,7 +82,7 @@
 									</div>
 									</a>
 									<a v-if="4<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[4]]">{{ this.tag_name[4] }}</center>
-									<div class="flex-container">
+									<div class="flex-container" >
 										<div @click="userColorTag5('red')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag5('yellow')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
 										<div @click="userColorTag5('blue')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
@@ -370,6 +370,7 @@ export default({
   width: 250px;
   height: 250px;
   border-radius: 50%;
+  object-fit: cover;
 }
 .avatar img {
 	margin: -10px 0px 0px -180px;
@@ -380,7 +381,6 @@ export default({
   background-color: rgb(230, 230, 230);
   border-radius: 8px;
 }
-
 .flex-container > div {
   vertical-align: middle;
   border-radius: 50%;
@@ -392,6 +392,9 @@ export default({
   line-height: 75px;
   font-size: 30px;
   text-indent: -9999px;
+}
+.flex-container div:hover {
+	box-shadow: inset 0 -150px 0 0 rgba(243, 243, 243, 0.5)
 }
 .theme-container {
   width: 63%;
@@ -413,13 +416,17 @@ export default({
   line-height: 75px;
   font-size: 15px;
 }
+.theme-container div:hover {
+	box-shadow: inset 0 -150px 0 0 rgba(243, 243, 243, 0.5)
+}
 .inputfile {
 	width: 150px;
 	height: 30px;
 	opacity: 0;
-	// overflow: hidden;
+	overflow: hidden;
 	position: absolute;
 	// z-index: -1;
+	cursor: pointer;
 }
 .inputfile + label {
     font-family: 'Heebo', sans-serif;
@@ -439,16 +446,15 @@ export default({
 	border-color: #EF2D56;
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
-	-box-shadow: none;
 	width: 200px;
 }
-
 .inputfile:focus + label{
 	outline: 1px dotted #000;
 	outline: -webkit-focus-ring-color auto 5px;
 }
 .inputfile + label:hover {
-    background-color: red;
+    background-color: rgb(238, 211, 211);
+	cursor: pointer;
 }
 ::-webkit-scrollbar {
   width: 20px;
