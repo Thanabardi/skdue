@@ -366,55 +366,55 @@ export default({
 	justify-content: space-evenly;
 }
 .avatar {
-  vertical-align: middle;
-  width: 250px;
-  height: 250px;
-  border-radius: 50%;
-  object-fit: cover;
+  	vertical-align: middle;
+  	width: 250px;
+  	height: 250px;
+  	border-radius: 50%;
+ 	object-fit: cover;
 }
 .avatar img {
 	margin: -10px 0px 0px -180px;
 }
 .flex-container {
-  display: flex;
-  flex-wrap: nowrap;
-  background-color: rgb(230, 230, 230);
-  border-radius: 8px;
+  	display: flex;
+  	flex-wrap: nowrap;
+  	background-color: rgb(230, 230, 230);
+  	border-radius: 8px;
 }
 .flex-container > div {
-  vertical-align: middle;
-  border-radius: 50%;
-  background-color: #f1f1f1;
-  width: 25px;
-  height: 25px;
-  margin: 10px;
-  text-align: center;
-  line-height: 75px;
-  font-size: 30px;
-  text-indent: -9999px;
-}
-.flex-container div:hover {
-	box-shadow: inset 0 -150px 0 0 rgba(243, 243, 243, 0.5)
-}
-.theme-container {
-  width: 63%;
-  display: flex;
-  flex-wrap: nowrap;
-  background-color: rgb(230, 230, 230);
-  border-radius: 16px;
-  padding: 20px;
-  text-align: 'justify';
+	vertical-align: middle;
+	border-radius: 50%;
+	background-color: #f1f1f1;
+	width: 25px;
+	height: 25px;
+	margin: 10px;
+	text-align: center;
+	line-height: 75px;
+	font-size: 30px;
+	text-indent: -9999px;
+	}
+	.flex-container div:hover {
+		box-shadow: inset 0 -150px 0 0 rgba(243, 243, 243, 0.5)
+	}
+	.theme-container {
+	width: 63%;
+	display: flex;
+	flex-wrap: nowrap;
+	background-color: rgb(230, 230, 230);
+	border-radius: 16px;
+	padding: 20px;
+	text-align: 'justify';
 }
 
 .theme-container > div {
-  vertical-align: middle;
-  border-radius: 50%;
-  background-color: #006664;
-  width: 25px;
-  height: 25px;
-  margin: 20px;
-  line-height: 75px;
-  font-size: 15px;
+	vertical-align: middle;
+	border-radius: 50%;
+	background-color: #006664;
+	width: 25px;
+	height: 25px;
+	margin: 20px;
+	line-height: 75px;
+	font-size: 15px;
 }
 .theme-container div:hover {
 	box-shadow: inset 0 -150px 0 0 rgba(243, 243, 243, 0.5)
@@ -425,7 +425,7 @@ export default({
 	opacity: 0;
 	overflow: hidden;
 	position: absolute;
-	// z-index: -1;
+	// z-index: 0;
 	cursor: pointer;
 }
 .inputfile + label {
@@ -444,9 +444,8 @@ export default({
 	border-style: solid;
 	border-width: 0.125rem;
 	border-color: #EF2D56;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
 	width: 200px;
+	// z-index: -1;
 }
 .inputfile:focus + label{
 	outline: 1px dotted #000;
@@ -457,22 +456,22 @@ export default({
 	cursor: pointer;
 }
 ::-webkit-scrollbar {
-  width: 20px;
+  	width: 20px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: transparent;
+  	background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #d6dee1;
-  border-radius: 20px;
-  border: 6px solid transparent;
-  background-clip: content-box;
+	background-color: #d6dee1;
+	border-radius: 20px;
+	border: 6px solid transparent;
+	background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #a8bbbf;
+  	background-color: #a8bbbf;
 }
 @page {
     size: 11.7in 16.5in;

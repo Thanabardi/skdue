@@ -200,6 +200,7 @@ export default {
   width: 35px;
   height: 35px;
   border-radius: 50%;
+  object-fit: cover;
 }
 // .avatar img {
 //     padding: -10px 0px 0px -180px;
