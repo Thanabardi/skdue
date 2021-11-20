@@ -4,7 +4,7 @@
         <div v-else>{{ this.calendar_slug }}</div>
 		<div v-if="popupTriggers.buttonTrigger && this.user_name != ''">
 		    <div class="follow-list-tab">
-				<button v-for="name in followed_name" :key="name" @click="redirectFollowedCalendar(name)" 
+				<button v-for="name in followed_name" :key="name" @click="redirectFollowedCalendar()" 
                     class="follow-list-button-tp"> {{ name }}</button>
 			</div>
 		</div>
@@ -41,6 +41,8 @@ export default ({
             user_name: '',
             tag_colors: TAG_COLORS,
             app_colors: APP_COLORS,
+            fs_slug: '',
+            fs_name_display: '',
 		}
 	},
     props: {
@@ -55,14 +57,20 @@ export default ({
             this.calendar_slug = calendar_slug.replace(/-/g,' ')
             axios.get(`/api/v2/me/follow`).then( response => {
                 this.user_name = response.data[0]["user_name"]
+                this.fs_slug = response.data[0]["followed_calendar_slug"]
+                this.fs_name_display = this.fs_slug.replace(/-/g,' ')
+                const str2 = this.fs_name_display.charAt(0).toUpperCase() + this.fs_name_display.slice(1);
                 response.data.forEach(elements => {
-				this.followed_name.push(elements["followed_name"])
-					})
+                    if (elements["followed_name"]=='admin'){
+                        elements["followed_name"]=str2
+                    }
+				    this.followed_name.push(elements["followed_name"])
+				})
             })
         },
-        async redirectFollowedCalendar(followed) {
+        async redirectFollowedCalendar() {
 			await this.$router.push({ path: `/me/` })
-			await this.$router.replace({ path: `/calendar/${followed}` })
+			await this.$router.replace({ path: `/calendar/${this.fs_slug}` })
         },
 	}
 })
