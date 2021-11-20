@@ -199,7 +199,7 @@ export default {
 				"description" : this.detail[1],
 				"start_date" : start_date_time,
 				"end_date" : end_date_time,
-				"tag" : this.tag
+				"tag" : this.detail[6]
 			}
 
 			axios.delete(`/api/v2/me/${this.user_name}/${this.detail[7]}`)
@@ -221,7 +221,7 @@ export default {
 				"description" : this.detail[1],
 				"start_date" : start_date_time,
 				"end_date" : end_date_time,
-				"tag" : this.tag
+				"tag" : this.detail[6]
 			}
 
 			// console.log(this.name)
@@ -230,6 +230,7 @@ export default {
 			// console.log(end_date_time)
 			// console.log(this.tag)
 
+			console.log(event)
 			axios.put(`/api/v2/me/${this.user_name}/${this.detail[7]}`, event)
 				.then(function(response) {
 					console.log(response),
