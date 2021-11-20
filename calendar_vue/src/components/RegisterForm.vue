@@ -8,7 +8,7 @@
             <h1>Welcome To Skdue!</h1>
             <p>Please enter your personal detail to start using your calendar.</p>
               <div style="display: flex;">Have an Account Already?
-                <button style="color: var(--green); font-size: 18px;" class="app-button-tp"
+                <button style="color: #c0ca35; font-size: 18px;" class="app-button-tp"
                   id="signIn" @click="signUp = !signUp"> LOG IN</button>
               </div>
           </div>
@@ -20,7 +20,7 @@
                 Login with google
             </button>
             <div style="display: flex;">New to Skdue?
-              <button style="color: var(--green); font-size: 18px;" class="app-button-tp"
+              <button style="color: #c0ca35; font-size: 18px;" class="app-button-tp"
                 id="signUp" @click="signUp = !signUp">SIGN UP</button>
             </div>
           </div>
@@ -38,7 +38,8 @@
         <h2>Login</h2>
         <input class="register-input" type="username" v-model="dataLogIn.username" placeholder="Username" required />
         <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
-        <a class="app-button-tp" style="text-decoration: none; color: var(--black);"
+
+        <a class="app-button-tp" style="text-decoration: none; color: black;" 
           href="#">Forgot your password?</a>
         <button class="register-button">Continue</button>
       </form>
@@ -46,12 +47,14 @@
 
     <!-- router-link for mockup -->
     <!-- <div style="text-align: center;">
-      <h1 style="font-size: 50px; color: var(--red);" class="register-header">*This is just a login mockup*</h1>
-      <h2 style="color: var(--gray-dark);">Anyway, if you want to create your own calendar check
-      <router-link class="app-button-tp" style="text-decoration: none; color: var(--green);"
+      <h1 style="font-size: 50px; color: red;" class="register-header">*This is just a login mockup*</h1>
+      <h2 style="color: gray;">Anyway, if you want to create your own calendar check
+      <router-link class="app-button-tp" style="text-decoration: none; color: #c0ca35;"
         to=/create_calendar>this</router-link>
-      out to see how our Skdue works, or if you want to take a look at the existing Skdue try
-      <router-link class="app-button-tp" style="text-decoration: none; color: var(--green);"
+
+      out to see how our Skdue works, or if you want to take a look at the existing Skdue try 
+      <router-link class="app-button-tp" style="text-decoration: none; color: #c0ca35;"
+
         to=/calendar/holidays>this</router-link>.</h2>
     </div> -->
 
@@ -189,7 +192,7 @@ import axios from 'axios'
 }
 
 .register-header {
-  color: var(--main-green);
+  color: #006664;
   font-size: 80px;
   font-weight: 500px;
   text-align: center;
@@ -203,7 +206,7 @@ import axios from 'axios'
     height: 480px;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 15px 30px var(--black-op-1), 0 10px 10px var(--black-op-2);
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.5), 0px 0px 40px 0px rgba(0, 0, 0, 0.2);
     // background: linear-gradient(to bottom, #efefef, #ccc);
   .overlay-container {
     position: absolute;
@@ -220,7 +223,7 @@ import axios from 'axios'
     left: -100%;
     height: 100%;
     width: 200%;
-    background: linear-gradient(to bottom right, var(--main-green), var(--main-green-light));
+    background: linear-gradient(to bottom right, #006664, #3B9693);
     color: #fff;
     transform: translateX(0);
     transition: transform .5s ease-in-out;
@@ -256,7 +259,7 @@ import axios from 'axios'
 //   margin: 20px 0 30px;
 // }
 // a {
-//   color: var(--black);
+//   color: black;
 //   text-decoration: none;
 //   margin: 15px 0;
 //   font-size: 20px;
@@ -265,8 +268,8 @@ import axios from 'axios'
   width: 100%;
   border-radius: 20px;
   border: none;
-  background-color: var(--green);
-  color: var(--white);
+  background-color: #c0ca35;
+  color: white;
   font-size: 18px;
   font-weight: bold;
   padding: 10px 40px;
@@ -276,12 +279,12 @@ import axios from 'axios'
   transition: transform .1s ease-in;
   &:active {
     transform: scale(.98);
-    background-color: var(--green-dark)
+    background-color: #004746
   }
 }
 // button.invert {
 //   background-color: transparent;
-//   border-color: var(--white);
+//   border-color: white;
 // }
 form {
   position: absolute;
@@ -294,11 +297,11 @@ form {
   width: calc(50% - 120px);
   height: calc(100% - 180px);
   text-align: center;
-  background: linear-gradient(to bottom, var(--gray-light), var(--gray-dark));
+  background: linear-gradient(to bottom, #f5f5f5, #999999);
   transition: all .5s ease-in-out;
 }
 .register-input {
-  //   background-color: var(--white);
+  //   background-color: white;
   //   border: none;
   //   padding: 8px 15px;
   //   margin: 6px 0;
@@ -311,9 +314,9 @@ form {
   //   overflow: hidden;
   //   &:focus {
   //     outline: none;
-  //     background-color: var(--gray-light);
+  //     background-color: #f5f5f5;
   //   }
-  background: var(--gray-light);
+  background: #f5f5f5;
 	font-size: 18px;
 	padding: 8px;
 	width: 300px;
