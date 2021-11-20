@@ -36,7 +36,7 @@ class UserMeView(APIView):
     """View of user's information"""
 
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)  
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         if request.user.id:
@@ -56,7 +56,7 @@ class UserMeCalendarView(APIView):
     """View of user's specific calendar information"""
 
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,) 
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, calendar_slug):
         """User calendar detail with public, private, and followed events"""
@@ -107,11 +107,11 @@ class UserMeCalendarView(APIView):
             data["tag"] = data_event.keys()
             return Response(data)
         return Response({"msg": "login required or you are not calendar owner"}, HTTP_403_FORBIDDEN)
-        
+
 
     def post(self, request, calendar_slug):
         """Create new calendar event
-        
+
         Args:
             requset.data: a dict consist of,
                 - name: calendar event name
@@ -129,7 +129,7 @@ class UserMeCalendarView(APIView):
             event_data = request.data
             if CalendarEvent.is_valid(event_data, calendar_slug) and CalendarEvent.is_usable_tag(event_data["tag"], user_id=request.user.id):
                 calendar = Calendar.objects.get(slug=calendar_slug)
-                slug = generate_slug(event_data["name"]) 
+                slug = generate_slug(event_data["name"])
                 tag = CalendarTag.objects.get(tag=event_data["tag"])
                 new_event = CalendarEvent(
                     calendar = calendar,
@@ -152,14 +152,14 @@ class UserMeCalendarView(APIView):
                 return Response(data, HTTP_201_CREATED)
             else:
                 return Response({"msg": "invalid event data"}, HTTP_400_BAD_REQUEST)
-        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED) 
+        return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)
 
 
 class UserMeFollowedView(APIView):
     """View for user's follow status with follow/unfollow option"""
 
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,) 
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         """Get list of user's follwed people"""
@@ -174,15 +174,18 @@ class UserMeFollowedView(APIView):
         opt = request.data["option"]
         follow_id = request.data["follow_id"]
         followed_user = User.objects.get(id=follow_id)
+        follow_cal = request.data["follow_calendar"]
+        followed_cal = Calendar.objects.get(id=follow_cal)
         if opt == "follow":
-            if FollowStatus.is_valid(request.user, followed_user):
-                fs = FollowStatus(user=request.user, followed=followed_user)
+            if FollowStatus.is_valid(request.user, followed_user, followed_cal):
+                # fs = FollowStatus(user=request.user, followed=followed_user)
+                fs = FollowStatus(user=request.user, followed=followed_user, followed_calendar=followed_cal)
                 fs.save()
                 return Response({"msg": "followed"}, HTTP_201_CREATED)
             else:
                 return Response({"msg": "invalid follow status"}, HTTP_400_BAD_REQUEST)
         elif opt == "unfollow":
-            fs = FollowStatus.objects.get(user=request.user, followed=followed_user)
+            fs = FollowStatus.objects.get(user=request.user, followed=followed_user, followed_calendar=followed_cal)
             fs.unfollow()
             return Response({"msg": "unfollowed"}, HTTP_200_OK)
         return Response({"msg": "option not found"}, HTTP_404_NOT_FOUND)
@@ -192,8 +195,8 @@ class UserMeAddTagView(APIView):
     """View for adding new custom tag"""
 
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,) 
-    
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request):
         """User can add new custom tag from here"""
         if request.user.id:
@@ -240,7 +243,7 @@ class UserMeEventView(APIView):
 
     def put(self, request, calendar_slug, event_slug):
         """Change calendar event
-        
+
         Args:
             requset.data: a dict consist of,
                 - name: calendar event name
@@ -300,7 +303,7 @@ class UserMeEventView(APIView):
                     {
                         "msg": "changed event detail",
                         "new_url": reverse('api_v2:me_event', args=[calendar_slug, new_slug])
-                    }, 
+                    },
                     HTTP_200_OK
                 )
         else:
@@ -315,4 +318,3 @@ class UserMeEventView(APIView):
             return Response({"msg": "event deleted"}, HTTP_200_OK)
         else:
             return Response({"msg": "you are not the owner of this calendar"}, HTTP_403_FORBIDDEN)
-

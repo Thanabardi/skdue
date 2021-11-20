@@ -26,13 +26,13 @@ class UserMeTests(TestCase):
         tag = CalendarTagType(tag_type="custom")
         tag.save()
         self.CUSTOM_TAG_TYPE = CalendarTagType.objects.get(tag_type="custom")
-        
+
         self.user = User(username="tester", password="tester")
         self.user.save()
         self.calendar = Calendar(
             user=self.user,
             name=self.user.username,
-            slug=generate_slug(self.user.username)    
+            slug=generate_slug(self.user.username)
         )
         self.calendar.save()
         self.public_tag = CalendarTag(
@@ -83,7 +83,7 @@ class UserMeTests(TestCase):
             tag_type=self.CUSTOM_TAG_TYPE
         )
         self.other_tag.save()
-        
+
         self.other_event = CalendarEvent(
             calendar=self.other_calendar,
             name="other event",
@@ -146,7 +146,7 @@ class UserMeTests(TestCase):
         f_calendar = Calendar(
             user=followed,
             name=followed.username,
-            slug=generate_slug(followed.username)   
+            slug=generate_slug(followed.username)
         )
         f_calendar.save()
         f_public_event = CalendarEvent(
@@ -167,7 +167,7 @@ class UserMeTests(TestCase):
             end_date = self.end_date
         )
         f_private_event.save()
-        fs = FollowStatus(user=self.user, followed=followed)
+        fs = FollowStatus(user=self.user, followed=followed, followed_calendar=f_calendar)
         fs.save()
         calendar_slug = generate_slug(self.user.username)
         response = self.client.get(reverse('api_v2:me_calendar', args=[calendar_slug]))
@@ -227,7 +227,13 @@ class UserMeTests(TestCase):
         self.client = authenticated_client_factory(self.user)
         followed = User(username="followed", password="followed")
         followed.save()
-        fs = FollowStatus(user=self.user, followed=followed)
+        followed_cal = Calendar(
+            user=followed,
+            name=followed.username,
+            slug=generate_slug(followed.username)
+        )
+        followed_cal.save()
+        fs = FollowStatus(user=self.user, followed=followed, followed_calendar=followed_cal)
         response = self.client.get(reverse('api_v2:me_follow'))
         response_data = convert_response(response.content)
         expect = json.dumps(FollowStatusSerializer(FollowStatus.objects.all(), many=True).data)
@@ -237,31 +243,49 @@ class UserMeTests(TestCase):
         self.client = authenticated_client_factory(self.user)
         followed = User(username="followed", password="followed")
         followed.save()
+        calendar = Calendar(
+            user=followed,
+            name=followed.username,
+            slug=generate_slug(followed.username)
+        )
+        calendar.save()
         response = self.client.post(
             reverse('api_v2:me_follow'),
             data = {
                 "option": "follow",
-                "follow_id": followed.id}
+                "follow_id": followed.id,
+                "follow_calendar": calendar.id
+                }
         )
         self.assertEqual(HTTP_201_CREATED, response.status_code)
 
     def test_me_unfollowed_post(self):
         self.client = authenticated_client_factory(self.user)
+
         # follow
         followed = User(username="followed", password="followed")
         followed.save()
+        calendar = Calendar(
+            user=followed,
+            name=followed.username,
+            slug=generate_slug(followed.username)
+        )
+        calendar.save()
         self.client.post(
             reverse('api_v2:me_follow'),
             data = {
                 "option": "follow",
-                "follow_id": followed.id}
+                "follow_id": followed.id,
+                "follow_calendar": calendar.id,
+            }
         )
         # unfollow
         response = self.client.post(
             reverse('api_v2:me_follow'),
             data = {
                 "option": "unfollow",
-                "follow_id": followed.id
+                "follow_id": followed.id,
+                "follow_calendar": calendar.id,
             }
         )
         with self.assertRaises(FollowStatus.DoesNotExist):
