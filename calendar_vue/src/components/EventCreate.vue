@@ -100,7 +100,8 @@ export default {
 			start_date: new Date().toLocaleDateString("fr-CA"),
 			start_time: new Date().toTimeString().substring(0, 5),
 			end_date: new Date().toLocaleDateString("fr-CA"),
-			end_time: (new Date().toTimeString().substring(0, 2)) + ":" + ("0" + (Number(new Date().toTimeString().substring(3, 5))+1)).slice(-2),
+			end_time: (new Date().toTimeString().substring(0, 2)) + ":" + 
+				("0" + (Number(new Date().toTimeString().substring(3, 5))+1)).slice(-2),
 			tag: '',
 			token: "token",
 			fs: "follow",
