@@ -29,6 +29,9 @@
                                 <input :style="'color:'+app_colors[this.color_theme['type']]['main']" type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png" class="inputfile">
 								<label for="file">Choose an image</label>
                             </div>
+							<div class="sync" :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">
+									<GoogleCalSync />
+								</div>
                         </center>
 						<!-- End -->
 						<center><table>
@@ -123,10 +126,12 @@ import { ref } from 'vue';
 import axios from 'axios';
 import CalendarNavbar from './CalendarNavbar.vue'
 import { TAG_COLORS, APP_COLORS } from './ColorHandle'
+import GoogleCalSync from './GoogleCalSync'
 
 export default({
     components: {
         CalendarNavbar,
+		GoogleCalSync
     },
     setup () {
 		const popupTriggers = ref({
@@ -499,5 +504,8 @@ html {
 }
 body {
     min-height: 235%;
+}
+.sync {
+	padding-top: 3%;
 }
 </style>

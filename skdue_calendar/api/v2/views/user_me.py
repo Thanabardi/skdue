@@ -266,6 +266,7 @@ class UserMeEventView(APIView):
             try:
                 changed_tag = CalendarTag.objects.get(tag=request.data["tag"])
             except CalendarTag.DoesNotExist:
+                print('it tag!!!')
                 raise Http404
             if changed_tag.id in [t.id for t in get_available_tag(request.user, is_private=True)]:
                 event.tag = changed_tag

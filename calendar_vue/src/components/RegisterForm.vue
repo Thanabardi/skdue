@@ -15,6 +15,10 @@
           <div class="overlay-right">
             <h1>Welcome Back!</h1>
             <p>Please login to see what's going to happen next on your calendar.</p>
+            <button title="Google" class="google-button"  @click.prevent="googleLogin">
+              <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                Login with google
+            </button>
             <div style="display: flex;">New to Skdue?
               <button style="color: #c0ca35; font-size: 18px;" class="app-button-tp"
                 id="signUp" @click="signUp = !signUp">SIGN UP</button>
@@ -34,6 +38,7 @@
         <h2>Login</h2>
         <input class="register-input" type="username" v-model="dataLogIn.username" placeholder="Username" required />
         <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
+
         <a class="app-button-tp" style="text-decoration: none; color: black;" 
           href="#">Forgot your password?</a>
         <button class="register-button">Continue</button>
@@ -46,8 +51,10 @@
       <h2 style="color: gray;">Anyway, if you want to create your own calendar check
       <router-link class="app-button-tp" style="text-decoration: none; color: #c0ca35;"
         to=/create_calendar>this</router-link>
+
       out to see how our Skdue works, or if you want to take a look at the existing Skdue try 
       <router-link class="app-button-tp" style="text-decoration: none; color: #c0ca35;"
+
         to=/calendar/holidays>this</router-link>.</h2>
     </div> -->
 
@@ -71,17 +78,31 @@ import axios from 'axios'
         dataLogIn:{
           username: null,
           password: null
-        } 
+        },
       }
     },
     methods:{
+      googleLoginData(data){
+        // for login
+        console.log(data);
+
+        // auth setting
+        let token = data.token
+        this.$store.commit('setToken', token)
+        axios.defaults.headers.common["Authorization"] = "Token " + token
+        localStorage.setItem("token", token)
+
+        this.slug = data.user_info.given_name
+        this.$router.push({ path: `/me/${this.slug}`});
+
+      },
       setData(data){
         // for register
         console.log(data);
 
         // auth setting
         let token = data.token
-        this.$store.commit('setToken', token)            
+        this.$store.commit('setToken', token)
         axios.defaults.headers.common["Authorization"] = "Token " + token
         localStorage.setItem("token", token)
 
@@ -94,12 +115,24 @@ import axios from 'axios'
 
         // auth setting
         let token = data.token
-        this.$store.commit('setToken', token)            
+        this.$store.commit('setToken', token)
         axios.defaults.headers.common["Authorization"] = "Token " + token
         localStorage.setItem("token", token)
 
         this.slug = data.calendar.slug
         this.$router.push({ path: `/me/${this.slug}`});
+      },
+      googleLogin(e){
+        e.preventDefault();
+        axios.get(`/oauth/login/`)
+                .then(response => {
+                this.googleLoginData(response.data);
+                // console.log(response.data);
+                // console.log(response.data.slug);
+                })
+                .catch(error => {
+                console.log(error)
+            })
       },
       getData(e){
         e.preventDefault();
@@ -139,12 +172,31 @@ import axios from 'axios'
 
 @import './../assets/style.css';
 
+.google-button{
+  width: 70%;
+  border-radius: 20px;
+  border: none;
+  background-color: var(--green);
+  color: var(--white);
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 40px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .1s ease-in;
+  &:active {
+    transform: scale(.98);
+    background-color: var(--green-dark)
+  }
+}
+
 .register-header {
   color: #006664;
   font-size: 80px;
   font-weight: 500px;
   text-align: center;
-    
+
 }
 .container {
     position: relative;
@@ -256,8 +308,8 @@ form {
   //   width: calc(100% - 30px);
   //   border-radius: 8px;
   //   border-bottom: 1px solid #ddd;
-  //   // box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4), 
-  //   //                   0 -1px 1px #fff, 
+  //   // box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4),
+  //   //                   0 -1px 1px #fff,
   //   //                   0 1px 0 #fff;
   //   overflow: hidden;
   //   &:focus {
