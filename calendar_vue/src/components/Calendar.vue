@@ -8,7 +8,11 @@ import EventCreate from './EventCreate'
 import Follow from './Follow'
 import Search from './search'
 import EventDetails from './EventDetails'
+
+import EditRemove from './EditRemove'
+
 import { TAG_COLORS, APP_COLORS } from './ColorHandle'
+
 import {ref} from 'vue'
 import axios from 'axios'
 export default {
@@ -18,6 +22,7 @@ export default {
     Search,
     EventCreate,
     Follow,
+    EditRemove,
   },
   data: function () {
     return {
@@ -50,7 +55,7 @@ export default {
         dayMaxEvents: true,
         weekends: true,
         select: this.handleDateSelect,
-        eventClick: this.handleEventClick,
+        // eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
         /* you can update a remote database when these fire:
         eventAdd:
@@ -58,6 +63,8 @@ export default {
         eventRemove:
         */
       },
+      editEvent: false,
+      editEventList: [],
       currentEvents: [],
       calendar_events: [],
       event_in_selected_date: [], //added in iter4
@@ -68,6 +75,7 @@ export default {
       follow_tag_list: [], // store follow tag name
       event_details: [],
       modalActive: true,
+      calendar_id: Number,
       token: "",
       day_select: "",
       day: [
@@ -95,11 +103,28 @@ export default {
   const popupTriggers = ref({
     sidebarTrigger: false,
     editTrigger: false,
+    select_event: {},
   });
-
-  const TogglePopup = (trigger, e) => {
+  const TogglePopup = (trigger, e=0, item=0) => {
+    //handle edit followed event
+    if (trigger == 'editTrigger' && item.is_mine == false){
+      return
+    }
+    else {
     e.preventDefault()
+    console.log('is_this_mine',item)
     popupTriggers.value[trigger] = !popupTriggers.value[trigger]
+    popupTriggers.value["select_event"]= [
+        item.name,
+        item.description,
+        item.start_date,
+        item.start_time,
+        item.end_date,
+        item.end_time,
+        item.tag,
+        item.slug
+      ]
+    }
   }
   return {
     modalActive,
@@ -132,6 +157,7 @@ export default {
       });
     },
     setCalendarEvents(data){
+      this.calendar_id = data.calendar.id
       console.log(data.event)
       let tag = data.tag
       this.tag_list = data.tag // check this line
@@ -154,7 +180,8 @@ export default {
             end: d[i].end_date,
             description: d[i].description,
             slug: d[i].slug,
-            tag : d[i].tag_text
+            tag : d[i].tag_text,
+            from_calendar_id: d[i].calendar,
           })
         }
       }
@@ -251,24 +278,26 @@ export default {
       this.event_details.sort( compare );
       console.log('sort',this.event_details)
     },
-    handleEventClick(clickInfo) {
-      this.calendar_events.forEach(elements => {
-        let event = this.convertEventDateTime(elements)
-        if (elements.id == clickInfo.event.id){
-          this.modalActive = true;
-          // let  start_date = elements.start_date.substring(11, 16) +
-          //   ", " + elements.start_date.substring(0, 10)
-          // let  end_date = elements.end_date.substring(11, 16) +
-          //   ", " + elements.start_date.substring(0, 10)
-          // this.event_details = [
-          //   elements.name,
-          //   start_date,
-          //   end_date,
-          //   elements.description
-          // ]
-          this.event_details.push(event)
+    changeIntForDateTime(dateTimeList){
+      console.log(dateTimeList)
+      let list = [];
+      dateTimeList.forEach(e => {
+        if (e.length == 1) {
+          e="0"+e;
         }
-      });
+        list.push(e);
+      })
+      return list
+      ;
+
+    },
+    handleEventClick(clickInfo) {
+      
+    },
+    swap(value){
+      console.log('PIDDDDD')
+      this.popupTriggers.editTrigger = false
+      console.log(this.popupTriggers.select_event)
     },
     handleEvents(events) {
       this.currentEvents = events;
@@ -290,6 +319,9 @@ export default {
       else if ((start_date_check == end_date_check) && (start_time == "00:00") && (end_time == "23:59")) {
         allday = true
       }
+
+      let is_mine = events.from_calendar_id == this.calendar_id
+
       return {
 				"name" : events.title,
 				"description" : events.description,
@@ -298,7 +330,9 @@ export default {
 				"end_date" : end_date,
         "end_time" : end_time,
         "tag" : events.tag,
-        "allday" : allday
+        "allday" : allday,
+        "slug" : events.slug,
+        "is_mine" : is_mine
 			}
     },
     clearData(data){
@@ -359,9 +393,30 @@ export default {
 
 
 <template>
+  <!-- <div> -->
+      <!-- <form @submit.prevent="logoutData" class="form-form">
+        <button class="logout-button">Logout</button>
+      </form> -->
+    <!-- <CalendarNavbar /> -->
+
+<!--
+    <div class='calendar-sidebar'>
+      <EventDetails>
+
+        <Follow />
+        <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
+          {{ (this.day_select.substring(8, 10)) }}
+          {{ this.month[new Date(this.day_select).getMonth()] }}
+          {{ (this.day_select.substring(0, 4)) }}
+        </h2>
+        <div style="overflow-x: hidden; height: 76%;"> -->
+
   <div v-if="this.is_fetch" :style="'height: 100%; width: 100%; position: fixed; background-color:'
     +app_colors[this.color_theme['type']]['sub']">
     <CalendarNavbar :color_theme="this.color_theme"/>
+
+
+
     <div class='calendar-sidebar' :style="'background-color:'+app_colors[this.color_theme['name']]['sub-1']">
       <Follow :color_theme="this.color_theme"/>
       <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
@@ -370,16 +425,21 @@ export default {
         {{ (this.day_select.substring(0, 4)) }}
       </h2>
         <!-- list of all event -->
+
         <div style="position: absolute; overflow-x: hidden; 
           top: 140px; bottom: 140px; color; rgba(255, 255, 255, 0.6); width: 95%;">
+          
           <div v-if="this.event_details.length!=0">
             <p>All-Day Event</p>
             <!-- list of all day event -->
-            
+
             <div v-for="item in this.event_details" :key="item">
                 <button v-if="item['allday']" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
+
+                  <!-- v-on:click.right="TogglePopup('editTrigger', $event, item)"> -->
+
                   <table class="calendar-table">
                   <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
                   <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
@@ -393,9 +453,9 @@ export default {
             <hr class="calendar-hr">
             <div v-for="item in this.event_details" :key="item">
               <div v-if="!item['allday']">
-                <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg" 
+                <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
                   <table class="calendar-table">
                   <tr><td style="width: 110px;">00:00-{{ item["end_time"] }}</td>
                     <td>{{ item["name"] }}</td></tr>
@@ -405,7 +465,7 @@ export default {
                 </button>
                 <button v-if="this.day_select < item['end_date']" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
                   <table class="calendar-table">
                   <tr><td style="width: 110px;">{{ item["start_time"] }}-00:00</td>
                     <td>{{ item["name"] }}</td></tr>
@@ -415,7 +475,7 @@ export default {
                 </button>
                 <button v-if="item['start_date'] == item['end_date']" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
                   <table class="calendar-table">
                   <tr><td style="width: 110px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
                     <td>{{ item["name"] }}</td></tr>
@@ -447,7 +507,7 @@ export default {
       <!-- Tag filters -->
       <div style="text-align: center;" v-if="popupTriggers.sidebarTrigger">
         <div class='calendar-sidebar' :style="'background-color:'+app_colors[this.color_theme['name']]['sub-1']">
-          
+
           <!-- My Tag filters -->
           <p style="font-size: 20px; text-align: left; padding-left: 20px;">My Tags</p>
           <hr class="calendar-hr">
@@ -481,11 +541,14 @@ export default {
     <!-- Tag filters -->
 
     <!-- edit event -->
-    <div style="text-align: center;" v-if="popupTriggers.editTrigger">
-      <div class="calendar-sidebar">
-        <button class="app-button-main" v-on:click.left="TogglePopup('editTrigger', $event)">Edit</button>
-        <button class="app-button-gray" v-on:click.left="TogglePopup('editTrigger', $event)">Delete</button>
+    <div v-if="popupTriggers.editTrigger">
+      <div class="editremove">
+            <EditRemove :popup="popupTriggers.editTrigger" :detail="popupTriggers.select_event" :color_theme="this.color_theme" @closed="swap"/>
       </div>
+
+
+        <!-- <button class="app-button-main" v-on:click.left="TogglePopup('editTrigger', $event)">Edit</button>
+        <button class="app-button-gray" v-on:click.left="TogglePopup('editTrigger', $event)">Delete</button> -->
     </div>
     <!-- edit event -->
 
@@ -516,6 +579,12 @@ export default {
 <style lang='scss' scoped>
 
 @import './../assets/style.css';
+
+.editremove {
+  height: 65px;
+  z-index: 10;
+  position: fixed !important;
+}
 
 .calendar-sidebar {
   color: white;
