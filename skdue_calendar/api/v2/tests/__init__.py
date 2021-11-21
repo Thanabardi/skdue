@@ -10,3 +10,4 @@ from .test_me import *
 from .test_logout import *
 from .test_calendar_register import *
 from .test_login import *
+from .test_selenium import *
