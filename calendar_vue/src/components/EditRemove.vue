@@ -78,7 +78,7 @@
 							:style="'background-color:'+app_colors[this.color_theme['type']]['main-1']"
 							 @click="() => close()">Cancel</button>
 							 <div class="app-button-main"
-							 style="background-color:red; text-align:center; "
+							 style="background-color:red; line-height: 24px; "
 							 @click="() => deleteEvent()">Delete</div>
 
 						</div>

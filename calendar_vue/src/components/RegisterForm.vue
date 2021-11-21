@@ -176,8 +176,8 @@ import axios from 'axios'
   width: 70%;
   border-radius: 20px;
   border: none;
-  background-color: var(--green);
-  color: var(--white);
+  background-color: #c0ca35;
+  color: white;
   font-size: 18px;
   font-weight: bold;
   padding: 10px 40px;

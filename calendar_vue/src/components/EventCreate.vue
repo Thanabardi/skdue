@@ -149,6 +149,7 @@ export default {
 				})
         },
 		getTag() {
+			this.available_tag = []
 			axios.get(`/api/v2/me`)
 				.then( response => {
 					response.data["available_tag"].forEach(elements => {
@@ -185,7 +186,6 @@ export default {
 				if (!this.available_tag.includes(this.tag)) {
 					this.tagCreate()
 				}
-				this.getTag()
 					axios.post(`/api/v2/me/${this.user_name}`, event)
 						.then(function(response) {
 							console.log("create new Event", response),
@@ -203,7 +203,7 @@ export default {
 			if (this.tag == '') {
 				alert("Tag can't be blank")
 			} else if (!this.available_tag.includes(this.tag)) {
-				this.available_tag.push(this.tag)
+				this.getTag()
 				axios.post(`/api/v2/me/add_new_tag`, {"tag":this.tag})
 					.then(function(response) {
 						console.log("create new Tag", response)
