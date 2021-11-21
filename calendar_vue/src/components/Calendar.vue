@@ -499,7 +499,9 @@ export default {
           <hr class="calendar-hr">
           <div class="filter-tag-bg">
             <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.my_tag_list" :key="tag_text">
-              <input type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)" checked>
+              <input v-if="this.tag_status[tag_text]" type="checkbox" v-bind:id="tag_text" 
+                v-on:click.left="handlefiltertag(tag_text)" checked>
+              <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)">
               <label :style="'color:'+tag_colors[this.color_tag[tag_text]]"> {{ tag_text }} </label><br>
             </div>
           </div>
@@ -510,7 +512,9 @@ export default {
           <hr class="calendar-hr">
           <div class="filter-tag-bg" >
             <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.follow_tag_list" :key="tag_text">
-              <input type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)" checked>
+              <input v-if="this.tag_status[tag_text]" type="checkbox" v-bind:id="tag_text" 
+                v-on:click.left="handlefiltertag(tag_text)" checked>
+              <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)">
               <label :style="'max-height: 20%; color:'+app_colors[this.color_theme['type']]['main']"> {{ tag_text }} </label><br>
             </div>
           </div>
