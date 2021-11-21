@@ -146,7 +146,7 @@ export default {
     border: 1px solid transparent;
     padding: 5px;
 	font-size: 22px;
-	transform: translate(0, -20px);
+	transform: translate(0, -24px);
 	cursor: pointer;
 }
 .user-detail-login:hover {
@@ -175,7 +175,7 @@ export default {
     cursor: pointer;
     text-decoration: none;
 }
-.user-detail-app-button:hover {
+.user-detail-app-button:active {
 	opacity: 0.8;
 }
 .user-detail-button-tp {

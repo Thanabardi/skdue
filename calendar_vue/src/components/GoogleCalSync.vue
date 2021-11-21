@@ -1,5 +1,5 @@
 <template>
-	<div class="event-create">
+	<div class="google">
 		<button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
 			@click="() => syncGoogleCalEvent()">SYNC</button>
 	</div>
@@ -73,17 +73,9 @@ export default {
 
 @import './../assets/style.css';
 
-.event-create {
-    position: absolute;
-    right: 18%;
-    border-radius: 2px;
-    width: 40px;
-    top: 14px;
-	height: 40px;
-	line-height: 10px;
-	text-align: center;
-}
-.app-button-tp:hover {
-    background-color: var(--white-op-2);
+.app-button-tp {
+    background-color: black;
+	color: white;
+	border-radius: 23%;
 }
 </style>

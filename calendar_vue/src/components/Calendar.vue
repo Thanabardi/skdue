@@ -88,7 +88,6 @@ export default {
         'October','November','December'
         ],
       color_theme: {"type" : "light", "name" : "theme-1"},
-      is_fetch: false,
       color_tag: {},
       app_colors: APP_COLORS,
       tag_colors: TAG_COLORS,
@@ -134,8 +133,8 @@ export default {
   },
   mounted() {
     this.getCalendarEvents()
-    this.getColor()
     this.getTag()
+    this.getColor()
   },
   methods: {
     setTodayEvents() {
@@ -181,6 +180,7 @@ export default {
             description: d[i].description,
             slug: d[i].slug,
             tag : d[i].tag_text,
+            color: this.tag_colors[this.color_tag[d[i].tag_text]],
             from_calendar_id: d[i].calendar,
           })
         }
@@ -204,6 +204,22 @@ export default {
         })
 
     },
+    getTag() {
+			axios.get(`/api/v2/me`)
+				.then( response => {
+					response.data["available_tag"].forEach(elements => {
+						if (elements["user"] == response.data["user"]["id"]) {
+							this.my_tag_list.push(elements["tag"])
+            } else if (elements["user"] == 1) {
+              this.my_tag_list.push(elements["tag"])
+              this.color_tag[elements['tag']] = "default"
+						} else {
+              this.follow_tag_list.push(elements["tag"])
+              this.color_tag[elements['tag']] = "follow"
+            }
+					})
+				})
+    },
     getColor() {
       axios.get(`/api/v2/me/user_setting`)
       .then(response => {
@@ -214,19 +230,6 @@ export default {
       .catch(error => {
         console.log(error)
       })
-      this.is_fetch = true
-    },
-    getTag() {
-			axios.get(`/api/v2/me`)
-				.then( response => {
-					response.data["available_tag"].forEach(elements => {
-						if (elements["user"] == response.data["user"]["id"]) {
-							this.my_tag_list.push(elements["tag"])
-						} else {
-              this.follow_tag_list.push(elements["tag"])
-            }
-					})
-				})
     },
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
@@ -361,7 +364,7 @@ export default {
       else if (checkBox.checked==true){
         this.tag_status[tag_text] = true
       }
-      console.log(this.tag_status)
+      // console.log(this.tag_status)
 
       // whenever status has been changed, call a re-rederevent function
       this.calendarOptions.events = []
@@ -380,7 +383,8 @@ export default {
               end: tagged_event[j].end_date,
               description: tagged_event[j].description,
               slug: tagged_event[j].slug,
-              tag : tagged_event[j].tag_text
+              tag : tagged_event[j].tag_text,
+              color: this.tag_colors[this.color_tag[tagged_event[j].tag_text]]
             })
           }
         }
@@ -393,25 +397,7 @@ export default {
 
 
 <template>
-  <!-- <div> -->
-      <!-- <form @submit.prevent="logoutData" class="form-form">
-        <button class="logout-button">Logout</button>
-      </form> -->
-    <!-- <CalendarNavbar /> -->
-
-<!--
-    <div class='calendar-sidebar'>
-      <EventDetails>
-
-        <Follow />
-        <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
-          {{ (this.day_select.substring(8, 10)) }}
-          {{ this.month[new Date(this.day_select).getMonth()] }}
-          {{ (this.day_select.substring(0, 4)) }}
-        </h2>
-        <div style="overflow-x: hidden; height: 76%;"> -->
-
-  <div v-if="this.is_fetch" :style="'height: 100%; width: 100%; position: fixed; background-color:'
+  <div :style="'height: 100%; width: 100%; position: fixed; background-color:'
     +app_colors[this.color_theme['type']]['sub']">
     <CalendarNavbar :color_theme="this.color_theme"/>
 
@@ -434,7 +420,7 @@ export default {
             <!-- list of all day event -->
 
             <div v-for="item in this.event_details" :key="item">
-                <button v-if="item['allday']" class="calendar-detail-bg"
+                <button v-if="item['allday'] && this.tag_status[item['tag']]" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
                   v-on:click.right="TogglePopup('editTrigger', $event, item)">
 
@@ -452,8 +438,8 @@ export default {
             <!-- list of other event -->
             <hr class="calendar-hr">
             <div v-for="item in this.event_details" :key="item">
-              <div v-if="!item['allday']">
-                <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg"
+              <div v-if="!item['allday'] && this.tag_status[item['tag']]">
+                <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg" 
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
                   v-on:click.right="TogglePopup('editTrigger', $event, item)">
                   <table class="calendar-table">
@@ -513,7 +499,9 @@ export default {
           <hr class="calendar-hr">
           <div class="filter-tag-bg">
             <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.my_tag_list" :key="tag_text">
-              <input type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)" checked>
+              <input v-if="this.tag_status[tag_text]" type="checkbox" v-bind:id="tag_text" 
+                v-on:click.left="handlefiltertag(tag_text)" checked>
+              <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)">
               <label :style="'color:'+tag_colors[this.color_tag[tag_text]]"> {{ tag_text }} </label><br>
             </div>
           </div>
@@ -524,7 +512,9 @@ export default {
           <hr class="calendar-hr">
           <div class="filter-tag-bg" >
             <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.follow_tag_list" :key="tag_text">
-              <input type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)" checked>
+              <input v-if="this.tag_status[tag_text]" type="checkbox" v-bind:id="tag_text" 
+                v-on:click.left="handlefiltertag(tag_text)" checked>
+              <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)">
               <label :style="'max-height: 20%; color:'+app_colors[this.color_theme['type']]['main']"> {{ tag_text }} </label><br>
             </div>
           </div>
@@ -552,7 +542,8 @@ export default {
     </div>
     <!-- edit event -->
 
-    <FullCalendar class="calendar-app-main" :options="calendarOptions" :color_theme="this.color_theme" :style="'color:'+app_colors[this.color_theme['type']]['main']">
+    <FullCalendar class="calendar-app-main" :options="calendarOptions" :color_theme="this.color_theme" 
+      :style="'color:'+app_colors[this.color_theme['type']]['main-0']">
       <template v-slot:eventContent="arg">
         <b>{{ arg.timeText }}</b>
         <i>{{ arg.event.title }}</i>
@@ -566,8 +557,8 @@ export default {
           +tag_colors[this.color_tag[tag_text]]" v-if="this.tag_status[tag_text]"> {{ tag_text }} </label><br>
       </div>
       <div style="display: inline-block; padding-top: 8px;" v-for="tag_text in this.follow_tag_list" :key="tag_text">
-        <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; background-color: rgba(200, 200, 200, 0.5); color:'+
-          app_colors[this.color_theme['type']]['main-0']"
+        <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; color:'+
+          app_colors[this.color_theme['type']]['main-0']+'; background-color:'+ tag_colors[this.color_tag[tag_text]]"
           v-if="this.tag_status[tag_text]"> {{ tag_text }} </label><br>
       </div>
     </div>
@@ -638,6 +629,8 @@ export default {
 }
 .filter-tag-bg {
   background-color: rgba(255, 255, 255, 0.6);
+  -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.5);
+  font-weight: 550;
   padding: 10px 20px 10px 20px;
   display: block;
   margin: 20px auto 20px auto;

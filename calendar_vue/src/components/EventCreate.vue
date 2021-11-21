@@ -54,7 +54,8 @@
 								<td style="width: 400px;">
 									<button type="button" v-for="tag in available_tag" :key="tag"
 										class="event-create-tag-bt" v-on:click.left="this.tag = tag"
-										v-on:click.right="TagEdit($event)">{{ tag }}</button>
+										v-on:click.right="TagEdit($event)" :style="'background-color:'
+										+ this.tag_colors[color_tag[tag]]">{{ tag }}</button>
 								</td>
 							</tr>
 						</table>
@@ -100,7 +101,8 @@ export default {
 			start_date: new Date().toLocaleDateString("fr-CA"),
 			start_time: new Date().toTimeString().substring(0, 5),
 			end_date: new Date().toLocaleDateString("fr-CA"),
-			end_time: (new Date().toTimeString().substring(0, 2)) + ":" + ("0" + (Number(new Date().toTimeString().substring(3, 5))+1)).slice(-2),
+			end_time: (new Date().toTimeString().substring(0, 2)) + ":" + 
+				("0" + (Number(new Date().toTimeString().substring(3, 5))+1)).slice(-2),
 			tag: '',
 			token: "token",
 			fs: "follow",
@@ -111,6 +113,7 @@ export default {
 	},
 	props: {
         color_theme: {},
+		color_tag: {},
     },
 	mounted () {
         this.getUserName(),
@@ -149,14 +152,16 @@ export default {
 			this.available_tag = []
 			axios.get(`/api/v2/me`)
 				.then( response => {
-					// this.user_name = response.data["user"]["username"]
 					response.data["available_tag"].forEach(elements => {
 						if (elements["user"] == response.data["user"]["id"]) {
 							this.available_tag.push(elements["tag"])
+						} else if (elements["user"] == 1) {
+							this.available_tag.push(elements["tag"])
+							this.color_tag[elements['tag']] = "default"
 						}
 					})
 				})
-        },
+    	},
 		eventCreate() {
 			const start_date_time = this.start_date + " " + this.start_time + ":00"
 			const end_date_time = this.end_date + " " + this.end_time + ":00"
@@ -173,13 +178,14 @@ export default {
 			// console.log(start_date_time)
 			// console.log(end_date_time)
 			// console.log(this.tag)
-
-			if ((this.start_date.replace(/-/g,'') + this.start_time.replace(/:/g,'')) < 
+			if (this.tag == '') {
+				alert("Tag can't be blank")
+			}
+			else if ((this.start_date.replace(/-/g,'') + this.start_time.replace(/:/g,'')) < 
 				(this.end_date.replace(/-/g,'') + this.end_time.replace(/:/g,''))) {
 				if (!this.available_tag.includes(this.tag)) {
 					this.tagCreate()
 				}
-				this.getTag()
 					axios.post(`/api/v2/me/${this.user_name}`, event)
 						.then(function(response) {
 							console.log("create new Event", response),
@@ -197,7 +203,7 @@ export default {
 			if (this.tag == '') {
 				alert("Tag can't be blank")
 			} else if (!this.available_tag.includes(this.tag)) {
-				this.available_tag.push(this.tag)
+				this.getTag()
 				axios.post(`/api/v2/me/add_new_tag`, {"tag":this.tag})
 					.then(function(response) {
 						console.log("create new Tag", response)
@@ -206,11 +212,11 @@ export default {
 				alert("This tag already exists")
 			}
 		},
-		TagEdit(e) {
-			alert("EditTag")
-			this.getTag()
-			e.preventDefault()
-		}
+		// TagEdit(e) {
+		// 	alert("EditTag")
+		// 	this.getTag()
+		// 	e.preventDefault()
+		// }
 	},
 }
 
@@ -282,8 +288,8 @@ export default {
 	border-radius: 8px;
 }
 .event-create-tag-bt {
-	background-color: rgb(230, 230, 230);
-	color: black;
+	background-color: #3788d8;
+	color: white;
 	margin-left: 10px;
     border: 0;
     padding: 5px 10px;

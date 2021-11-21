@@ -46,11 +46,14 @@ export const APP_COLORS = {
     },
 }
 export const TAG_COLORS = {
+    "default": "#3788d8",
+    "follow": "rgba(200, 200, 200, 0.6)",
     "white": "#f2f2f2",
     "red": "#C51104",
     "yellow": "#FBBC05",
-    "blue": "#0096EF",
+    "blue": "#3788d8",
     "green": "#34A853",
     "pink": "#F4ABBA",
     "purple": "#A73FB9",
+    "orange" : "#E36005",
 }

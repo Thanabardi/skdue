@@ -19,7 +19,7 @@
     cursor: pointer;
     border-radius: 8px;
 }
-.app-button-main:hover {
+.app-button-main:active {
     opacity: 0.8;
 }
 
@@ -32,7 +32,7 @@
     cursor: pointer;
     border-radius: 8px;
 }
-.app-button-gray:hover {
+.app-button-gray:active {
     opacity: 0.8;
 }
 
@@ -42,7 +42,7 @@
     color: white;
     cursor: pointer;
 }
-.app-button-tp:hover{
+.app-button-tp:active{
     opacity: 0.8;
 }
 

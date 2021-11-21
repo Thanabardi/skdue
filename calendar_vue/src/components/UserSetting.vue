@@ -29,6 +29,9 @@
                                 <input :style="'color:'+app_colors[this.color_theme['type']]['main']" type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png" class="inputfile">
 								<label for="file">Choose an image</label>
                             </div>
+							<div class="sync" :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">
+									<GoogleCalSync />
+								</div>
                         </center>
 						<!-- End -->
 						<center><table>
@@ -36,6 +39,10 @@
 								<p></p>
 								<div><center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">Tag</center></div><br>
 								<div>
+									<div v-if="this.available_tag.length < 5">
+										<input style="width: 270px;" class="event-create-textarea" 
+											placeholder="MyNewTag" maxlength="10" v-model="tag">
+									</div>
 									<!-- <p v-for="[key, color] of Object.entries(set_color)" :style="'font-size:22px; color:'+app_colors[this.color_theme['type']]['main']"> -->
 									<a v-if="0<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[0]]">{{ this.tag_name[0] }}</center>
 									<div class="flex-container">
@@ -45,7 +52,7 @@
 										<div @click="userColorTag1('green')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
 										<div @click="userColorTag1('pink')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
 										<div @click="userColorTag1('purple')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag1('white')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+										<div @click="userColorTag1('orange')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
 									</div>
 									</a> 
 									<a v-if="1<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[1]]">{{ this.tag_name[1] }}</center>
@@ -56,7 +63,7 @@
 										<div @click="userColorTag2('green') " id="color2" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
 										<div @click="userColorTag2('pink')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
 										<div @click="userColorTag2('purple')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag2('white')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+										<div @click="userColorTag2('orange')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
 									</div>
 									</a>
 									<a  v-if="2<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[2]]">{{ this.tag_name[2] }}</center>
@@ -67,7 +74,7 @@
 										<div @click="userColorTag3('green')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
 										<div @click="userColorTag3('pink')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
 										<div @click="userColorTag3('purple')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag3('white')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+										<div @click="userColorTag3('orange')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
 									</div>
 									</a>
 									<a v-if="3<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[3]]">{{ this.tag_name[3] }}</center>
@@ -78,7 +85,7 @@
 										<div @click="userColorTag4('green')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
 										<div @click="userColorTag4('pink')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
 										<div @click="userColorTag4('purple')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag4('white')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+										<div @click="userColorTag4('orange')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
 									</div>
 									</a>
 									<a v-if="4<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[4]]">{{ this.tag_name[4] }}</center>
@@ -89,7 +96,7 @@
 										<div @click="userColorTag5('green')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
 										<div @click="userColorTag5('pink')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
 										<div @click="userColorTag5('purple')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag5('white')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['white']">.</div>
+										<div @click="userColorTag5('orange')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
 									</div>
 									</a>
 									<!-- </p> -->
@@ -119,10 +126,12 @@ import { ref } from 'vue';
 import axios from 'axios';
 import CalendarNavbar from './CalendarNavbar.vue'
 import { TAG_COLORS, APP_COLORS } from './ColorHandle'
+import GoogleCalSync from './GoogleCalSync'
 
 export default({
     components: {
         CalendarNavbar,
+		GoogleCalSync
     },
     setup () {
 		const popupTriggers = ref({
@@ -150,7 +159,6 @@ export default({
 			fs: "follow",
             selectedFile: null,
 			color_theme: {"type" : "light", "name" : "theme-1"},
-			is_fetch: false,
 			color_tag: {},
 			app_colors: APP_COLORS,
 			tag_colors: TAG_COLORS,
@@ -158,7 +166,8 @@ export default({
 			color_item: {},
 			name_theme: "",
 			type_theme: "",
-			color_font_theme: ""
+			color_font_theme: "",
+			tag: '',
 		}
 	},
 	mounted () {
@@ -250,7 +259,6 @@ export default({
 						this.tag_name.push((Object.entries(this.set_color)[j][0]))
 					}
 					console.log(this.tag_name.length)
-					this.is_fetch = true
 				})
 		},
         onFileSelected(event) {
@@ -275,6 +283,7 @@ export default({
 			axios
 				.put(`/api/v2/me/user_setting`, apiDataForm)
 				.then(response => {
+					this.tagCreate()
 					console.log(response.data)
 					window.location.reload()
 					})
@@ -282,6 +291,19 @@ export default({
 					console.log(error),
 					alert("Opps, " + error)
 			})
+		},
+		tagCreate() {
+			if (this.tag != '') {
+				if (!this.tag_name.includes(this.tag)) {
+					this.tag_name.push(this.tag)
+					axios.post(`/api/v2/me/add_new_tag`, {"tag":this.tag})
+						.then(function(response) {
+							console.log("create new Tag", response)
+						})
+				} else {
+					alert("This new tag is already exists")
+				}
+			}
 		},
 		dataURLtoFile(dataurl, filename) {
 			// create a file object of url image that was transformed as base64
@@ -482,5 +504,8 @@ html {
 }
 body {
     min-height: 235%;
+}
+.sync {
+	padding-top: 3%;
 }
 </style>
