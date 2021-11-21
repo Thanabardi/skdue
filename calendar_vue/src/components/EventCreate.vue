@@ -177,8 +177,10 @@ export default {
 			// console.log(start_date_time)
 			// console.log(end_date_time)
 			// console.log(this.tag)
-
-			if ((this.start_date.replace(/-/g,'') + this.start_time.replace(/:/g,'')) < 
+			if (this.tag == '') {
+				alert("Tag can't be blank")
+			}
+			else if ((this.start_date.replace(/-/g,'') + this.start_time.replace(/:/g,'')) < 
 				(this.end_date.replace(/-/g,'') + this.end_time.replace(/:/g,''))) {
 				if (!this.available_tag.includes(this.tag)) {
 					this.tagCreate()
