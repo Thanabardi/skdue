@@ -14,35 +14,35 @@ export const colorData = async () => {
 
 export const APP_COLORS = {
     "light" : {
-        "main": "#000000",
-        "main-0": "#292929",
-        "main-1": "#acacac",
-        "sub": "#ffffff",
-        "sub-0": "#f8f8f8",
-        "sub-1": "#b3b3b3",
+        "main": "#000000", // black
+        "main-0": "#292929", // lighther black
+        "main-1": "#acacac", // more lighter black
+        "sub": "#ffffff", // white
+        "sub-0": "#f8f8f8", // lighther white
+        "sub-1": "#b3b3b3", // more lighther white
     },
     "dark" : {
-        "main": "#ffffff",
-        "main-0": "#f8f8f8",
-        "main-1": "#b3b3b3",
-        "sub": "#000000",
-        "sub-0": "#292929",
-        "sub-1": "#acacac",
+        "main": "#ffffff", // white
+        "main-0": "#f8f8f8", // lighther white
+        "main-1": "#b3b3b3", // more lighther white
+        "sub": "#000000", // black
+        "sub-0": "#292929", // lighther black
+        "sub-1": "#acacac", // more lighter black
     },
     "theme-1" : {
-        "main" : "#006664",
-        "sub-1" : "#3B9693",
-        "sub-2": "#c0ca35",
+        "main" : "#006664", // main green
+        "sub-1" : "#3B9693", // ligther main green
+        "sub-2": "#c0ca35", //  green
     },
     "theme-2" : {
-        "main" : "#262626",
-        "sub-1" : "#181717",
-        "sub-2": "#2069e0",
+        "main" : "#262626", // main black
+        "sub-1" : "#181717", // ligther main black
+        "sub-2": "#2069e0", // blue
     },
     "theme-3" : {
-        "main" : "#4D3D9E",
-        "sub-1" : "#565AC5",
-        "sub-2": "#5EA6CB",
+        "main" : "#4D3D9E", // main purple
+        "sub-1" : "#565AC5", // ligther main purple
+        "sub-2": "#5EA6CB", // blue
     },
 }
 export const TAG_COLORS = {

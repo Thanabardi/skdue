@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .calendar import Calendar
 
 class FollowStatus(models.Model):
     """USER has followed the FOLLOWED."""
@@ -15,6 +16,17 @@ class FollowStatus(models.Model):
             blank=False,
             on_delete=models.CASCADE,
             related_name='followed')
+    followed_calendar = models.ForeignKey(Calendar,
+                        default=None,
+                        null=False,
+                        blank=False,
+                        on_delete=models.CASCADE,
+                        related_name='followed_calendar')
+
+
+    @property
+    def followed_calendar_slug(self):
+        return self.followed_calendar.slug
 
     @property
     def user_name(self):
@@ -34,11 +46,13 @@ class FollowStatus(models.Model):
         return f'{self.user.username} has UNFOLLOWED {self.followed.username}'
 
     @classmethod
-    def is_valid(self, user, followed):
+    def is_valid(self, user, followed, fsc):
         # A user can't follow himself
         if user == followed:
             return False
         # A user must follow another exist user
-        if len(FollowStatus.objects.filter(user=user, followed=followed)) != 0:
+        if fsc.user != followed:
+            return False
+        if len(FollowStatus.objects.filter(user=user, followed=followed, followed_calendar=fsc)) != 0:
             return False
         return True

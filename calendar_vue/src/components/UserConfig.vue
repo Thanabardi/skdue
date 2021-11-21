@@ -1,7 +1,8 @@
 <template>
 	<div class="user-detail">
 
-		<div v-if="(this.user_name == '')" class="user-detail-not-login">
+		<div v-if="(this.token == '')" class="user-detail-not-login">
+
 			<h2><router-link class="user-detail-app-button"
             	to=/>Skdue</router-link></h2>
 			<!-- <router-link class="user-detail-button" style=" background: none; border: 2px solid white;"
@@ -13,12 +14,11 @@
 		<div v-else>
 			<h2><div class="user-detail-app-button" @click="redirectUserHome()">Skdue</div></h2>
 			<div class="user-detail-login" @click="() => TogglePopup('buttonTrigger')">
-				<div>{{ this.user_name }}</div>
+				<div><img :src="img" class="avatar"> {{ this.display_name }}</div>
 				<div v-if="popupTriggers.buttonTrigger">
 					<div class="user-detail-tab">
-						<!-- <form @submit.prevent="logoutData"> -->
+						<button class="user-detail-button-tp" @click="settingRoute">Setting</button>
 						<button class="user-detail-button-tp" @click="() => logoutData()">Logout</button>
-						<!-- </form> -->
 					</div>
 				</div>
 			</div>
@@ -53,6 +53,8 @@ export default {
 			dataLogout:{
 				"status":"logout"
 			},
+			display_name: '',
+			img: '',
 			tag_colors: TAG_COLORS,
             app_colors: APP_COLORS,
 		}
@@ -62,10 +64,14 @@ export default {
     },
     mounted () {
         this.getUserName()
+		this.getUserDetail()
     },
 	methods: {
         getUserName() {
             // const calendar_slug = this.$route.params.calendar_slug
+			this.token = localStorage.token
+			// console.log("slug =", calendar_slug)
+			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
             axios.get(`/api/v2/me`)
 			.then( response => {
 				// console.log(response.data)
@@ -88,7 +94,7 @@ export default {
 		},
 		logoutData(){
 			// e.preventDefault();
-			axios.get(`/api/v2/logout`, this.dataLogout)
+			axios.delete(`/api/v2/logout`, this.dataLogout)
 				.then(response => {
 				this.clearlogout(response.data);
 				// console.log(response.data);
@@ -98,6 +104,22 @@ export default {
 				console.log(error)
 			})
 		},
+
+		settingRoute(){
+			this.$router.push({path: '/setting'})
+		},
+		getUserDetail(){
+			axios
+				.get(`/api/v2/me/user_setting`)
+				.then(response => {
+					this.user_data = response.data
+					console.log(this.user_data)
+					this.display_name = this.user_data.setting.display_name
+					this.description = this.user_data.setting.about
+					this.img = "http://127.0.0.1:8000"+this.user_data.setting.image
+					console.log(this.img)
+				})
+		},		
 	}
 }
 
@@ -178,4 +200,16 @@ export default {
 	border-radius: 40px;
 	text-decoration: none;
 }
+
+.avatar {
+  vertical-align: middle;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+// .avatar img {
+//     padding: -10px 0px 0px -180px;
+// }
 </style>
+

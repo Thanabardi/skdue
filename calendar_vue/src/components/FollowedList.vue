@@ -50,8 +50,8 @@ export default ({
         this.getFollowList()
     },
     methods: {
-        getFollowList() {
-            const calendar_slug = this.$route.params.calendar_slug
+        async getFollowList() {
+            const calendar_slug = await this.$route.params.calendar_slug
             this.calendar_slug = calendar_slug.replace(/-/g,' ')
             axios.get(`/api/v2/me/follow`).then( response => {
                 this.user_name = response.data[0]["user_name"]

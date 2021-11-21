@@ -174,15 +174,18 @@ class UserMeFollowedView(APIView):
         opt = request.data["option"]
         follow_id = request.data["follow_id"]
         followed_user = User.objects.get(id=follow_id)
+        follow_cal = request.data["follow_calendar"]
+        followed_cal = Calendar.objects.get(id=follow_cal)
         if opt == "follow":
-            if FollowStatus.is_valid(request.user, followed_user):
-                fs = FollowStatus(user=request.user, followed=followed_user)
+            if FollowStatus.is_valid(request.user, followed_user, followed_cal):
+                # fs = FollowStatus(user=request.user, followed=followed_user)
+                fs = FollowStatus(user=request.user, followed=followed_user, followed_calendar=followed_cal)
                 fs.save()
                 return Response({"msg": "followed"}, HTTP_201_CREATED)
             else:
                 return Response({"msg": "invalid follow status"}, HTTP_400_BAD_REQUEST)
         elif opt == "unfollow":
-            fs = FollowStatus.objects.get(user=request.user, followed=followed_user)
+            fs = FollowStatus.objects.get(user=request.user, followed=followed_user, followed_calendar=followed_cal)
             fs.unfollow()
             return Response({"msg": "unfollowed"}, HTTP_200_OK)
         return Response({"msg": "option not found"}, HTTP_404_NOT_FOUND)

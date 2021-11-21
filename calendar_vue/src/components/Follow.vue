@@ -33,6 +33,7 @@ export default {
       is_fetch: false,
       app_colors: APP_COLORS,
       tag_colors: TAG_COLORS,
+      calendar_id: 0,
 		}
 	},
     props: {
@@ -46,6 +47,7 @@ export default {
       const follow = {
       	"option" : this.fs.toLowerCase(),
       	"follow_id" : this.owner_id,
+        "follow_calendar" : this.calendar_id
       }
       console.log(follow)
       axios.post(`/api/v2/me/follow`, follow)
@@ -67,7 +69,7 @@ export default {
     setCalendarOwner(data) {
     //set owner_id
     this.owner_id = data.user.id
-    console.log('owner_id=',this.owner_id,'id_type',typeof this.owner_id)
+    this.calendar_id = data.calendar.id
     // check follow status
     axios
       .get(`/api/v2/me`)

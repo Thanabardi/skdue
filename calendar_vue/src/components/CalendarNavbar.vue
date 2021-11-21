@@ -1,9 +1,13 @@
 <template>
+
 	<div  v-if="this.is_fetch" class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color_theme['name']]['main']">
         <Search :color_theme="this.color_theme"/>
         <EventCreate :color_theme="this.color_theme"/>
         <UserConfig :color_theme="this.color_theme"/>
         <FollowedList :color_theme="this.color_theme"/>
+        		<div class="sync">
+							<GoogleCalSync />
+				</div>
 	</div>
 </template>
 
@@ -14,14 +18,19 @@ import Search from './search'
 import EventCreate from './EventCreate'
 import UserConfig from './UserConfig'
 import FollowedList from './FollowedList'
+
+import GoogleCalSync from './GoogleCalSync'
+
 import { TAG_COLORS, APP_COLORS } from './ColorHandle'
+
 
 export default {
     components: {
         Search,
         EventCreate,
         UserConfig,
-        FollowedList
+        FollowedList,
+				GoogleCalSync
 	},
     data() {
 		return {
@@ -38,6 +47,9 @@ export default {
     },
     methods: {
         getFollowList() {
+            this.token = localStorage.token
+			// console.log("slug =", calendar_slug)
+			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
             // const calendar_slug = this.$route.params.calendar_slug
             axios.get(`/api/v2/me/follow`).then( response => {
                 console.log(response.data)
@@ -69,6 +81,9 @@ export default {
     top: 0px;
     left: 0px;
     right: 0px;
+}
+.sync {
+	margin-left: 10px;
 }
 // .user-detail {
 //     position: absolute;

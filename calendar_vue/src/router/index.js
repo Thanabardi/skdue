@@ -4,7 +4,7 @@ import CalendarDetail from '../views/CalendarDetail.vue'
 import SearchCalendar from '../views/SearchCalendar.vue'
 import Form from '../views/create_calendar'
 import Register from '../views/Register'
-
+import Setting from '../views/Setting'
 
 const routes = [
     // {
@@ -40,6 +40,11 @@ const routes = [
         path: '/',
         name: 'Register',
         component: Register
+    },
+    {
+        path: '/setting',
+        name: 'Setting',
+        component: Setting,
     }
 ]
 

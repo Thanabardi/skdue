@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
     'skdue_calendar',
+    'google_oauth',
 ]
 
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=lambda v: [s.strip() for s in v.split(',')])

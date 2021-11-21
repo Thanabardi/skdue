@@ -421,12 +421,14 @@ export default {
       <Follow :color_theme="this.color_theme"/>
       <h2 style="text-align: center;">{{ this.day[new Date(this.day_select).getDay()] }}
         {{ (this.day_select.substring(8, 10)) }}
-        {{ this.month[new Date(this.day_select).getMonth()] }}
+        {{ this.month[new Date(this.day_select).getMonth()] }} 
         {{ (this.day_select.substring(0, 4)) }}
       </h2>
         <!-- list of all event -->
-        <div style="overflow-x: hidden; height: 73%; color; rgba(255, 255, 255, 0.6)">
 
+        <div style="position: absolute; overflow-x: hidden; 
+          top: 140px; bottom: 140px; color; rgba(255, 255, 255, 0.6); width: 95%;">
+          
           <div v-if="this.event_details.length!=0">
             <p>All-Day Event</p>
             <!-- list of all day event -->
@@ -550,7 +552,7 @@ export default {
     </div>
     <!-- edit event -->
 
-    <FullCalendar class="calendar-app-main" :options="calendarOptions" :color_theme="this.color_theme">
+    <FullCalendar class="calendar-app-main" :options="calendarOptions" :color_theme="this.color_theme" :style="'color:'+app_colors[this.color_theme['type']]['main']">
       <template v-slot:eventContent="arg">
         <b>{{ arg.timeText }}</b>
         <i>{{ arg.event.title }}</i>
@@ -564,7 +566,7 @@ export default {
           +tag_colors[this.color_tag[tag_text]]" v-if="this.tag_status[tag_text]"> {{ tag_text }} </label><br>
       </div>
       <div style="display: inline-block; padding-top: 8px;" v-for="tag_text in this.follow_tag_list" :key="tag_text">
-        <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; background-color: #f2f2f2; color:'+
+        <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; background-color: rgba(200, 200, 200, 0.5); color:'+
           app_colors[this.color_theme['type']]['main-0']"
           v-if="this.tag_status[tag_text]"> {{ tag_text }} </label><br>
       </div>
