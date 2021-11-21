@@ -728,6 +728,19 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 57,
+  "fields": {
+    "action_time": "2021-11-21T12:29:33.191Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "7",
+    "object_repr": "1241",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -1651,7 +1664,7 @@
     "user": 3,
     "tag": "custom-1",
     "tag_type": 3,
-    "tag_color": "white"
+    "tag_color": "blue"
   }
 },
 {
@@ -1660,16 +1673,6 @@
   "fields": {
     "user": 3,
     "tag": "custom-2",
-    "tag_type": 3,
-    "tag_color": "white"
-  }
-},
-{
-  "model": "skdue_calendar.calendartag",
-  "pk": 7,
-  "fields": {
-    "user": 3,
-    "tag": "1241",
     "tag_type": 3,
     "tag_color": "blue"
   }
@@ -1961,19 +1964,6 @@
   }
 },
 {
-  "model": "skdue_calendar.calendarevent",
-  "pk": 26,
-  "fields": {
-    "calendar": 4,
-    "name": "125412",
-    "slug": "125412",
-    "description": "124124",
-    "start_date": "2021-11-20T23:37:00Z",
-    "end_date": "2021-11-20T23:38:00Z",
-    "tag": 7
-  }
-},
-{
   "model": "skdue_calendar.followstatus",
   "pk": 8,
   "fields": {
@@ -1988,7 +1978,7 @@
   "fields": {
     "user": 3,
     "display_name": "pun",
-    "image": "/images/default.jpg",
+    "image": "images/pun/userimage.jpg",
     "about": "",
     "theme_type": "light",
     "theme_name": "theme-1"
