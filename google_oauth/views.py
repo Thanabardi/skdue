@@ -1,7 +1,8 @@
 from typing import Mapping
+from django.contrib import auth
 from django.http.response import HttpResponseRedirect
 from django.urls.base import reverse
-from django.views.generic.base import View
+from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from rest_framework.authtoken.models import Token
@@ -26,13 +27,14 @@ from skdue_calendar.utils import generate_slug
 from skdue_calendar.models import *
 
 
+GOOGLE_REDIRECT = "http://127.0.0.1:8000/oauth/login/success/"
 CREDENTIALS_PATH = os.path.join(BASE_DIR, 'google_oauth', 'credentials.json')
 SCOPES = [
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/calendar.readonly'
     ]
-
+FLOW = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
 
 def get_user_info(credentials) -> Mapping:
     """Get user info from authorized accont
@@ -46,7 +48,6 @@ def get_user_info(credentials) -> Mapping:
     """
     user_info_service = build('oauth2', 'v2', credentials=credentials)
     user_info = user_info_service.userinfo().get().execute()
-    print(user_info)
     return user_info
 
 
@@ -65,15 +66,20 @@ def generate_new_username(username: str) -> str:
         except User.DoesNotExist:
             return f"{username}{i}"
 
+def GoogleLogin(request):
+    os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+    FLOW.redirect_uri = GOOGLE_REDIRECT
+    auth_url, _ = FLOW.authorization_url(
+        prompt="select_account",
+        access_type="offline"
+    )
+    return redirect(auth_url)
 
-class GoogleLogin(APIView):
-
+class GoogleLoginSuccess(APIView):
+    
     def get(self, request):
-        # setup cred and api service
-        os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
-        flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
-        creds = flow.run_local_server(port=8040)
-        # load user info
+        FLOW.fetch_token(code=request.GET.get('code'))
+        creds = FLOW.credentials
         user_info = get_user_info(creds)
         # create account and save token
         google_account, created_new_user = GoogleAccount.objects.get_or_create(
@@ -118,13 +124,65 @@ class GoogleLogin(APIView):
             "token": token.key
         })
 
+# class GoogleLogin(APIView):
 
-class GoogleLoginSuccess(APIView):
-    permission_classes = (IsAuthenticated,)
+#     def get(self, request):
+#         # setup cred and api service
+#         os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+#         flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
+#         creds = flow.run_local_server(port=8040)
+#         # load user info
+#         user_info = get_user_info(creds)
+#         # create account and save token
+#         google_account, created_new_user = GoogleAccount.objects.get_or_create(
+#             uuid=user_info["id"],
+#             defaults={
+#                 "username": user_info["given_name"]
+#             }
+#         )
+#         # google_account.token = creds.to_json()
+#         # google_account.save()
+#         # if new account is created
+#         if created_new_user:
+#             google_account.token = creds.to_json()
+#             # create new User instance
+#             google_account.linked_username = generate_new_username(google_account.username)
+#             google_account.save()
+#             user = User.objects.create(
+#                 username=google_account.linked_username,
+#                 first_name=user_info["given_name"],
+#                 last_name=user_info["family_name"],
+#                 email=user_info["email"]
+#             )
+#             calendar = Calendar.objects.create(
+#                 user = user,
+#                 slug = generate_slug(user.username),
+#                 name = user.username
+#             )
 
-    def get(self, request):
-        token, created = Token.objects.get_or_create(user=request.user)
-        return Response({"token": token.key})
+#         # create backend access token
+#         token, created = Token.objects.get_or_create(
+#             user=User.objects.get(username=google_account.linked_username)
+#         )
+#         # login to the backend system
+#         user = User.objects.get(username=google_account.linked_username)
+#         user.backend = 'django.contrib.auth.backends.ModelBackend'
+#         login(request, user)
+#         # return response
+#         return Response({
+#             "user_info": user_info,
+#             "created": created_new_user,
+#             "id": google_account.uuid,
+#             "token": token.key
+#         })
+
+
+# class GoogleLoginSuccess(APIView):
+#     permission_classes = (IsAuthenticated,)
+
+#     def get(self, request):
+#         token, created = Token.objects.get_or_create(user=request.user)
+#         return Response({"token": token.key})
 
 
 class GoogleLogout(APIView):
