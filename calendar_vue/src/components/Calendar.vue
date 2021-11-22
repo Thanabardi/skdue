@@ -89,6 +89,7 @@ export default {
         ],
       color_theme: {"type" : "light", "name" : "theme-1"},
       color_tag: {},
+      follow_list: {},
       app_colors: APP_COLORS,
       tag_colors: TAG_COLORS,
       dataLogout:{
@@ -135,6 +136,7 @@ export default {
     this.getCalendarEvents()
     this.getTag()
     this.getColor()
+    this.getFollow()
   },
   methods: {
     setTodayEvents() {
@@ -231,6 +233,17 @@ export default {
         console.log(error)
       })
     },
+    getFollow() {
+      axios.get(`/api/v2/me/follow`)
+      .then(response => {
+        response.data.forEach(element => {
+          this.follow_list[element["followed_calendar"]] = element["followed_calendar_slug"].replace(/-/g,' ')
+        });
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
     },
@@ -311,6 +324,7 @@ export default {
       let start_time = events.start.substring(11, 16)
       let end_time = events.end.substring(11, 16)
       let allday = false
+      let event_owner = ""
 
       let start_date_check = start_date.replace(/-/g,'')
       let end_date_check = end_date.replace(/-/g,'')
@@ -325,6 +339,10 @@ export default {
 
       let is_mine = events.from_calendar_id == this.calendar_id
 
+      if (events.from_calendar_id != this.calendar_id) {
+        event_owner = this.follow_list[events.from_calendar_id]
+      }
+
       return {
 				"name" : events.title,
 				"description" : events.description,
@@ -335,7 +353,9 @@ export default {
         "tag" : events.tag,
         "allday" : allday,
         "slug" : events.slug,
-        "is_mine" : is_mine
+        "is_mine" : is_mine,
+        "detail_display" : false,
+        "event_owner" : event_owner
 			}
     },
     clearData(data){
@@ -391,6 +411,10 @@ export default {
       }
       FullCalendar.calendar.currentData.calendarApi.refetchEvents()
     },
+    handlefilterEvent(event){
+      event["detail_display"] = !event["detail_display"]
+      console.log(event["name"],event["detail_display"]);
+    },
   },
 };
 </script>
@@ -420,15 +444,44 @@ export default {
             <!-- list of all day event -->
 
             <div v-for="item in this.event_details" :key="item">
-                <button v-if="item['allday'] && this.tag_status[item['tag']]" class="calendar-detail-bg"
+                <button v-if="item['allday'] && this.tag_status[item['tag']] && item['start_date'] == item['end_date']"
+                  class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
-
-                  <!-- v-on:click.right="TogglePopup('editTrigger', $event, item)"> -->
-
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
-                  <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
+                    <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
+
+                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: center; padding-right: 10px;">from: {{ item["event_owner"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: center; padding-right: 10px;">tag: {{ item['tag'] }}</td></tr>
+
+                    <tr><td v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      {{ item["description"] }}</td></tr>
+                  </table>
+                </button>
+                <button v-if="item['allday'] && this.tag_status[item['tag']] && item['start_date'] != item['end_date']" 
+                  class="calendar-detail-bg"
+                  :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
+                  <table class="calendar-table">
+                    <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
+
+                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: center; padding-right: 10px;">from: {{ item["event_owner"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: center; padding-right: 10px;">
+                        {{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }} - 
+                        {{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: center; padding-right: 10px;">tag: {{ item['tag'] }}</td></tr>
+
+                    <tr><td v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
                       {{ item["description"] }}</td></tr>
                   </table>
                 </button>
@@ -441,31 +494,72 @@ export default {
               <div v-if="!item['allday'] && this.tag_status[item['tag']]">
                 <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg" 
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
-                  <tr><td style="width: 110px;">00:00-{{ item["end_time"] }}</td>
-                    <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
+                    <tr><td style="width: 110px; vertical-align: text-top">00:00-{{ item["end_time"] }}</td>
+                      <td>{{ item["name"] }}</td></tr>
+                    
+                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">from:</td><td>{{ item["event_owner"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">Start:</td>
+                      <td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">End:</td>
+                      <td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">tag:</td><td>{{ item['tag'] }}</td></tr>
+
+                    <tr><td colspan="2"  v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
                       {{ item["description"] }}</td></tr>
                   </table>
                 </button>
                 <button v-if="this.day_select < item['end_date']" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
-                  <tr><td style="width: 110px;">{{ item["start_time"] }}-00:00</td>
-                    <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
+                    <tr><td style="width: 110px; vertical-align: text-top">{{ item["start_time"] }}-00:00</td>
+                      <td>{{ item["name"] }}</td></tr>
+
+                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">from:</td><td>{{ item["event_owner"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">Start:</td>
+                      <td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">End:</td>
+                      <td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">tag:</td><td>{{ item['tag'] }}</td></tr>
+
+                    <tr><td colspan="2"  v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
                       {{ item["description"] }}</td></tr>
+
                   </table>
                 </button>
-                <button v-if="item['start_date'] == item['end_date']" class="calendar-detail-bg"
+                <button colspan="2" v-if="item['start_date'] == item['end_date']" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
-                  <tr><td style="width: 110px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
-                    <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
+                    <tr><td style="width: 110px; ;vertical-align: text-top">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
+                      <td>{{ item["name"] }}</td></tr>
+
+                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">from:</td><td>{{ item["event_owner"] }}</td></tr>
+
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td style="text-align: right; padding-right: 10px;">tag:</td><td>{{ item['tag'] }}</td></tr>
+
+                    <tr><td colspan="2"  v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
                       {{ item["description"] }}</td></tr>
                   </table>
                 </button>
@@ -533,7 +627,8 @@ export default {
     <!-- edit event -->
     <div v-if="popupTriggers.editTrigger">
       <div class="editremove">
-            <EditRemove :popup="popupTriggers.editTrigger" :detail="popupTriggers.select_event" :color_theme="this.color_theme" @closed="swap"/>
+            <EditRemove :popup="popupTriggers.editTrigger" :detail="popupTriggers.select_event" 
+              :color_theme="this.color_theme" :color_tag="this.color_tag" @closed="swap"/>
       </div>
 
 
