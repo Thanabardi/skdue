@@ -93,7 +93,8 @@ export default {
       tag_colors: TAG_COLORS,
       dataLogout:{
         "status":"logout"
-      }
+      },
+      slug_list: []
     };
   },
   setup() {  //EventDetails
@@ -111,7 +112,7 @@ export default {
     }
     else {
     e.preventDefault()
-    console.log('is_this_mine',item)
+    // console.log('is_this_mine',item)
     popupTriggers.value[trigger] = !popupTriggers.value[trigger]
     popupTriggers.value["select_event"]= [
         item.name,
@@ -157,12 +158,12 @@ export default {
     },
     setCalendarEvents(data){
       this.calendar_id = data.calendar.id
-      console.log(data.event)
+      // console.log(data.event)
       let tag = data.tag
       this.tag_list = data.tag // check this line
       let all_event = data.event
       this.event_response = data
-      console.log("RESPONSE", this.event_response)
+      // console.log("RESPONSE", this.event_response)
       for (let t=0; t<tag.length; t++){
         // init tag status
         this.tag_status[tag[t]] = true;
@@ -193,14 +194,28 @@ export default {
 
       this.token = localStorage.token
 
-      console.log("slug =", calendar_slug)
+      // console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
       axios.get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
           this.setCalendarEvents(response.data)
         })
         .catch(error => {
-          console.log(error)
+          // console.log(error.response.status)
+          if (error.response.status == 401){
+            this.$router.push('/error/401')
+          }
+          else if (error.response.status == 403){
+            this.$router.push('/error/403')
+          }
+          else if (error.response.status == 404){
+            this.$router.push('/error/404')
+          }
+          else if (error.response.status >= 500){
+            this.$router.push('/error/5xx')
+          } else {
+            this.$router.push('/error/XXX')
+          }
         })
 
     },
@@ -279,10 +294,10 @@ export default {
         return 0;
       }
       this.event_details.sort( compare );
-      console.log('sort',this.event_details)
+      // console.log('sort',this.event_details)
     },
     changeIntForDateTime(dateTimeList){
-      console.log(dateTimeList)
+      // console.log(dateTimeList)
       let list = [];
       dateTimeList.forEach(e => {
         if (e.length == 1) {
@@ -298,9 +313,9 @@ export default {
       
     },
     swap(value){
-      console.log('PIDDDDD')
+      // console.log('PIDDDDD')
       this.popupTriggers.editTrigger = false
-      console.log(this.popupTriggers.select_event)
+      // console.log(this.popupTriggers.select_event)
     },
     handleEvents(events) {
       this.currentEvents = events;
