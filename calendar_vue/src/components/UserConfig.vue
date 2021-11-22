@@ -75,10 +75,10 @@ export default {
             axios.get(`/api/v2/me`)
 			.then( response => {
 				// console.log(response.data)
-								console.log(response.data)
+								response.data
                 this.user_name = response.data["user"]["username"]
 								this.slug = response.data.calendar[0].slug
-								console.log('slug',this.slug)
+								// console.log('slug',this.slug)
             })
         },
 		async redirectUserHome() {
@@ -113,11 +113,11 @@ export default {
 				.get(`/api/v2/me/user_setting`)
 				.then(response => {
 					this.user_data = response.data
-					console.log(this.user_data)
+					// console.log(this.user_data)
 					this.display_name = this.user_data.setting.display_name
 					this.description = this.user_data.setting.about
 					this.img = "http://127.0.0.1:8000"+this.user_data.setting.image
-					console.log(this.img)
+					// console.log(this.img)
 				})
 		},		
 	}

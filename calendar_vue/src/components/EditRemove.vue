@@ -152,7 +152,7 @@ export default {
 			axios
 				.get(`/api/v2/me`)
 				.then(response => {
-					console.log(response.data.user.id == owner)
+					// console.log(response.data.user.id == owner)
 					if (response.data.user.id == owner) {
 						this.fs = 'follow';
 					}
@@ -168,7 +168,7 @@ export default {
 					const calendar_slug = this.$route.params.calendar_slug
       const calendar_type = this.$route.params.calendar_type
 			this.token = localStorage.token
-      console.log("slug =", calendar_slug)
+    //   console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 
 
@@ -187,7 +187,7 @@ export default {
 							this.available_tag.push(elements["tag"])
 						}
 						})
-					console.log('avaliable',this.available_tag)
+					// console.log('avaliable',this.available_tag)
 			})
 
         },
@@ -204,7 +204,7 @@ export default {
 
 			axios.delete(`/api/v2/me/${this.user_name}/${this.detail[7]}`)
 				.then(function(response) {
-					console.log(response),
+					response,
 					window.location.reload()
 					})
 				.catch(function(error) {
@@ -230,10 +230,10 @@ export default {
 			// console.log(end_date_time)
 			// console.log(this.tag)
 
-			console.log(event)
+			// console.log(event)
 			axios.put(`/api/v2/me/${this.user_name}/${this.detail[7]}`, event)
 				.then(function(response) {
-					console.log(response),
+					response,
 					window.location.reload()
 					})
 				.catch(function(error) {

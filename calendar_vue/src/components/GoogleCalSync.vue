@@ -26,7 +26,7 @@ export default {
 			axios
 				.get(`/api/v2/me`)
 				.then(response => {
-					console.log(response.data.user.id == owner)
+					// console.log(response.data.user.id == owner)
 					if (response.data.user.id == owner) {
 						this.fs = 'follow';
 					}
@@ -56,7 +56,7 @@ export default {
       await axios.get(`/oauth/sync-event/`)
               .then(response => {
 
-              console.log('sync-event',response.data);
+              	response.data;
                   // console.log(response.data.slug);
               })
               .catch(error => {

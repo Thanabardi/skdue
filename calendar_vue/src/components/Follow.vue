@@ -48,10 +48,10 @@ export default {
       	"follow_id" : this.owner_id,
         "follow_calendar" : this.calendar_id
       }
-      console.log(follow)
+      // console.log(follow)
       axios.post(`/api/v2/me/follow`, follow)
       	.then(function(response) {
-      		console.log(response)
+      		response
       		// window.location.reload()
       		})
       	.catch(function(error) {
@@ -75,7 +75,7 @@ export default {
       .then(response => {
         if (response.data.user.id == this.owner_id) {
           this.fs = '';
-          console.log('done')
+          // console.log('done')
         }
       })
       .catch(error => {
@@ -91,8 +91,8 @@ export default {
           else if (user.user == this.owner_id) {
             this.fs = '';
           }
-          console.log('user',user.user)
-          console.log('owner',this.owner_id)
+          // console.log('user',user.user)
+          // console.log('owner',this.owner_id)
         })
       })
       .catch(error => {
@@ -104,11 +104,11 @@ export default {
       const calendar_type = this.$route.params.calendar_type
       this.calendar_slug = calendar_slug.replace(/-/g,' ')
 
-      console.log("TOKEN:", localStorage.token)
+      // console.log("TOKEN:", localStorage.token)
       this.token = localStorage.token
 
 
-      console.log("slug =", calendar_slug)
+      // console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
       axios
         .get(`/api/v2/${calendar_type}/${calendar_slug}`)
