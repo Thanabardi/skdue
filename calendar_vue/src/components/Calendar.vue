@@ -339,7 +339,7 @@ export default {
 
       let is_mine = events.from_calendar_id == this.calendar_id
 
-      if (events.from_calendar_id != this.calendar_id) {
+      if ((events.from_calendar_id != this.calendar_id) && (events.from_calendar_id != 3)) {
         event_owner = this.follow_list[events.from_calendar_id]
       }
 
