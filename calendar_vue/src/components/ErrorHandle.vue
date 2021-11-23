@@ -1,4 +1,5 @@
 <template>
+<body class="centered-wrapper">
     <center class="center">
             <div class="box">
                 <div class="box-code">
@@ -12,6 +13,7 @@
                 <!-- <div><router-link style="font-size: 25px;" to='/'>Go to login page</router-link></div> -->
             </div>
     </center>
+</body>
 </template>
 
 <script>
@@ -112,5 +114,26 @@ export default ({
     text-shadow: -0.05em 0 0 #00fffc, -0.025em -0.04em 0 #fc00ff,
       -0.04em -0.025em 0 #fffc00;
   }
+}
+.centered-wrapper {
+    position: relative;
+    text-align: center;
+}
+.centered-wrapper:before {
+    content: "";
+    position: relative;
+    display: inline-block;
+    width: 0; height: 100%;
+    vertical-align: middle;
+}
+.centered-content {
+    display: inline-block;
+    vertical-align: middle;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    padding-top: 10%;
+    margin: 0;
 }
 </style>
