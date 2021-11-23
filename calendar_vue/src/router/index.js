@@ -5,6 +5,7 @@ import SearchCalendar from '../views/SearchCalendar.vue'
 import Form from '../views/create_calendar'
 import Register from '../views/Register'
 import Setting from '../views/Setting'
+import GoogleCallback from '../views/GoogleCallback'
 
 const routes = [
     // {
@@ -45,6 +46,11 @@ const routes = [
         path: '/setting',
         name: 'Setting',
         component: Setting,
+    },
+    {
+        path: '/google/callback',
+        name: 'GoogleCallback',
+        component: GoogleCallback,
     }
 ]
 
