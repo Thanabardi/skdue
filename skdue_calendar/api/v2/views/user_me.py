@@ -241,8 +241,10 @@ class UserMeAddTagView(APIView):
         if request.user.id:
             user = request.user
             try:
-                changed_tag = CalendarTag.objects.get(user=user,tag=request.data['tag'])
-                # changed_tag.delete()
+                tag = request.GET.get('tag')
+                print(tag)
+                changed_tag = CalendarTag.objects.get(user=user,tag=tag)
+                changed_tag.delete()
                 return Response({"msg": "tag deleted"}, HTTP_200_OK)
             except:
                 return Response({"msg": "given tag is invalid"}, HTTP_400_BAD_REQUEST)
