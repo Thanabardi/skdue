@@ -94,7 +94,9 @@ export default {
       tag_colors: TAG_COLORS,
       dataLogout:{
         "status":"logout"
-      }
+      },
+      user_name: '',
+      calendar_slug: this.$route.params.calendar_slug.replace(/-/g,' '),
     };
   },
   setup() {  //EventDetails
@@ -209,6 +211,7 @@ export default {
     getTag() {
 			axios.get(`/api/v2/me`)
 				.then( response => {
+          this.user_name = response.data["user"]["username"]
 					response.data["available_tag"].forEach(elements => {
 						if (elements["user"] == response.data["user"]["id"]) {
 							this.my_tag_list.push(elements["tag"])
@@ -413,7 +416,6 @@ export default {
     },
     handlefilterEvent(event){
       event["detail_display"] = !event["detail_display"]
-      console.log(event["name"],event["detail_display"]);
     },
   },
 };
@@ -451,15 +453,21 @@ export default {
                   v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
                     <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
-
-                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: center; padding-right: 10px;">from: {{ item["event_owner"] }}</td></tr>
-
+                    <!-- event detail -->
                     <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: center; padding-right: 10px;">tag: {{ item['tag'] }}</td></tr>
-
-                    <tr><td v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      {{ item["description"] }}</td></tr>
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
                   </table>
                 </button>
                 <button v-if="item['allday'] && this.tag_status[item['tag']] && item['start_date'] != item['end_date']" 
@@ -469,20 +477,21 @@ export default {
                   v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
                     <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
-
-                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: center; padding-right: 10px;">from: {{ item["event_owner"] }}</td></tr>
-
+                    <!-- event detail -->
                     <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: center; padding-right: 10px;">
-                        {{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }} - 
-                        {{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
-
-                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: center; padding-right: 10px;">tag: {{ item['tag'] }}</td></tr>
-
-                    <tr><td v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      {{ item["description"] }}</td></tr>
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
                   </table>
                 </button>
             </div>
@@ -499,23 +508,21 @@ export default {
                   <table class="calendar-table">
                     <tr><td style="width: 110px; vertical-align: text-top">00:00-{{ item["end_time"] }}</td>
                       <td>{{ item["name"] }}</td></tr>
-                    
-                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">from:</td><td>{{ item["event_owner"] }}</td></tr>
-
+                    <!-- event detail -->
                     <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">Start:</td>
-                      <td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
-
-                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">End:</td>
-                      <td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
-
-                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">tag:</td><td>{{ item['tag'] }}</td></tr>
-
-                    <tr><td colspan="2"  v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      {{ item["description"] }}</td></tr>
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
                   </table>
                 </button>
                 <button v-if="this.day_select < item['end_date']" class="calendar-detail-bg"
@@ -525,24 +532,21 @@ export default {
                   <table class="calendar-table">
                     <tr><td style="width: 110px; vertical-align: text-top">{{ item["start_time"] }}-00:00</td>
                       <td>{{ item["name"] }}</td></tr>
-
-                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">from:</td><td>{{ item["event_owner"] }}</td></tr>
-
+                    <!-- event detail -->
                     <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">Start:</td>
-                      <td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
-
-                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">End:</td>
-                      <td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
-
-                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">tag:</td><td>{{ item['tag'] }}</td></tr>
-
-                    <tr><td colspan="2"  v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      {{ item["description"] }}</td></tr>
-
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
                   </table>
                 </button>
                 <button colspan="2" v-if="item['start_date'] == item['end_date']" class="calendar-detail-bg"
@@ -552,15 +556,21 @@ export default {
                   <table class="calendar-table">
                     <tr><td style="width: 110px; ;vertical-align: text-top">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
                       <td>{{ item["name"] }}</td></tr>
-
-                    <tr v-if="item['detail_display'] && item['event_owner'] != ''" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">from:</td><td>{{ item["event_owner"] }}</td></tr>
-
+                    <!-- event detail -->
                     <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td style="text-align: right; padding-right: 10px;">tag:</td><td>{{ item['tag'] }}</td></tr>
-
-                    <tr><td colspan="2"  v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      {{ item["description"] }}</td></tr>
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
                   </table>
                 </button>
               </div>
@@ -578,9 +588,10 @@ export default {
       <!-- side bar footer -->
       <div class="calendar-sidebar-footer">
         <hr class="calendar-hr">
-        <button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp"
+        <button v-if="(this.token!='') && (this.user_name == this.calendar_slug)" class="app-button-tp"
           style="color: rgba(255, 255, 255, 0.8); font-size: 20px;"
           v-on:click.left="TogglePopup('sidebarTrigger', $event)">Manage View</button>
+        <div v-else style="padding: 14px;"></div>
       </div>
       <!-- side bar footer -->
 
