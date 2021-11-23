@@ -1,4 +1,5 @@
 # skdue
+![example workflow](https://github.com/patkamon/skdue/actions/workflows/django.yml/badge.svg)
 [![Build Status](https://app.travis-ci.com/patkamon/skdue.svg?branch=apply-ci)](https://app.travis-ci.com/patkamon/skdue) [![codecov](https://codecov.io/gh/patkamon/skdue/branch/apply-ci/graph/badge.svg?token=5EZP9GP4CX)](https://codecov.io/gh/patkamon/skdue)
 
 
@@ -68,7 +69,7 @@
   ``` DEBUG = True  ```          
   ``` SECRET_KEY = this-is-my-secret-key-not-safe ```       
   ``` ALLOWED_HOSTS = 127.0.0.1 ```          
-  ``` CORS_ALLOWED_ORIGINS = http://localhost:8080 ``` 
+  ``` CORS_ALLOWED_ORIGINS = http://localhost:8080 ```
 
   </p>
     </details>
