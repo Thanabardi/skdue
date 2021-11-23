@@ -1,8 +1,4 @@
 from typing import Mapping
-from django.contrib import auth
-from django.http.response import HttpResponseRedirect
-from django.urls.base import reverse
-from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from rest_framework.authtoken.models import Token
@@ -13,21 +9,20 @@ from rest_framework.authentication import TokenAuthentication, BasicAuthenticati
 from rest_framework.permissions import IsAuthenticated
 
 import os
-import requests
-import datetime
 from google_oauth.models import GoogleAccount
 from mysite.settings import BASE_DIR
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from requests.structures import CaseInsensitiveDict
 import json
 from skdue_calendar.utils import generate_slug
 from skdue_calendar.models import *
+from skdue_calendar.serializers import CalendarSerializer
 
 
-GOOGLE_REDIRECT = "http://127.0.0.1:8000/oauth/login/success/"
+# GOOGLE_REDIRECT = "http://127.0.0.1:8000/oauth/login/success/"
+GOOGLE_REDIRECT = "http://localhost:8080/google/callback/"
 CREDENTIALS_PATH = os.path.join(BASE_DIR, 'google_oauth', 'credentials.json')
 SCOPES = [
     'https://www.googleapis.com/auth/userinfo.profile',
@@ -66,14 +61,15 @@ def generate_new_username(username: str) -> str:
         except User.DoesNotExist:
             return f"{username}{i}"
 
-def GoogleLogin(request):
-    os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
-    FLOW.redirect_uri = GOOGLE_REDIRECT
-    auth_url, _ = FLOW.authorization_url(
-        prompt="select_account",
-        access_type="offline"
-    )
-    return redirect(auth_url)
+class GoogleLogin(APIView):
+    def get(self, request):
+        os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+        FLOW.redirect_uri = GOOGLE_REDIRECT
+        auth_url, _ = FLOW.authorization_url(
+            prompt="select_account",
+            access_type="offline"
+        )
+        return Response({"auth_url": auth_url})
 
 class GoogleLoginSuccess(APIView):
     
@@ -116,8 +112,11 @@ class GoogleLoginSuccess(APIView):
         user = User.objects.get(username=google_account.linked_username)
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
+        # get user calendar
+        calendar = Calendar.objects.get(user=user)
         # return response
         return Response({
+            "calendar": CalendarSerializer(calendar).data,
             "user_info": user_info,
             "created": created_new_user,
             "id": google_account.uuid,
