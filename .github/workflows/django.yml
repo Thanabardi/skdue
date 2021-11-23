@@ -22,8 +22,14 @@ jobs:
         python-version: [3.7, 3.8, 3.9]
 
     steps:
-    - env :
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+    - name: env file
+      run: |
+        cd /home/runner/work/beattosetto/
+        touch .env
+        echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+        echo DEBUG=False >> .env
+        echo ALLOWED_HOSTS=127.0.0.1,localhost >> .env
+        cat .env
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
