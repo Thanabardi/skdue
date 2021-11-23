@@ -1,15 +1,19 @@
 <template>
-    <center class="center"><div class="error">
-        <div class="box">
-            <p class="glitch" style="font-size: 100px;">
-                            <span aria-hidden="true">Error 403</span>
-                            Error 403
-                            <span aria-hidden="true">Error 403</span>
-                        </p>
-            <p style="font-size: 25px;">Forbidden: Access to this calendar on the server is denied!</p>
-            <!-- <div><router-link style="font-size: 45px" to='/'>Go to login page</router-link></div> -->
+<body>
+        <div class="center">
+            <div class="error">
+                <div class="box">
+                    <p class="glitch" style="font-size: 100px;">
+                                    <span aria-hidden="true">Error 403</span>
+                                    Error 403
+                                    <span aria-hidden="true">Error 403</span>
+                                </p>
+                    <p style="font-size: 25px;">Forbidden: Access to this calendar on the server is denied!</p>
+                    <!-- <div><router-link style="font-size: 45px" to='/'>Go to login page</router-link></div> -->
+                </div>
+            </div>
         </div>
-    </div></center>
+</body>
 </template>
 
 <script>
@@ -20,12 +24,11 @@ export default ({
 
 <style scoped>
 .center {
-    position: absolute;
+    position: sticky;
     top: 50%;
     width: 100%;
     text-align: center;
 }
-
 .box {
     border: 2px solid #c0ca35;
     background-color: #c0ca35;
@@ -40,7 +43,6 @@ export default ({
     text-decoration: none;
     appearance: button;
 }
-
 .button {
     border-radius: 20px;
     border: none;
@@ -70,7 +72,7 @@ export default ({
   clip-path: polygon(0 0, 150% 0, 100% 35%, 0 35%);
   transform: translate(-0.04em, -0.03em);
   opacity: 0.75;
-  left: 263px;
+  left: 33%;
 }
 
 .glitch span:last-child {
@@ -78,7 +80,7 @@ export default ({
   clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
   transform: translate(0.04em, 0.03em);
   opacity: 0.75;
-  left: 255px;
+  left: 32.45%;
 }
 
 @keyframes glitch {

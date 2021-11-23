@@ -1,7 +1,9 @@
 <template>
+<body>
     <div class="Home">
         <ErrorHandle />
     </div>
+</body>
 </template>
 
 

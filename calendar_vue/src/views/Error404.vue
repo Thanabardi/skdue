@@ -1,4 +1,5 @@
 <template>
+<body>
     <center class="center">
             <div class="box">
                 <div class="box-code">
@@ -12,6 +13,7 @@
                 <!-- <div><router-link style="font-size: 25px;" to='/'>Go to login page</router-link></div> -->
             </div>
     </center>
+</body>
 </template>
 
 <script>
@@ -72,7 +74,7 @@ export default ({
   clip-path: polygon(0 0, 150% 0, 100% 35%, 0 35%);
   transform: translate(-0.04em, -0.03em);
   opacity: 0.75;
-  left: 263px;
+  left: 33%;
 }
 
 .glitch span:last-child {
@@ -80,7 +82,7 @@ export default ({
   clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
   transform: translate(0.04em, 0.03em);
   opacity: 0.75;
-  left: 255px;
+  left: 32.45%;
 }
 
 @keyframes glitch {
