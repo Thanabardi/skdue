@@ -3,14 +3,14 @@ name: Django
 on:
   push:
     branches:
-      -dev
-      -main
-      -apply-action
+      - dev
+      - main
+      - apply-action
 
   pull_request:
     branches:
-      -dev
-      -main
+      - dev
+      - main
 
 
 jobs:
