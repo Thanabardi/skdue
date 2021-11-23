@@ -3,9 +3,9 @@
             <div class="box">
                 <div class="box-code">
                         <p class="glitch" style="font-size: 100px;">
-                            <span aria-hidden="true">Error 404</span>
+                            <!-- <span aria-hidden="true">Error 404</span> -->
                             Error 404
-                            <span aria-hidden="true">Error 404</span>
+                            <!-- <span aria-hidden="true">Error 404</span> -->
                         </p>
                     </div>
                 <p style="font-size: 25px;">Page that you looking for is not found.</p>
@@ -72,7 +72,7 @@ export default ({
   clip-path: polygon(0 0, 150% 0, 100% 35%, 0 35%);
   transform: translate(-0.04em, -0.03em);
   opacity: 0.75;
-  left: 33%;
+  left: 306px;
 }
 
 .glitch span:last-child {
@@ -80,7 +80,7 @@ export default ({
   clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
   transform: translate(0.04em, 0.03em);
   opacity: 0.75;
-  left: 32.45%;
+  left: 300px;
 }
 
 @keyframes glitch {

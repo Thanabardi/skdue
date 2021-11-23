@@ -3,9 +3,9 @@
     <center class="center"><div class="error">
         <div class="box">
             <p class="glitch" style="font-size: 100px;">
-                            <span aria-hidden="true">Error 5XX</span>
+                            <!-- <span aria-hidden="true">Error 5XX</span> -->
                             Error 5XX
-                            <span aria-hidden="true">Error 5XX</span>
+                            <!-- <span aria-hidden="true">Error 5XX</span> -->
                         </p>
             <p style="font-size: 25px;">Internal server error</p>
             <p style="font-size: 25px;">Please come back later</p>
@@ -67,13 +67,12 @@ export default ({
   top: 0;
   left: 0;
 }
-
 .glitch span:first-child {
   animation: glitch 500ms infinite;
   clip-path: polygon(0 0, 150% 0, 100% 35%, 0 35%);
   transform: translate(-0.04em, -0.03em);
   opacity: 0.75;
-  left: 33%;
+  left: 303px;
 }
 
 .glitch span:last-child {
@@ -81,9 +80,8 @@ export default ({
   clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
   transform: translate(0.04em, 0.03em);
   opacity: 0.75;
-  left: 32.45%;
+  left: 295px;
 }
-
 @keyframes glitch {
   0% {
     text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
