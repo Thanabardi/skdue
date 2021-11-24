@@ -70,9 +70,9 @@ export default {
       event_in_selected_date: [], //added in iter4
       event_response: {}, // data from response
       tag_status: {}, // a dict for which tag gonna show in calendar
-      tag_list: [], // store all tag name
+      // tag_list: [], // store all tag name
       my_tag_list: [], // store my tag name
-      follow_tag_list: [], // store follow tag name
+      follow_name_list: [], // store follow name
       event_details: [],
       modalActive: true,
       calendar_id: Number,
@@ -136,9 +136,9 @@ export default {
   },
   mounted() {
     this.getCalendarEvents()
-    this.getTag()
     this.getColor()
-    this.getFollow()
+    // this.getTag()
+    // this.getFollow()
   },
   methods: {
     setTodayEvents() {
@@ -161,34 +161,55 @@ export default {
     },
     setCalendarEvents(data){
       this.calendar_id = data.calendar.id
-      console.log(data.event)
       let tag = data.tag
-      this.tag_list = data.tag // check this line
-      let all_event = data.event
-      this.event_response = data
-      console.log("RESPONSE", this.event_response)
-      for (let t=0; t<tag.length; t++){
-        // init tag status
-        this.tag_status[tag[t]] = true;
+      // this.tag_list = data.tag // check this line
+      // data.event.forEach(element => console.log('acacac',element))
 
-        let d = all_event[tag[t]]
-        // console.log(d)
-        this.calendar_events = d
-        // console.log(this.calendar_events)
-        for(let i=0; i<d.length; i++) {
-          this.calendarOptions.events.push({
-            id: d[i].id,
-            title: d[i].name,
-            start: d[i].start_date,
-            end: d[i].end_date,
-            description: d[i].description,
-            slug: d[i].slug,
-            tag : d[i].tag_text,
-            color: this.tag_colors[this.color_tag[d[i].tag_text]],
-            from_calendar_id: d[i].calendar,
-          })
+      this.event_response = data
+      this.tag_status["my_tag"] = {}
+      this.tag_status["follow_id"] = {}
+      // console.log("RESPONSE", this.event_response)
+      // console.log('egsegseg', this.my_tag_list);
+      // console.log('egsegseg', this.follow_name_list);
+      this.my_tag_list.forEach(element => {this.tag_status["my_tag"][element] = true})
+      this.follow_list["id"].forEach(element => {this.tag_status["follow_id"][element] = true})
+      // console.log('esfsefesf', this.tag_status);
+      let event = this.event_response.event; // get event
+      // for (let t=0; t<tag.length; t++){
+      //   // init tag status
+      //   // this.tag_status[tag[t]] = true;
+      //   let d = all_event[tag[t]]
+      //   // console.log(d)
+      //   this.calendar_events = d
+      //   // console.log(this.calendar_events)
+      // console.log('segsgsge',event);
+      for (const tag in event){
+        for (const event_all in event[tag]){
+          this.handleRenderEvent(event[tag][event_all])
         }
       }
+        
+      
+      // Object.event.forEach(tag => {
+      //   tag.event.forEach(event => {
+      //     console.log('afawfafw',event);
+      //     this.handleRenderEvent(event)
+      //   })
+      // })
+        // for(let i=0; i<d.length; i++) {
+        //   this.calendarOptions.events.push({
+        //     id: d[i].id,
+        //     title: d[i].name,
+        //     start: d[i].start_date,
+        //     end: d[i].end_date,
+        //     description: d[i].description,
+        //     slug: d[i].slug,
+        //     tag : d[i].tag_text,
+        //     color: this.tag_colors[this.color_tag[d[i].tag_text]],
+        //     from_calendar_id: d[i].calendar,
+        //   })
+        // }
+      
     this.setTodayEvents();
     },
     getCalendarEvents() {
@@ -218,9 +239,6 @@ export default {
             } else if (elements["user"] == 1) {
               this.my_tag_list.push(elements["tag"])
               this.color_tag[elements['tag']] = "default"
-						} else {
-              this.follow_tag_list.push(elements["tag"])
-              this.color_tag[elements['tag']] = "follow"
             }
 					})
 				})
@@ -231,16 +249,22 @@ export default {
         this.color_theme["type"] = response.data["setting"]["theme_type"]
         this.color_theme["name"] = response.data["setting"]["theme_name"]
         this.color_tag = response.data["color"]
+        this.getFollow()
+        this.getTag()
       })
       .catch(error => {
         console.log(error)
       })
     },
     getFollow() {
+      this.follow_list["id"] = []
       axios.get(`/api/v2/me/follow`)
       .then(response => {
         response.data.forEach(element => {
           this.follow_list[element["followed_calendar"]] = element["followed_calendar_slug"].replace(/-/g,' ')
+          this.follow_list["id"].push(element["followed_calendar"])
+          this.follow_name_list.push(element["followed_calendar_slug"].replace(/-/g,' '))
+          this.color_tag[element["followed_calendar_slug"].replace(/-/g,' ')] = "follow"
         });
       })
       .catch(error => {
@@ -328,6 +352,7 @@ export default {
       let end_time = events.end.substring(11, 16)
       let allday = false
       let event_owner = ""
+      let event_check = events.tag
 
       let start_date_check = start_date.replace(/-/g,'')
       let end_date_check = end_date.replace(/-/g,'')
@@ -340,10 +365,13 @@ export default {
         allday = true
       }
 
-      let is_mine = events.from_calendar_id == this.calendar_id
+      let is_mine = (events.from_calendar_id == this.calendar_id)
 
-      if ((events.from_calendar_id != this.calendar_id) && (events.from_calendar_id != 3)) {
+      if (is_mine) {
+        event_check = ["my_tag", events.tag]
+      } else {
         event_owner = this.follow_list[events.from_calendar_id]
+        event_check = ["follow_id", (events.from_calendar_id).toString()]
       }
 
       return {
@@ -358,7 +386,8 @@ export default {
         "slug" : events.slug,
         "is_mine" : is_mine,
         "detail_display" : false,
-        "event_owner" : event_owner
+        "event_owner" : event_owner,
+        "event_check" : event_check,
 			}
     },
     clearData(data){
@@ -378,40 +407,72 @@ export default {
         console.log(error)
       })
     },
+    handleRenderEvent(event) {
+      this.calendarOptions.events.push({
+        id: event.id,
+        title: event.name,
+        start: event.start_date,
+        end: event.end_date,
+        description: event.description,
+        slug: event.slug,
+        tag : event.tag_text,
+        color: this.tag_colors[this.color_tag[event.tag_text]],
+        from_calendar_id : event.calendar
+      })
+    },
     handlefiltertag(tag_text){
       // only change status in `this.tag_status`
-      var checkBox = document.getElementById(tag_text);
-      if (checkBox.checked==false){
-        this.tag_status[tag_text] = false
-        }
-      else if (checkBox.checked==true){
-        this.tag_status[tag_text] = true
+      // var checkBox = document.getElementById(tag_text);
+      if (this.my_tag_list.includes(tag_text)) {
+        this.tag_status["my_tag"][tag_text] = ! this.tag_status["my_tag"][tag_text]
+			} else {
+        this.tag_status["follow_id"][tag_text] = ! this.tag_status["follow_id"][tag_text]
       }
+      // console.log('esfsefesf', this.tag_status);
+
       // console.log(this.tag_status)
 
       // whenever status has been changed, call a re-rederevent function
       this.calendarOptions.events = []
       let event = this.event_response.event; // get event
-      for(let i=0; i<this.tag_list.length; i++) {
-        // using this.event_response
-        let tag = this.tag_list[i]
-        let tagged_event = event[tag]
-        if(this.tag_status[tag]) {
-          // console.log(tag, this.tag_status[tag])
-          for(let j=0; j<event[tag].length; j++) {
-            this.calendarOptions.events.push({
-              id: tagged_event[j].id,
-              title: tagged_event[j].name,
-              start: tagged_event[j].start_date,
-              end: tagged_event[j].end_date,
-              description: tagged_event[j].description,
-              slug: tagged_event[j].slug,
-              tag : tagged_event[j].tag_text,
-              color: this.tag_colors[this.color_tag[tagged_event[j].tag_text]]
-            })
+      let calendar_id = this.event_response.calendar.id; // get calendar id
+      // console.log('awdawd',this.my_tag_list)
+      for (const tag in event){
+        if (this.my_tag_list.includes(tag) && (this.tag_status["my_tag"][tag])) {
+          for (const event_all in event[tag]){
+            if(calendar_id == event[tag][event_all]["calendar"]) {
+              this.handleRenderEvent(event[tag][event_all])
+            }
           }
         }
       }
+      for (const tag in event){
+        for (const event_all in event[tag]){
+          if(this.tag_status["follow_id"][event[tag][event_all]["calendar"]]) {
+            this.handleRenderEvent(event[tag][event_all])
+          }
+        }
+      }
+      // this.my_tag_list.forEach(tag => {
+      //   if(this.tag_status["my_tag"][tag]) {
+      //     let tagged_event = event[tag]
+      //     tagged_event.forEach(event => {
+      //       if(calendar_id == event.calendar) {
+      //         this.handleRenderEvent(event)
+      //       }
+      //     })
+      //   }
+      // })
+      // this.follow_list["id"].forEach(tag => {
+      //   if(this.tag_status["follow_id"][tag]) {
+      //     let tagged_event = event[tag]
+      //     tagged_event.forEach(event => {
+      //       if(follow_list["id"].includes(tagged_event[i].calendar)) {
+      //         this.handleRenderEvent(event)
+      //       }
+      //     })
+      //   }
+      // })
       FullCalendar.calendar.currentData.calendarApi.refetchEvents()
     },
     handlefilterEvent(event){
@@ -446,61 +507,61 @@ export default {
             <!-- list of all day event -->
 
             <div v-for="item in this.event_details" :key="item">
-                <button v-if="item['allday'] && this.tag_status[item['tag']] && item['start_date'] == item['end_date']"
-                  class="calendar-detail-bg"
-                  :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
-                  v-on:click.left="handlefilterEvent(item)">
-                  <table class="calendar-table">
-                    <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
-                    <!-- event detail -->
-                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td colspan="2">
-                        <table style="line-height: 18px">
-                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
-                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
-                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
-                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
-                        </table>
-                      </td>
-                    </tr>
-                    <tr v-if="item['detail_display']">
-                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
-                    </tr>
-                    <!-- event detail -->
-                  </table>
-                </button>
-                <button v-if="item['allday'] && this.tag_status[item['tag']] && item['start_date'] != item['end_date']" 
-                  class="calendar-detail-bg"
-                  :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
-                  v-on:click.left="handlefilterEvent(item)">
-                  <table class="calendar-table">
-                    <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
-                    <!-- event detail -->
-                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
-                      <td colspan="2">
-                        <table style="line-height: 18px">
-                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
-                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
-                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
-                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
-                        </table>
-                      </td>
-                    </tr>
-                    <tr v-if="item['detail_display']">
-                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
-                    </tr>
-                    <!-- event detail -->
-                  </table>
-                </button>
+              <button v-if="item['allday'] && this.tag_status[item['event_check'][0]][item['event_check'][1]] && item['start_date'] == item['end_date']"
+                class="calendar-detail-bg"
+                :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
+                v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                v-on:click.left="handlefilterEvent(item)">
+                <table class="calendar-table">
+                  <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
+                  <!-- event detail -->
+                  <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                    <td colspan="2">
+                      <table style="line-height: 18px">
+                        <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                        <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                        <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                        <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr v-if="item['detail_display']">
+                    <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                  </tr>
+                  <!-- event detail -->
+                </table>
+              </button>
+              <button v-if="item['allday'] && this.tag_status[item['event_check'][0]][item['event_check'][1]] && item['start_date'] != item['end_date']" 
+                class="calendar-detail-bg"
+                :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
+                v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                v-on:click.left="handlefilterEvent(item)">
+                <table class="calendar-table">
+                  <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
+                  <!-- event detail -->
+                  <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                    <td colspan="2">
+                      <table style="line-height: 18px">
+                        <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                        <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                        <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                        <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr v-if="item['detail_display']">
+                    <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                  </tr>
+                  <!-- event detail -->
+                </table>
+              </button>
             </div>
             <!-- list of all day event -->
 
             <!-- list of other event -->
             <hr class="calendar-hr">
             <div v-for="item in this.event_details" :key="item">
-              <div v-if="!item['allday'] && this.tag_status[item['tag']]">
+              <div v-if="!item['allday'] && this.tag_status[item['event_check'][0]][item['event_check'][1]]">
                 <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg" 
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
                   v-on:click.right="TogglePopup('editTrigger', $event, item)"
@@ -604,7 +665,7 @@ export default {
           <hr class="calendar-hr">
           <div class="filter-tag-bg">
             <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.my_tag_list" :key="tag_text">
-              <input v-if="this.tag_status[tag_text]" type="checkbox" v-bind:id="tag_text" 
+              <input v-if="this.tag_status['my_tag'][tag_text]" type="checkbox" v-bind:id="tag_text" 
                 v-on:click.left="handlefiltertag(tag_text)" checked>
               <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)">
               <label :style="'color:'+tag_colors[this.color_tag[tag_text]]"> {{ tag_text }} </label><br>
@@ -616,10 +677,10 @@ export default {
           <p style="font-size: 20px; text-align: left; padding-left: 20px;">Follow</p>
           <hr class="calendar-hr">
           <div class="filter-tag-bg" >
-            <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.follow_tag_list" :key="tag_text">
-              <input v-if="this.tag_status[tag_text]" type="checkbox" v-bind:id="tag_text" 
-                v-on:click.left="handlefiltertag(tag_text)" checked>
-              <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)">
+            <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.follow_name_list" :key="tag_text">
+              <input v-if="this.tag_status['follow_id'][Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text)]" type="checkbox" v-bind:id="tag_text" 
+                v-on:click.left="handlefiltertag(Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text))" checked>
+              <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text))">
               <label :style="'max-height: 20%; color:'+app_colors[this.color_theme['type']]['main']"> {{ tag_text }} </label><br>
             </div>
           </div>
@@ -660,12 +721,12 @@ export default {
     <div style="font-size: 15px; left: 27% ;position: fixed; width: 71%; height: 45px; overflow-x: hidden;">
       <div style="display: inline-block; padding-top: 8px;" v-for="tag_text in this.my_tag_list" :key="tag_text">
         <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; color: white; background-color:'
-          +tag_colors[this.color_tag[tag_text]]" v-if="this.tag_status[tag_text]"> {{ tag_text }} </label><br>
+          +tag_colors[this.color_tag[tag_text]]" v-if="this.tag_status['my_tag'][tag_text]"> {{ tag_text }} </label><br>
       </div>
-      <div style="display: inline-block; padding-top: 8px;" v-for="tag_text in this.follow_tag_list" :key="tag_text">
+      <div style="display: inline-block; padding-top: 8px;" v-for="tag_text in this.follow_name_list" :key="tag_text">
         <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; color:'+
           app_colors[this.color_theme['type']]['main-0']+'; background-color:'+ tag_colors[this.color_tag[tag_text]]"
-          v-if="this.tag_status[tag_text]"> {{ tag_text }} </label><br>
+          v-if="this.tag_status['follow_id'][Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text)]"> {{ tag_text }} </label><br>
       </div>
     </div>
     <!-- show tags -->
