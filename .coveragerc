@@ -8,3 +8,4 @@ omit =
     skdue_calendar/migrations/*
     mysite/asgi.py
     mysite/wsgi.py
+    google_oauth/*
