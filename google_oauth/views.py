@@ -29,6 +29,10 @@ SCOPES = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/calendar.readonly'
     ]
+try:
+    FLOW = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
+except:
+    FLOW = None
 
 def get_user_info(credentials) -> Mapping:
     """Get user info from authorized accont
@@ -63,7 +67,6 @@ def generate_new_username(username: str) -> str:
 class GoogleLogin(APIView):
     def get(self, request):
         os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
-        FLOW = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
         FLOW.redirect_uri = GOOGLE_REDIRECT
         auth_url, _ = FLOW.authorization_url(
             prompt="select_account",
@@ -74,7 +77,6 @@ class GoogleLogin(APIView):
 class GoogleLoginSuccess(APIView):
 
     def get(self, request):
-        FLOW = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
         FLOW.fetch_token(code=request.GET.get('code'))
         creds = FLOW.credentials
         user_info = get_user_info(creds)
@@ -85,8 +87,6 @@ class GoogleLoginSuccess(APIView):
                 "username": user_info["given_name"]
             }
         )
-        # google_account.token = creds.to_json()
-        # google_account.save()
         # if new account is created
         if created_new_user:
             google_account.token = creds.to_json()
@@ -104,7 +104,6 @@ class GoogleLoginSuccess(APIView):
                 slug = generate_slug(user.username),
                 name = user.username
             )
-
         # create backend access token
         token, created = Token.objects.get_or_create(
             user=User.objects.get(username=google_account.linked_username)
@@ -123,66 +122,6 @@ class GoogleLoginSuccess(APIView):
             "id": google_account.uuid,
             "token": token.key
         })
-
-# class GoogleLogin(APIView):
-
-#     def get(self, request):
-#         # setup cred and api service
-#         os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
-#         flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
-#         creds = flow.run_local_server(port=8040)
-#         # load user info
-#         user_info = get_user_info(creds)
-#         # create account and save token
-#         google_account, created_new_user = GoogleAccount.objects.get_or_create(
-#             uuid=user_info["id"],
-#             defaults={
-#                 "username": user_info["given_name"]
-#             }
-#         )
-#         # google_account.token = creds.to_json()
-#         # google_account.save()
-#         # if new account is created
-#         if created_new_user:
-#             google_account.token = creds.to_json()
-#             # create new User instance
-#             google_account.linked_username = generate_new_username(google_account.username)
-#             google_account.save()
-#             user = User.objects.create(
-#                 username=google_account.linked_username,
-#                 first_name=user_info["given_name"],
-#                 last_name=user_info["family_name"],
-#                 email=user_info["email"]
-#             )
-#             calendar = Calendar.objects.create(
-#                 user = user,
-#                 slug = generate_slug(user.username),
-#                 name = user.username
-#             )
-
-#         # create backend access token
-#         token, created = Token.objects.get_or_create(
-#             user=User.objects.get(username=google_account.linked_username)
-#         )
-#         # login to the backend system
-#         user = User.objects.get(username=google_account.linked_username)
-#         user.backend = 'django.contrib.auth.backends.ModelBackend'
-#         login(request, user)
-#         # return response
-#         return Response({
-#             "user_info": user_info,
-#             "created": created_new_user,
-#             "id": google_account.uuid,
-#             "token": token.key
-#         })
-
-
-# class GoogleLoginSuccess(APIView):
-#     permission_classes = (IsAuthenticated,)
-
-#     def get(self, request):
-#         token, created = Token.objects.get_or_create(user=request.user)
-#         return Response({"token": token.key})
 
 
 class GoogleLogout(APIView):
@@ -235,7 +174,6 @@ class GoogleSyncEvent(APIView):
 
             print(request.user.username)
 
-            # DEBUG: pls remove this after you implement the sync data
             # convert google -> skdue
             for j in events['items']:
                 list =[]
@@ -246,19 +184,10 @@ class GoogleSyncEvent(APIView):
                     list.append(j['description'])
                 except KeyError:
                     list.append('no description')
+
                 all_events.append(list)
-                #
                 DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
-                # #delete old tag
-                # try:
-                #     old_tag = CalendarTag.objects.get(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
-                #     old_tag.delete()
-                # except:
-                #     pass
-                # test_tag = CalendarTag.objects.create(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
-                # test_tag.save()
-                #
-                # user_cal = Calendar.objects.get(name=request.user.username)
+
                 admin = User.objects.get(id=1)
                 user_cal = Calendar.objects.get(name=request.user.username)
                 test_tag, _ = CalendarTag.objects.get_or_create(tag="google", user=admin, tag_type=DEFAULT_TAG_TYPE)
@@ -287,12 +216,6 @@ class GoogleSyncEvent(APIView):
                         end_date = end_time,
                         tag = test_tag
                     )
-
-
-
-
-
-            # TODO: implement sync data function here (using `google` event tag to create new events)
 
             return Response({"msg": all_events})
         return Response({"msg": "you are not logged in"}, HTTP_401_UNAUTHORIZED)
