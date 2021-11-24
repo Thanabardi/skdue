@@ -29,7 +29,6 @@ SCOPES = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/calendar.readonly'
     ]
-FLOW = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
 
 def get_user_info(credentials) -> Mapping:
     """Get user info from authorized accont
@@ -64,6 +63,7 @@ def generate_new_username(username: str) -> str:
 class GoogleLogin(APIView):
     def get(self, request):
         os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+        FLOW = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
         FLOW.redirect_uri = GOOGLE_REDIRECT
         auth_url, _ = FLOW.authorization_url(
             prompt="select_account",
@@ -72,8 +72,9 @@ class GoogleLogin(APIView):
         return Response({"auth_url": auth_url})
 
 class GoogleLoginSuccess(APIView):
-    
+
     def get(self, request):
+        FLOW = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
         FLOW.fetch_token(code=request.GET.get('code'))
         creds = FLOW.credentials
         user_info = get_user_info(creds)
