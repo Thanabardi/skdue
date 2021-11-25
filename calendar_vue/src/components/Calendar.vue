@@ -618,33 +618,36 @@ export default {
       <!-- Tag filters -->
       <div style="text-align: center;" v-if="popupTriggers.sidebarTrigger">
         <div class='calendar-sidebar' :style="'background-color:'+app_colors[this.color_theme['name']]['sub-1']">
-
-          <!-- My Tag filters -->
-          <p style="font-size: 20px; text-align: left; padding-left: 20px;">My Tags</p>
-          <hr class="calendar-hr">
-          <div class="filter-tag-bg">
-            <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.my_tag_list" :key="tag_text">
-              <input v-if="this.tag_status['my_tag'][tag_text]" type="checkbox" v-bind:id="tag_text" 
-                v-on:click.left="handlefiltertag(tag_text)" checked>
-              <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)">
-              <label :style="'color:'+tag_colors[this.color_tag[tag_text]]"> {{ tag_text }} </label><br>
+          <div style="position: absolute; overflow-x: hidden; 
+            top: 0px; bottom: 140px; color; width: 95%;">
+            
+            <!-- My Tag filters -->
+            <p style="font-size: 20px; text-align: left; padding-left: 20px;">My Tags</p>
+            <hr class="calendar-hr">
+            <div class="filter-tag-bg">
+              <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.my_tag_list" :key="tag_text">
+                <input v-if="this.tag_status['my_tag'][tag_text]" type="checkbox" v-bind:id="tag_text" 
+                  v-on:click.left="handlefiltertag(tag_text)" checked>
+                <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(tag_text)">
+                <label :style="'color:'+tag_colors[this.color_tag[tag_text]]"> {{ tag_text }} </label><br>
+              </div>
             </div>
-          </div>
-          <!-- My Tag filters -->
+            <!-- My Tag filters -->
 
-          <!-- Follow Tag filters -->
-          <p style="font-size: 20px; text-align: left; padding-left: 20px;">Follow</p>
-          <hr class="calendar-hr">
-          <div class="filter-tag-bg" >
-            <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.follow_name_list" :key="tag_text">
-              <input v-if="this.tag_status['follow_id'][Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text)]" type="checkbox" v-bind:id="tag_text" 
-                v-on:click.left="handlefiltertag(Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text))" checked>
-              <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text))">
-              <label :style="'max-height: 20%; color:'+app_colors[this.color_theme['type']]['main']"> {{ tag_text }} </label><br>
+            <!-- Follow Tag filters -->
+            <p style="font-size: 20px; text-align: left; padding-left: 20px;">Follow</p>
+            <hr class="calendar-hr">
+            <div class="filter-tag-bg" >
+              <div style="padding: 5px 0px 5px 0" v-for="tag_text in this.follow_name_list" :key="tag_text">
+                <input v-if="this.tag_status['follow_id'][Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text)]" type="checkbox" v-bind:id="tag_text" 
+                  v-on:click.left="handlefiltertag(Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text))" checked>
+                <input v-else type="checkbox" v-bind:id="tag_text" v-on:click.left="handlefiltertag(Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text))">
+                <label :style="'max-height: 20%; color:'+app_colors[this.color_theme['type']]['main']"> {{ tag_text }} </label><br>
+              </div>
             </div>
-          </div>
-          <!-- Follow Tag filters -->
+            <!-- Follow Tag filters -->
 
+          </div>
           <div class="calendar-sidebar-footer">
             <hr class="calendar-hr">
             <button class="app-button-tp" v-on:click.left="TogglePopup('sidebarTrigger', $event)"
