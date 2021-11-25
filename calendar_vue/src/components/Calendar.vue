@@ -387,7 +387,7 @@ export default {
       if ((this.user_name == this.calendar_slug) && (event.calendar == this.calendar_id)) {
         event_color = this.tag_colors[this.color_tag[event.tag_text]]
       } else {
-        event_color = this.tag_colors["follow"]
+        event_color = "rgba(180, 180, 180, 0.9)"
       }
       this.calendarOptions.events.push({
         id: event.id,
@@ -685,7 +685,7 @@ export default {
         </div>
         <div style="display: inline-block; padding-top: 8px;" v-for="tag_text in this.follow_name_list" :key="tag_text">
           <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; color:'+
-            app_colors[this.color_theme['type']]['main-0']+'; background-color:'+ tag_colors[this.color_tag[tag_text]]"
+            app_colors[this.color_theme['type']]['main-0']+'; background-color: rgba(200, 200, 200, 0.6)'"
             v-if="this.tag_status['follow_id'][Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text)]"> {{ tag_text }} </label><br>
         </div>
       </div>
@@ -723,7 +723,7 @@ export default {
   opacity: 0.8;
 }
 .calendar-detail-bg {
-  background-color: rgba(200, 200, 200, 0.6);
+  background-color: rgba(220, 220, 220, 0.5);
   border-collapse: collapse;
   padding: 5px;
   display: block;

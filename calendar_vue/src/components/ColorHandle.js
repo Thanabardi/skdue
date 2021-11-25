@@ -47,7 +47,7 @@ export const APP_COLORS = {
 }
 export const TAG_COLORS = {
     "default": "#3788d8",
-    "follow": "rgba(200, 200, 200, 0.6)",
+    "follow": "rgba(220, 220, 220, 0.5)",
     "white": "#f2f2f2",
     "red": "#C51104",
     "yellow": "#FBBC05",
