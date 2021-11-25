@@ -106,14 +106,14 @@ export default {
 		color_theme: {},
   },
 	setup (props) {
-    console.log('popup',props.popup)
+    // console.log('popup',props.popup)
     const popupTriggers = ref({
 			buttonTrigger: props.popup,
 		});
 
 		const TogglePopup = (trigger) => {
 			popupTriggers.value[trigger] = !popupTriggers.value[trigger]
-      console.log(props.popup, popupTriggers.value['buttonTrigger'])
+      	props.popup, popupTriggers.value['buttonTrigger']
 
 		}
 		return {
@@ -229,12 +229,12 @@ export default {
 			// console.log(end_date_time)
 			// console.log(this.tag)
 			// console.log(event)
-			console.log(this.detail[2])
+			// console.log(this.detail[2])
 			if ((this.detail[2].replace(/-/g,'') + this.detail[3].replace(/:/g,'')) <
 				(this.detail[4].replace(/-/g,'') + this.detail[5].replace(/:/g,''))) 
 			axios.put(`/api/v2/me/${this.user_name}/${this.detail[7]}`, event)
 				.then(function(response) {
-					console.log(response),
+					response,
 					window.location.reload()
 					})
 				.catch(function(error) {
