@@ -274,7 +274,7 @@ export default({
 				else if (error.response.status == 404){
 					this.$router.push('/error/404')
 				}
-				else if (error.response.status >= 500){
+				else if (error.response.status >= 500 && error.response.status < 600){
 					this.$router.push('/error/5xx')
 				} else {
 					this.$router.push('/error/XXX')
