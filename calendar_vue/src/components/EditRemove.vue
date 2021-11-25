@@ -214,39 +214,34 @@ export default {
 
 		},
 		eventCreate() {
-			const start_date_time = this.start_date + " " + this.start_time + ":00"
-			const end_date_time = this.end_date + " " + this.end_time + ":00"
+			const start_date_time = this.detail[2] + " " + this.detail[3] + ":00"
+			const end_date_time = this.detail[4] + " " + this.detail[5] + ":00"
 			const event = {
-				"name" : this.name,
-				"description" : this.description,
+				"name" : this.detail[0],
+				"description" : this.detail[1],
 				"start_date" : start_date_time,
 				"end_date" : end_date_time,
-				"tag" : this.tag
+				"tag" : this.detail[6]
 			}
-
 			// console.log(this.name)
 			// console.log(this.description)
 			// console.log(start_date_time)
 			// console.log(end_date_time)
 			// console.log(this.tag)
-			if (this.tag == '') {
-				alert("Tag can't be blank")
-			}
-			else if ((this.start_date.replace(/-/g,'') + this.start_time.replace(/:/g,'')) < 
-				(this.end_date.replace(/-/g,'') + this.end_time.replace(/:/g,''))) {
-				if (!this.available_tag.includes(this.tag)) {
-					this.tagCreate()
-				}
-					axios.put(`/api/v2/me/${this.user_name}/${this.detail[7]}`, event)
-						.then(function(response) {
-							response,
-							window.location.reload()
-						})
-						.catch(function(error) {
-							console.log(error)
-							alert("Opps, " + error)
-						})
-			} else {
+			// console.log(event)
+			console.log(this.detail[2])
+			if ((this.detail[2].replace(/-/g,'') + this.detail[3].replace(/:/g,'')) <
+				(this.detail[4].replace(/-/g,'') + this.detail[5].replace(/:/g,''))) 
+			axios.put(`/api/v2/me/${this.user_name}/${this.detail[7]}`, event)
+				.then(function(response) {
+					console.log(response),
+					window.location.reload()
+					})
+				.catch(function(error) {
+					console.log(error),
+					alert("Opps, " + error)
+					})
+			else {
 				alert("Start time must be earlier than the end time")
 			}
 		}
