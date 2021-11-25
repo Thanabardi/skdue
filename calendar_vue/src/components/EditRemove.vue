@@ -248,6 +248,7 @@ export default {
 						})
 			} else {
 				alert("Start time must be earlier than the end time")
+			}
 		}
 	},
 }
