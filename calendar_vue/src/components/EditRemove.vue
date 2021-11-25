@@ -237,7 +237,7 @@ export default {
 				if (!this.available_tag.includes(this.tag)) {
 					this.tagCreate()
 				}
-					axios.put(`/api/v2/me/${this.user_name}`, event)
+					axios.put(`/api/v2/me/${this.user_name}/${this.detail[7]}`, event)
 						.then(function(response) {
 							response,
 							window.location.reload()
