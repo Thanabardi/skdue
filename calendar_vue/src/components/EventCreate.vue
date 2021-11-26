@@ -213,21 +213,21 @@ export default {
 			}
 		},
 		// TagEdit(e, tag) {
-		// 	const changed_tag = {
-		// 		"old_name" : tag,
-		// 		"new_name" : "back",
-		// 	}
-		// 	axios.put(`/api/v2/me/add_new_tag`, changed_tag)
+			// const changed_tag = {
+			// 	"old_name" : tag,
+			// 	"new_name" : "back",
+			// }
+			// axios.put(`/api/v2/me/add_new_tag`, changed_tag)
+			// 	.then(function(response) {
+			// 	})
+			// window.location.reload()
+		// }
+		// TagEdit(e, tag) {
+		// 	axios.delete(`/api/v2/me/add_new_tag?tag=${tag}`)
 		// 		.then(function(response) {
 		// 		})
 		// 	window.location.reload()
 		// }
-		TagEdit(e, tag) {
-			axios.delete(`/api/v2/me/add_new_tag?tag=${tag}`)
-				.then(function(response) {
-				})
-			window.location.reload()
-		}
 	},
 }
 
