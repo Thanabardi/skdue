@@ -1,5 +1,5 @@
 # skdue
-[![Build Status](https://app.travis-ci.com/patkamon/skdue.svg?branch=apply-ci)](https://app.travis-ci.com/patkamon/skdue) [![codecov](https://codecov.io/gh/patkamon/skdue/branch/apply-ci/graph/badge.svg?token=5EZP9GP4CX)](https://codecov.io/gh/patkamon/skdue)
+![example workflow](https://github.com/patkamon/skdue/actions/workflows/django.yml/badge.svg)[![codecov](https://codecov.io/gh/patkamon/skdue/branch/apply-ci/graph/badge.svg?token=5EZP9GP4CX)](https://codecov.io/gh/patkamon/skdue)
 
 
 ## Description
@@ -17,61 +17,9 @@
 | Thanabardi | [Thanabardi](https://github.com/Thanabardi)                                                     |
 
 ## Setup
-<details>
-  <summary> Django Setup </summary>
-  <p>
 
-  ```
-  # activate virtual environment
-  source venv/bin/activate
-  ```
-  ```
-  # install dependencies
-  pip install -r requirements.txt
-  ```
-  ```
-  # setup database
-  python manage.py migrate
-  python manage.py loaddata calendar_data
-  ```
-  ```
-  # run server and explorer api
-  python manage.py runserver
-  ```
-  </p>
-    </details>
+- [Installation and Instructions](/../../wiki/Installation-and-Instructions)
 
-<details>
-  <summary> Vue Setup </summary>
-  <p>  
-
-  ```
-  # install vue
-  npm install -g @vue/cli
-  ```
-  ```
-  # install dependencies
-  cd calendar_vue
-  npm install
-  ```
-  ```
-  # run frontend sever
-  npm run serve
-  ```
-  </p>
-    </details>
-
-<details>
-  <summary> Dev Setup </summary>
-  <p>      
-
-  ``` DEBUG = True  ```          
-  ``` SECRET_KEY = this-is-my-secret-key-not-safe ```       
-  ``` ALLOWED_HOSTS = 127.0.0.1 ```          
-  ``` CORS_ALLOWED_ORIGINS = http://localhost:8080 ``` 
-
-  </p>
-    </details>
 
 
 ## Iteration Plan
@@ -81,12 +29,14 @@
 - [Iteration 3](/../../wiki/Iteration-Plan-3)
 - [Iteration 4](/../../wiki/Iteration-Plan-4)
 - [Iteration 5](/../../wiki/Iteration-Plan-5)
+- [Iteration 6](/../../wiki/Iteration-Plan-6)
+- [Iteration 7](/../../wiki/Iteration-Plan-7)
 
 ## Project Documents
 
 * [Project Proposal](https://docs.google.com/document/d/1ZdIS9-_TD_CAAROzRfGB1QxAL8mmSFebVxw4AjWr2yQ/edit#heading=h.pe6wpztc0dwa)
 * [Project Jamboard](https://jamboard.google.com/d/1iB_wpYj0qTMekB9jfVZLBmZ4JiU3f6bvgBLjktGU23o/edit?usp=sharing)
 * [Django Rest Model](https://drive.google.com/file/d/1Xu2_mMAfK72p_U584PJ2d0ifFIC8Fjo2/view?usp=sharing)
-* [Vision Statement](./Vision-Statement)
+* [Vision Statement](/../../wiki/Vision-Statement)
 
   [readmore](/../../wiki#project-documents)

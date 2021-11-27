@@ -368,15 +368,15 @@ class UserMeTests(TestCase):
         )
         self.assertEqual(HTTP_200_OK, response.status_code)
         # find change data
-        response = self.client.get(reverse('api_v2:me_event', args=[self.calendar.slug, generate_slug(change_data["name"])]))
+        response = self.client.get(reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]))
         response_data = convert_response(response.content)
         expect = json.dumps(CalendarEventSerializer(
             CalendarEvent.objects.get(name=change_data["name"])).data
         )
         self.assertJSONEqual(expect, response_data)
-        # find previous event (should not found)
-        response = self.client.get(reverse('api_v2:me_event', args=[self.calendar.slug, self.private_event.slug]))
-        self.assertEqual(HTTP_404_NOT_FOUND, response.status_code)
+        # test that event name does not change
+        event = CalendarEvent.objects.get(slug=self.private_event.slug)
+        self.assertEqual(change_data["name"], event.name)
 
     def test_me_event_put_dont_change_event_name(self):
         # change private event to public event but don't change name

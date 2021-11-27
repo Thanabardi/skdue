@@ -1,7 +1,4 @@
 from typing import Mapping
-from django.http.response import HttpResponseRedirect
-from django.urls.base import reverse
-from django.views.generic.base import View
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from rest_framework.authtoken.models import Token
@@ -12,27 +9,30 @@ from rest_framework.authentication import TokenAuthentication, BasicAuthenticati
 from rest_framework.permissions import IsAuthenticated
 
 import os
-import requests
-import datetime
 from google_oauth.models import GoogleAccount
 from mysite.settings import BASE_DIR
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from requests.structures import CaseInsensitiveDict
 import json
 from skdue_calendar.utils import generate_slug
 from skdue_calendar.models import *
+from skdue_calendar.serializers import CalendarSerializer
 
 
+# GOOGLE_REDIRECT = "http://127.0.0.1:8000/oauth/login/success/"
+GOOGLE_REDIRECT = "http://localhost:8080/google/callback/"
 CREDENTIALS_PATH = os.path.join(BASE_DIR, 'google_oauth', 'credentials.json')
 SCOPES = [
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/calendar.readonly'
     ]
-
+try:
+    FLOW = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
+except:
+    FLOW = None
 
 def get_user_info(credentials) -> Mapping:
     """Get user info from authorized accont
@@ -46,7 +46,6 @@ def get_user_info(credentials) -> Mapping:
     """
     user_info_service = build('oauth2', 'v2', credentials=credentials)
     user_info = user_info_service.userinfo().get().execute()
-    print(user_info)
     return user_info
 
 
@@ -65,15 +64,21 @@ def generate_new_username(username: str) -> str:
         except User.DoesNotExist:
             return f"{username}{i}"
 
-
 class GoogleLogin(APIView):
+    def get(self, request):
+        os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+        FLOW.redirect_uri = GOOGLE_REDIRECT
+        auth_url, _ = FLOW.authorization_url(
+            prompt="select_account",
+            access_type="offline"
+        )
+        return Response({"auth_url": auth_url})
+
+class GoogleLoginSuccess(APIView):
 
     def get(self, request):
-        # setup cred and api service
-        os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
-        flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
-        creds = flow.run_local_server(port=8040)
-        # load user info
+        FLOW.fetch_token(code=request.GET.get('code'))
+        creds = FLOW.credentials
         user_info = get_user_info(creds)
         # create account and save token
         google_account, created_new_user = GoogleAccount.objects.get_or_create(
@@ -82,8 +87,6 @@ class GoogleLogin(APIView):
                 "username": user_info["given_name"]
             }
         )
-        # google_account.token = creds.to_json()
-        # google_account.save()
         # if new account is created
         if created_new_user:
             google_account.token = creds.to_json()
@@ -101,7 +104,6 @@ class GoogleLogin(APIView):
                 slug = generate_slug(user.username),
                 name = user.username
             )
-
         # create backend access token
         token, created = Token.objects.get_or_create(
             user=User.objects.get(username=google_account.linked_username)
@@ -110,21 +112,16 @@ class GoogleLogin(APIView):
         user = User.objects.get(username=google_account.linked_username)
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
+        # get user calendar
+        calendar = Calendar.objects.get(user=user)
         # return response
         return Response({
+            "calendar": CalendarSerializer(calendar).data,
             "user_info": user_info,
             "created": created_new_user,
             "id": google_account.uuid,
             "token": token.key
         })
-
-
-class GoogleLoginSuccess(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        token, created = Token.objects.get_or_create(user=request.user)
-        return Response({"token": token.key})
 
 
 class GoogleLogout(APIView):
@@ -177,7 +174,6 @@ class GoogleSyncEvent(APIView):
 
             print(request.user.username)
 
-            # DEBUG: pls remove this after you implement the sync data
             # convert google -> skdue
             for j in events['items']:
                 list =[]
@@ -188,19 +184,10 @@ class GoogleSyncEvent(APIView):
                     list.append(j['description'])
                 except KeyError:
                     list.append('no description')
+
                 all_events.append(list)
-                #
                 DEFAULT_TAG_TYPE = CalendarTagType.objects.get(tag_type="default")
-                # #delete old tag
-                # try:
-                #     old_tag = CalendarTag.objects.get(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
-                #     old_tag.delete()
-                # except:
-                #     pass
-                # test_tag = CalendarTag.objects.create(user=request.user, tag='google', tag_type=DEFAULT_TAG_TYPE)
-                # test_tag.save()
-                #
-                # user_cal = Calendar.objects.get(name=request.user.username)
+
                 admin = User.objects.get(id=1)
                 user_cal = Calendar.objects.get(name=request.user.username)
                 test_tag, _ = CalendarTag.objects.get_or_create(tag="google", user=admin, tag_type=DEFAULT_TAG_TYPE)
@@ -229,12 +216,6 @@ class GoogleSyncEvent(APIView):
                         end_date = end_time,
                         tag = test_tag
                     )
-
-
-
-
-
-            # TODO: implement sync data function here (using `google` event tag to create new events)
 
             return Response({"msg": all_events})
         return Response({"msg": "you are not logged in"}, HTTP_401_UNAUTHORIZED)
