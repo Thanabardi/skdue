@@ -446,7 +446,7 @@ export default {
 
 <template>
   <div :style="'height: 100%; width: 100%; position: fixed; background-color:'
-    +app_colors[this.color_theme['type']]['sub']">
+    +app_colors[this.color_theme['type']]['bg']">
     <CalendarNavbar :color_theme="this.color_theme"/>
 
 

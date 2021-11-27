@@ -52,7 +52,7 @@
                   <!-- <button type="button" v-for="tag in available_tag" :key="tag"
 										class="event-create-tag-bt"  @click="() => this.tag = tag">
 										{{ tag }}</button> -->
-										<button type="button" v-for="tag in available_tag" :key="tag"
+										<button type="button" v-for="tag in available_tag.filter(tag => tag !== 'google')" :key="tag"
 											class="event-create-tag-bt" v-on:click.left="this.detail[6] = tag"
 											v-on:click.right="TagEdit($event)" :style="'background-color:'
 											+ this.tag_colors[color_tag[tag]]">{{ tag }}</button>

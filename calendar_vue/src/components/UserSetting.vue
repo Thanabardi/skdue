@@ -1,10 +1,10 @@
 <template>
-    <div :style="'left:0px; height: 100%; width: 106%; position: fixed; overflow-x: hidden; background-color:' + app_colors[this.color_theme['type']]['sub']">
+    <div :style="'left:0px; height: 100%; width: 100%; position: fixed; overflow-x: hidden; background-color:' + app_colors[this.color_theme['type']]['bg']">
         <div>
             <CalendarNavbar />
         </div>
 		<body>
-        <div class="calendar-hr" :style="'color:'+app_colors[this.color_theme['type']]['main']">
+        <div class="calendar-hr" :style="'width: 100%; color:'+app_colors[this.color_theme['type']]['main']">
                 <center><a style="font-size: 40px">User Setting</a></center>
 				<p></p>
 				<center><img id="current_img" :src="img" class="avatar"></center>
@@ -29,9 +29,6 @@
                                 <input :style="'color:'+app_colors[this.color_theme['type']]['main']" type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png" class="inputfile">
 								<label for="file">Choose an image</label>
                             </div>
-							<div class="sync" :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">
-									<GoogleCalSync />
-								</div>
                         </center>
 						<!-- End -->
 						<center><table>
@@ -39,7 +36,7 @@
 								<p></p>
 								<div><center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">Tag</center></div><br>
 								<div>
-									<div v-if="this.available_tag.length < 5">
+									<div v-if="this.available_tag.length < 9">
 										<input style="width: 270px;" class="event-create-textarea"
 											placeholder="MyNewTag" maxlength="10" v-model="tag">
 									</div>
@@ -111,8 +108,11 @@
 								</div></center>
 							</tr>
 						</table></center>
+						<div class="sync" style="font-size:30px; text-align: center">
+							<GoogleCalSync :color_theme="this.color_theme"/><br>
+						</div>
 						<div class="event-create-footer">
-							<button class="app-button-main" :style="'background-color:'+app_colors[this.color_theme['name']]['main']" type="submit">Done</button>
+							<button class="app-button-main" :style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']" type="submit">Done</button>
 						</div>
 					</form>
                 </center>
@@ -294,8 +294,8 @@ export default({
 		},
 		tagCreate() {
 			if (this.tag != '') {
-				if (!this.tag_name.includes(this.tag)) {
-					this.tag_name.push(this.tag)
+				if (!this.available_tag.includes(this.tag)) {
+					this.available_tag.push(this.tag)
 					axios.post(`/api/v2/me/add_new_tag`, {"tag":this.tag})
 						.then(function(response) {
 							console.log("create new Tag", response)
@@ -374,7 +374,6 @@ export default({
 
 .calendar-hr {
     position: relative;
-	border: 1px solid;
 	opacity: 0.8;
 	width: 90%;
     top: 50px;
@@ -535,5 +534,10 @@ body {
   white-space: nowrap;
   display: inline;
   padding: 1%;
+  color: black;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 0 30px 0 30px;
+  background: rgb(230, 230, 230);
 }
 </style>

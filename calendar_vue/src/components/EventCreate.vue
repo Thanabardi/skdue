@@ -40,7 +40,7 @@
 									required v-model="end_time"></td>
 							</tr>
 
-							<tr v-if="this.available_tag.length < 5">
+							<tr v-if="this.available_tag.length < 9">
 								<td>Tag</td>
 								<td>
 									<input style="width: 250px;" class="event-create-input"
@@ -48,11 +48,11 @@
 								</td>
 							</tr>
 							<tr>
-								<td v-if="this.available_tag.length > 5"
+								<td v-if="this.available_tag.length > 9"
 									style="vertical-align: top; padding-top: 10px;">Tag</td>
 								<td v-else></td>
 								<td style="width: 400px;">
-									<button type="button" v-for="tag in available_tag" :key="tag"
+									<button type="button" v-for="tag in available_tag.filter(tag => tag !== 'google')" :key="tag"
 										class="event-create-tag-bt" v-on:click.left="this.tag = tag"
 										v-on:click.right="TagEdit($event, tag)" :style="'background-color:'
 										+ this.tag_colors[color_tag[tag]]">{{ tag }}</button>

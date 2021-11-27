@@ -1,13 +1,15 @@
 <template>
 	<div class="google">
-		<button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp" style="font-size: 40px; line-height: 30px;"
-			@click="() => syncGoogleCalEvent()">SYNC</button>
+		<div v-if="(this.token!='') && (this.fs!='')" class="app-button-tp" :style="'font-weight: bold;border-radius: 20px;font-size: 20px; color:'
+			+app_colors[this.color_theme['name']]['sub-2']+'; position: absolute; left: 50%; transform: translate(-50%, -50%); width: 200px;'"
+			@click="() => syncGoogleCalEvent()">SYNC WITH GOOGLE</div>
 	</div>
 </template>
 
 <script>
 import { ref } from 'vue';
 import axios from 'axios';
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
 
 export default {
 	setup () {
@@ -16,8 +18,13 @@ export default {
 		return {
 			token: "asdad",
 			fs: "follow",
+			tag_colors: TAG_COLORS,
+            app_colors: APP_COLORS,
 		}
 	},
+	props: {
+		color_theme: {},
+    },
 	mounted () {
         this.getUserNameAndTag()
     },
@@ -53,16 +60,15 @@ export default {
 
         },
 		async syncGoogleCalEvent() {
-      await axios.get(`/oauth/sync-event/`)
-              .then(response => {
-
-              console.log('sync-event',response.data);
-                  // console.log(response.data.slug);
-              })
-              .catch(error => {
-              console.log(error)
-              })
-      window.location.reload()
+      	await axios.get(`/oauth/sync-event/`)
+			.then(response => {
+				console.log('sync-event',response.data);
+				window.location.reload()
+			})
+			.catch(error => {
+				alert("Please log in with Google")
+				console.log(error)
+			})
 		}
 	},
 }
@@ -73,9 +79,4 @@ export default {
 
 @import './../assets/style.css';
 
-.app-button-tp {
-    background-color: black;
-	color: white;
-	border-radius: 23%;
-}
 </style>
