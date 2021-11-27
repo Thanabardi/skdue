@@ -73,6 +73,7 @@ export default {
       // tag_list: [], // store all tag name
       my_tag_list: [], // store my tag name
       follow_name_list: [], // store follow name
+      public_tag: [],
       event_details: [],
       modalActive: true,
       calendar_id: Number,
@@ -191,6 +192,7 @@ export default {
         .then( response => {this.calendar_id = response.data.calendar.id})
       axios.get(`/api/v2/${calendar_type}/${calendar_slug}`)
         .then(response => {
+          this.public_tag = response.data.tag
           this.setCalendarEvents(response.data)
         })
         .catch(error => {
@@ -680,8 +682,8 @@ export default {
     </FullCalendar>
 
     <!-- show tags -->
-    <div v-if="(this.token!='') && (this.user_name == this.calendar_slug)">
-      <div style="font-size: 15px; left: 27% ;position: fixed; width: 71%; height: 45px; overflow-x: hidden;">
+    <div style="font-size: 15px; left: 27% ;position: fixed; width: 71%; height: 45px; overflow-x: hidden;">
+      <div v-if="(this.token!='') && (this.user_name == this.calendar_slug)">
         <div style="display: inline-block; padding-top: 8px;" v-for="tag_text in this.my_tag_list" :key="tag_text">
           <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; color: white; background-color:'
             +tag_colors[this.color_tag[tag_text]]" v-if="this.tag_status['my_tag'][tag_text]"> {{ tag_text }} </label><br>
@@ -690,6 +692,13 @@ export default {
           <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; color:'+
             app_colors[this.color_theme['type']]['main-0']+'; background-color: rgba(200, 200, 200, 0.6)'"
             v-if="this.tag_status['follow_id'][Object.keys(this.follow_list).find(key => this.follow_list[key] == tag_text)]"> {{ tag_text }} </label><br>
+        </div>
+      </div>
+      <div v-else>
+        <div style="display: inline-block; padding-top: 8px;" v-for="tag_text in this.public_tag" :key="tag_text">
+          <label :style="'margin-right: 15px; padding: 2px 10px 2px 10px; border-radius: 8px; color:'+
+            app_colors[this.color_theme['type']]['main-0']+'; background-color: rgba(200, 200, 200, 0.6)'"
+            > {{ tag_text }} </label><br>
         </div>
       </div>
     </div>
