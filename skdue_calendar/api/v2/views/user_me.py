@@ -227,6 +227,42 @@ class UserMeAddTagView(APIView):
                 return Response({"msg": f"tag: {request.data['tag']} is already exist"}, HTTP_400_BAD_REQUEST)
         return Response({"msg": "login required"}, HTTP_401_UNAUTHORIZED)
 
+    def put(self, request):
+        """Change tag text
+
+        Args:
+            requset.data: a dict consist of,
+                - old_name: old text name before.
+                - new_name: new name tag you want.
+
+        """
+        if request.user.id:
+            try:
+                changed_tag = CalendarTag.objects.get(user=request.user, tag=request.data["old_name"])
+            except CalendarTag.DoesNotExist:
+                raise Http404
+            try:
+                check_tag = CalendarTag.objects.get(user=request.user, tag=request.data["new_name"])
+                return Response({"msg": "name tag was already in used"}, HTTP_400_BAD_REQUEST)
+            except CalendarTag.DoesNotExist:
+                print(changed_tag.tag)
+                changed_tag.tag = request.data["new_name"]
+                changed_tag.save()
+                return Response({"msg": "tag edited"}, HTTP_200_OK)
+
+
+    def delete(self, request):
+        if request.user.id:
+            user = request.user
+            try:
+                tag = request.GET.get('tag')
+                print(tag)
+                changed_tag = CalendarTag.objects.get(user=user,tag=tag)
+                changed_tag.delete()
+                return Response({"msg": "tag deleted"}, HTTP_200_OK)
+            except:
+                return Response({"msg": "given tag is invalid"}, HTTP_400_BAD_REQUEST)
+
 
 class UserMeEventView(APIView):
     """View for user's calendar event with ability to editing event's detail"""

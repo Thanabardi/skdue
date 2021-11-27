@@ -43,27 +43,27 @@
 							<tr v-if="this.available_tag.length < 5">
 								<td>Tag</td>
 								<td>
-									<input style="width: 250px;" class="event-create-input" 
+									<input style="width: 250px;" class="event-create-input"
 										placeholder="MyNewTag" maxlength="10" required v-model="tag">
 								</td>
 							</tr>
 							<tr>
-								<td v-if="this.available_tag.length > 5" 
+								<td v-if="this.available_tag.length > 5"
 									style="vertical-align: top; padding-top: 10px;">Tag</td>
 								<td v-else></td>
 								<td style="width: 400px;">
 									<button type="button" v-for="tag in available_tag" :key="tag"
 										class="event-create-tag-bt" v-on:click.left="this.tag = tag"
-										v-on:click.right="TagEdit($event)" :style="'background-color:'
+										v-on:click.right="TagEdit($event, tag)" :style="'background-color:'
 										+ this.tag_colors[color_tag[tag]]">{{ tag }}</button>
 								</td>
 							</tr>
 						</table>
 						<div class="event-create-footer">
-							<button class="app-button-main" type="submit" 
+							<button class="app-button-main" type="submit"
 								:style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']">Done</button>
-							<button class="app-button-gray" 
-								:style="'background-color:'+app_colors[this.color_theme['type']]['main-1']" 
+							<button class="app-button-gray"
+								:style="'background-color:'+app_colors[this.color_theme['type']]['main-1']"
 								@click="() => TogglePopup('buttonTrigger')">Cancel</button>
 						</div>
 					</form>
@@ -101,7 +101,7 @@ export default {
 			start_date: new Date().toLocaleDateString("fr-CA"),
 			start_time: new Date().toTimeString().substring(0, 5),
 			end_date: new Date().toLocaleDateString("fr-CA"),
-			end_time: (new Date().toTimeString().substring(0, 2)) + ":" + 
+			end_time: (new Date().toTimeString().substring(0, 2)) + ":" +
 				("0" + (Number(new Date().toTimeString().substring(3, 5))+1)).slice(-2),
 			tag: '',
 			token: "token",
@@ -181,7 +181,7 @@ export default {
 			if (this.tag == '') {
 				alert("Tag can't be blank")
 			}
-			else if ((this.start_date.replace(/-/g,'') + this.start_time.replace(/:/g,'')) < 
+			else if ((this.start_date.replace(/-/g,'') + this.start_time.replace(/:/g,'')) <
 				(this.end_date.replace(/-/g,'') + this.end_time.replace(/:/g,''))) {
 				if (!this.available_tag.includes(this.tag)) {
 					this.tagCreate()
@@ -212,10 +212,21 @@ export default {
 				alert("This tag already exists")
 			}
 		},
-		// TagEdit(e) {
-		// 	alert("EditTag")
-		// 	this.getTag()
-		// 	e.preventDefault()
+		// TagEdit(e, tag) {
+			// const changed_tag = {
+			// 	"old_name" : tag,
+			// 	"new_name" : "back",
+			// }
+			// axios.put(`/api/v2/me/add_new_tag`, changed_tag)
+			// 	.then(function(response) {
+			// 	})
+			// window.location.reload()
+		// }
+		// TagEdit(e, tag) {
+		// 	axios.delete(`/api/v2/me/add_new_tag?tag=${tag}`)
+		// 		.then(function(response) {
+		// 		})
+		// 	window.location.reload()
 		// }
 	},
 }
