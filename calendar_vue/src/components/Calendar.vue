@@ -168,8 +168,10 @@ export default {
       this.tag_status["follow_id"] = {}
 
       this.tag_status["follow_id"]["not_me"] = true
-      this.my_tag_list.forEach(element => {this.tag_status["my_tag"][element] = true})
-      this.follow_list["id"].forEach(element => {this.tag_status["follow_id"][element] = true})
+      if (this.token != '') {
+        this.my_tag_list.forEach(element => {this.tag_status["my_tag"][element] = true})
+        this.follow_list["id"].forEach(element => {this.tag_status["follow_id"][element] = true})
+      }
 
       let event = this.event_response.event; // get event
       for (const tag in event){
@@ -604,7 +606,7 @@ export default {
 
         <div v-else>
           <p style="font-size: 20px; text-align: center;">
-            You have no events scheduled today</p>
+            There are no events scheduled today</p>
         </div>
       </div>
       <!-- side bar footer -->

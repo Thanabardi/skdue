@@ -57,6 +57,7 @@ export default {
 			img: '',
 			tag_colors: TAG_COLORS,
             app_colors: APP_COLORS,
+			token: '',
 		}
 	},
 	props: {
