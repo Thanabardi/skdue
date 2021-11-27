@@ -40,11 +40,11 @@
 								<div><center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">Tag</center></div><br>
 								<div>
 									<div v-if="this.available_tag.length < 5">
-										<input style="width: 270px;" class="event-create-textarea" 
+										<input style="width: 270px;" class="event-create-textarea"
 											placeholder="MyNewTag" maxlength="10" v-model="tag">
 									</div>
 									<!-- <p v-for="[key, color] of Object.entries(set_color)" :style="'font-size:22px; color:'+app_colors[this.color_theme['type']]['main']"> -->
-									<a v-if="0<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[0]]">{{ this.tag_name[0] }}</center>
+									<a v-if="0<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[0]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[0])'>edit</div> {{ this.tag_name[0] }} <div @click='tagDelete(this.tag_name[0])'>delete</div></div></center>
 									<div class="flex-container">
 										<div @click="userColorTag1('red')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag1('yellow')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -54,8 +54,8 @@
 										<div @click="userColorTag1('purple')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
 										<div @click="userColorTag1('orange')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
 									</div>
-									</a> 
-									<a v-if="1<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[1]]">{{ this.tag_name[1] }}</center>
+									</a>
+									<a v-if="1<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[1]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[1])'>edit</div>{{ this.tag_name[1] }}<div @click='tagDelete(this.tag_name[1])'>delete</div></div></center>
 									<div class="flex-container">
 										<div @click="userColorTag2('red')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag2('yellow')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -66,7 +66,7 @@
 										<div @click="userColorTag2('orange')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
 									</div>
 									</a>
-									<a  v-if="2<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[2]]">{{ this.tag_name[2] }}</center>
+									<a  v-if="2<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[2]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[2])'>edit</div>{{ this.tag_name[2] }}<div @click='tagDelete(this.tag_name[2])'>delete</div></div></center>
 									<div class="flex-container">
 										<div @click="userColorTag3('red')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag3('yellow')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -77,7 +77,7 @@
 										<div @click="userColorTag3('orange')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
 									</div>
 									</a>
-									<a v-if="3<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[3]]">{{ this.tag_name[3] }}</center>
+									<a v-if="3<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[3]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[3])'>edit</div>{{ this.tag_name[3] }}<div @click='tagDelete(this.tag_name[3])'>delete</div></div></center>
 									<div class="flex-container">
 										<div @click="userColorTag4('red')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag4('yellow')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -88,7 +88,7 @@
 										<div @click="userColorTag4('orange')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
 									</div>
 									</a>
-									<a v-if="4<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[4]]">{{ this.tag_name[4] }}</center>
+									<a v-if="4<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[4]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[4])'>edit</div>{{ this.tag_name[4] }}<div @click='tagDelete(this.tag_name[4])'>delete</div></div></center>
 									<div class="flex-container" >
 										<div @click="userColorTag5('red')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
 										<div @click="userColorTag5('yellow')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
@@ -121,7 +121,7 @@
     </div>
 </template>
 
-<script> 
+<script>
 import { ref } from 'vue';
 import axios from 'axios';
 import CalendarNavbar from './CalendarNavbar.vue'
@@ -269,7 +269,7 @@ export default({
 			fr.onload = function(e) {
 			var img = document.getElementById('image_preview')
 			img.src = this.result
-			} 
+			}
         },
         onUpload() {
 			var apiDataForm = new FormData()
@@ -305,6 +305,27 @@ export default({
 				}
 			}
 		},
+    tagDelete(tag){
+      if(confirm("Are you sure you want to delete '"+ tag +"' tag \nIt will also delete event under the tag.")){
+      axios.delete(`/api/v2/me/add_new_tag?tag=${tag}`)
+      .then(function(response) {
+          window.location.reload()
+      })
+    }
+    },
+    tagEdit(tag){
+      let new_name = prompt("Please enter your new tag name");
+      if (new_name != null) {
+      const changed_tag = {
+				"old_name" : tag,
+				"new_name" : new_name,
+			}
+			axios.put(`/api/v2/me/add_new_tag`, changed_tag)
+				.then(function(response) {
+				})
+			window.location.reload()
+    }
+    },
 		dataURLtoFile(dataurl, filename) {
 			// create a file object of url image that was transformed as base64
 			var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -374,6 +395,7 @@ export default({
 	margin: 20x;
 	padding: 10px;
 }
+
 .event-create-textarea {
 	background: rgb(230, 230, 230);
 	font-size: 20px;
@@ -507,5 +529,10 @@ body {
 }
 .sync {
 	padding-top: 3%;
+}
+.tag-options * {
+  white-space: nowrap;
+  display: inline;
+  padding: 1%;
 }
 </style>
