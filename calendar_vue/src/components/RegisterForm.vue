@@ -30,10 +30,10 @@
         <input class="register-input" type="password" v-model="dataRegisterForm.password" placeholder="Password" required />
         
         <a class="app-button-tp" style="color: black;">OR</a>
-        <button title="Google" class="google-button"  @click.prevent="googleLogin">
+        <div title="Google" class="google-button"  @click.prevent="googleLogin">
           <span style="vertical-align:middle; display: inline-block; padding-top: 5px"><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/></span>
             <span style="vertical-align:middle;"> Sign Up with Google</span>
-        </button>
+        </div>
         <button class="register-button">Sign Up</button>
       </form>
       <form @submit.prevent="checkData" class="sign-in" action="#">
@@ -42,10 +42,10 @@
         <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
         
         <a class="app-button-tp" style="color: black;">OR</a>
-        <button title="Google" class="google-button"  @click.prevent="googleLogin">
+        <div title="Google" class="google-button"  @click.prevent="googleLogin">
           <span style="vertical-align:middle; display: inline-block; padding-top: 5px"><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/></span>
             <span style="vertical-align:middle;"> Continue with Google</span>
-        </button>
+        </div>
         <!-- <a class="app-button-tp" style="text-decoration: none; color: black;" 
           href="#">Forgot your password?</a> -->
         <button class="register-button">Continue</button>
