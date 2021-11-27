@@ -15,10 +15,6 @@
           <div class="overlay-right">
             <h1>Welcome Back!</h1>
             <p>Please login to see what's going to happen next on your calendar.</p>
-            <button title="Google" class="google-button"  @click.prevent="googleLogin">
-              <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
-                Login with google
-            </button>
             <div style="display: flex;">New to Skdue?
               <button style="color: #c0ca35; font-size: 18px;" class="app-button-tp"
                 id="signUp" @click="signUp = !signUp">SIGN UP</button>
@@ -28,19 +24,30 @@
       </div>
       <form @submit.prevent="getData" class="sign-up" action="#">
         <h2>Sign up</h2>
-        <div>Use your email for registration</div>
+        <div >Use your email for registration</div>
         <input class="register-input" type="text" v-model="dataRegisterForm.username" placeholder="Name" required />
         <input class="register-input" type="email" v-model="dataRegisterForm.email" placeholder="Email" required />
         <input class="register-input" type="password" v-model="dataRegisterForm.password" placeholder="Password" required />
+        
+        <a class="app-button-tp" style="color: black;">OR</a>
+        <button title="Google" class="google-button"  @click.prevent="googleLogin">
+          <span style="vertical-align:middle; display: inline-block; padding-top: 5px"><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/></span>
+            <span style="vertical-align:middle;"> Sign Up with Google</span>
+        </button>
         <button class="register-button">Sign Up</button>
       </form>
       <form @submit.prevent="checkData" class="sign-in" action="#">
         <h2>Login</h2>
         <input class="register-input" type="username" v-model="dataLogIn.username" placeholder="Username" required />
         <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
-
-        <a class="app-button-tp" style="text-decoration: none; color: black;" 
-          href="#">Forgot your password?</a>
+        
+        <a class="app-button-tp" style="color: black;">OR</a>
+        <button title="Google" class="google-button"  @click.prevent="googleLogin">
+          <span style="vertical-align:middle; display: inline-block; padding-top: 5px"><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/></span>
+            <span style="vertical-align:middle;"> Continue with Google</span>
+        </button>
+        <!-- <a class="app-button-tp" style="text-decoration: none; color: black;" 
+          href="#">Forgot your password?</a> -->
         <button class="register-button">Continue</button>
       </form>
     </div>
@@ -179,21 +186,21 @@ import axios from 'axios'
 @import './../assets/style.css';
 
 .google-button{
-  width: 70%;
-  border-radius: 20px;
-  border: none;
-  background-color: #c0ca35;
+  width: 100%;
+  border-radius: 8px;
+  border: 2px solid white;
+  background: none;
   color: white;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px 40px;
+  font-size: 15px;
+  // font-weight: bold;
+  padding: 2px;
   letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
   transition: transform .1s ease-in;
   &:active {
-    transform: scale(.98);
-    background-color: var(--green-dark)
+    // transform: scale(.98);
+    background-color: #cacaca
   }
 }
 

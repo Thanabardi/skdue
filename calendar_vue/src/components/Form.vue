@@ -2,7 +2,7 @@
     <div>
         <header class="form-header">
             <h1>Skdue</h1>
-            <h3 style="font-size: 30px; color: var(--gray)">Create your own Skdue!</h3>
+            <h3 style="font-size: 30px; color: #b4b4b4">Create your own Skdue!</h3>
         </header>
         <form @submit.prevent="getData" class="form-form">
             <p>Your calendar Name</p>
@@ -57,15 +57,15 @@ export default {
 @import './../assets/style.css';
 
 .form-header {
-    color: var(--main-green);
+    color: #006664;
     font-size: 60px;
     font-weight: 500px;
     text-align: center;
     line-height: 0px;
 }
 .form-form {
-    background: var(--gray-light);
-	color: var(--black);
+    background: #f5f5f5;
+	color: black;
 	text-align: center;
     position: absolute;
 	font-size: 26px;
@@ -77,7 +77,7 @@ export default {
     transform: translate(-50%, -50%);
 }
 .form-input {
-	background: var(--white);
+	background: white;
 	font-size: 20px;
 	padding: 10px;
 	width: 300px;

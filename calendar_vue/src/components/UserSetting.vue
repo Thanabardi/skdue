@@ -374,8 +374,9 @@ export default({
 
 .calendar-hr {
     position: relative;
-    border: 1px solid var(--white-op-2);
-    width: 90%;
+	border: 1px solid;
+	opacity: 0.8;
+	width: 90%;
     top: 50px;
 }
 .event-create {
