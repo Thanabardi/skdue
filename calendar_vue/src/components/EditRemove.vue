@@ -106,14 +106,14 @@ export default {
 		color_theme: {},
   },
 	setup (props) {
-    console.log('popup',props.popup)
+    // console.log('popup',props.popup)
     const popupTriggers = ref({
 			buttonTrigger: props.popup,
 		});
 
 		const TogglePopup = (trigger) => {
 			popupTriggers.value[trigger] = !popupTriggers.value[trigger]
-      console.log(props.popup, popupTriggers.value['buttonTrigger'])
+      	props.popup, popupTriggers.value['buttonTrigger']
 
 		}
 		return {
@@ -152,7 +152,7 @@ export default {
 			axios
 				.get(`/api/v2/me`)
 				.then(response => {
-					console.log(response.data.user.id == owner)
+					// console.log(response.data.user.id == owner)
 					if (response.data.user.id == owner) {
 						this.fs = 'follow';
 					}
@@ -168,7 +168,7 @@ export default {
 					const calendar_slug = this.$route.params.calendar_slug
       const calendar_type = this.$route.params.calendar_type
 			this.token = localStorage.token
-      console.log("slug =", calendar_slug)
+    //   console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 
 
@@ -187,7 +187,7 @@ export default {
 							this.available_tag.push(elements["tag"])
 						}
 						})
-					console.log('avaliable',this.available_tag)
+					// console.log('avaliable',this.available_tag)
 			})
 
         },
@@ -204,7 +204,7 @@ export default {
 
 			axios.delete(`/api/v2/me/${this.user_name}/${this.detail[7]}`)
 				.then(function(response) {
-					console.log(response),
+					response,
 					window.location.reload()
 					})
 				.catch(function(error) {
@@ -223,23 +223,27 @@ export default {
 				"end_date" : end_date_time,
 				"tag" : this.detail[6]
 			}
-
 			// console.log(this.name)
 			// console.log(this.description)
 			// console.log(start_date_time)
 			// console.log(end_date_time)
 			// console.log(this.tag)
-
-			console.log(event)
+			// console.log(event)
+			// console.log(this.detail[2])
+			if ((this.detail[2].replace(/-/g,'') + this.detail[3].replace(/:/g,'')) <
+				(this.detail[4].replace(/-/g,'') + this.detail[5].replace(/:/g,''))) 
 			axios.put(`/api/v2/me/${this.user_name}/${this.detail[7]}`, event)
 				.then(function(response) {
-					console.log(response),
+					response,
 					window.location.reload()
 					})
 				.catch(function(error) {
 					console.log(error),
 					alert("Opps, " + error)
 					})
+			else {
+				alert("Start time must be earlier than the end time")
+			}
 		}
 	},
 }

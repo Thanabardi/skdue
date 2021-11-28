@@ -34,7 +34,7 @@ export default {
         },
         getData(e){
             e.preventDefault();
-            console.log(this.dataForm);
+            // console.log(this.dataForm);
 
 
             axios.post(`/api/calendar/`, this.dataForm)

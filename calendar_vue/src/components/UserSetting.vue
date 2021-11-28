@@ -208,6 +208,9 @@ export default({
 				response.data["available_tag"].forEach(elements => {
                 this.available_tag.push(elements["tag"])
 				})
+				.catch(error => {
+                console.log(error)
+            	})
 			})
         },
 		getUserDetail(){
@@ -226,10 +229,10 @@ export default({
 					this.color_theme["type"] = response.data["setting"]["theme_type"]
        	 			this.color_theme["name"] = response.data["setting"]["theme_name"]
         			this.color_tag = this.user_data.color
-					console.log("color tag=", this.color_theme)
+					// console.log("color tag=", this.color_theme)
 					this.color_item = this.color_tag
-					console.log(this.color_item)
-					console.log("color", this.tag_colors)
+					// console.log(this.color_item)
+					// console.log("color", this.tag_colors)
 					this.name_theme = this.color_theme["name"]
 					this.type_theme = this.color_theme["type"]
 					// img url to base64
@@ -258,18 +261,41 @@ export default({
 					for (let j=0; j<this.user_data.custom_tag.length; j++){
 						this.tag_name.push((Object.entries(this.set_color)[j][0]))
 					}
-					console.log(this.tag_name.length)
+					// console.log(this.tag_name.length)
 				})
+				.catch(error => {
+                // console.log(error.response.status)
+				if (error.response.status == 401){
+					this.$router.push('/error/401')
+				}
+				else if (error.response.status == 403){
+					this.$router.push('/error/403')
+				}
+				else if (error.response.status == 404){
+					this.$router.push('/error/404')
+				}
+				else if (error.response.status >= 500 && error.response.status < 600){
+					this.$router.push('/error/5xx')
+				} else {
+					this.$router.push('/error/XXX')
+				}
+            })
 		},
         onFileSelected(event) {
-			this.selectedFile = event.target.files[0]
-			// render image preview
-			var fr = new FileReader()
-			fr.readAsDataURL(this.selectedFile)
-			fr.onload = function(e) {
 			var img = document.getElementById('image_preview')
-			img.src = this.result
-			}
+			var idxDot = img.lastIndexOf(".") + 1;
+			var extFile = img.substr(idxDot, img.length).toLowerCase();
+			if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
+				this.selectedFile = event.target.files[0]
+				// render image preview
+				var fr = new FileReader()
+				fr.readAsDataURL(this.selectedFile)
+				fr.onload = function(e) {
+					img.src = this.result
+				}
+			} else{
+				alert("Only jpg/jpeg and png files are allowed!");
+			}   
         },
         onUpload() {
 			var apiDataForm = new FormData()
@@ -284,7 +310,7 @@ export default({
 				.put(`/api/v2/me/user_setting`, apiDataForm)
 				.then(response => {
 					this.tagCreate()
-					console.log(response.data)
+					response.data
 					window.location.reload()
 					})
 				.catch(function(error) {
@@ -298,7 +324,7 @@ export default({
 					this.tag_name.push(this.tag)
 					axios.post(`/api/v2/me/add_new_tag`, {"tag":this.tag})
 						.then(function(response) {
-							console.log("create new Tag", response)
+							response
 						})
 				} else {
 					alert("This new tag is already exists")

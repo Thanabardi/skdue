@@ -48,7 +48,7 @@ export default {
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
             // const calendar_slug = this.$route.params.calendar_slug
             axios.get(`/api/v2/me/follow`).then( response => {
-                console.log(response.data)
+                response.data
             })
         },
         getColor() {
