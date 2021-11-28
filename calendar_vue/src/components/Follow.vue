@@ -15,7 +15,7 @@
 
   <div v-if="(this.visibility == 'visible')" class='follow-sidebar' 
     :style="'background-color:'+app_colors[this.color_theme['name']]['sub-1']+';visibility:'+ this.visibility">
-    <img :src="img" class="avatar" style="width: 250px; height: 250px;">
+    <img :src="img" class="avatar" style="width: 200px; height: 200px; padding-top: 20px">
     <p style="font-size: 35px; line-height: 0px;">{{this.follow_name}}</p>
     <button v-if="(this.token != '') && ((fs == 'Unfollow') || (fs == 'UNFOLLOW'))"
       style="width: 90px; background-color: rgba(190, 190, 190, 0.8);"
@@ -25,7 +25,7 @@
       +app_colors[this.color_theme['name']]['sub-2']"
       type="button" name="button" class="follow-button"
       v-on:click.left="follow_button(), this.visibility = 'hide'">FOLLOW</button>
-    <p style="opacity: 0.8; padding-left: 12px; position: absolute; overflow-x: hidden;top: 380px; bottom: 120px; 
+    <p style="opacity: 0.8; padding-left: 12px; position: absolute; overflow-x: hidden;top: 340px; bottom: 120px; 
       color; rgba(255, 255, 255, 0.6); width: 90%;">{{this.about}}</p>
     <div class="calendar-sidebar-footer">
       <hr class="calendar-hr">
