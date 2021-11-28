@@ -83,6 +83,10 @@ export default {
 				console.log('slug',this.slug)
 				this.set_delay = true
             })
+			.catch(error => {
+				console.log(error)
+				this.set_delay = true
+			})
         },
 		async redirectUserHome() {
 			await this.$router.push({ path: `/me/` })

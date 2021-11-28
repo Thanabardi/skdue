@@ -124,10 +124,11 @@ export default {
           console.log('user',user.user)
           console.log('owner',this.owner_id)
         })
-        setTimeout(this.set_delay = true, 500)
+        this.set_delay = true
       })
       .catch(error => {
         console.log(error)
+        this.set_delay = true
       })
     },
     getUser() {

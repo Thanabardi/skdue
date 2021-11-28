@@ -1,5 +1,5 @@
 <template>
-	<div class="event-create">
+	<div class="event-create" v-if="this.set_delay">
 		<button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp"
 			style="font-size: 40px; line-height: 30px;"
 			@click="() => TogglePopup('buttonTrigger')">+</button>
@@ -108,7 +108,7 @@ export default {
 			fs: "follow",
 			tag_colors: TAG_COLORS,
             app_colors: APP_COLORS,
-
+			set_delay: false,
 		}
 	},
 	props: {
@@ -146,6 +146,7 @@ export default {
 				.then(response => {
 					this.user_name = response.data.user.username
 					this.checkOwner(response.data.user.id)
+					this.set_delay = true
 				})
         },
 		getTag() {

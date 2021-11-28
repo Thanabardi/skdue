@@ -50,7 +50,11 @@ export default {
             // const calendar_slug = this.$route.params.calendar_slug
             axios.get(`/api/v2/me/follow`).then( response => {
                 console.log(response.data)
-                setTimeout(this.set_delay = true, 500)
+                this.set_delay = true
+            })
+            .catch(error => {
+                console.log(error)
+                this.set_delay = true
             })
         },
         getColor() {

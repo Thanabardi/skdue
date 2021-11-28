@@ -68,6 +68,11 @@ export default ({
 				})
                 this.set_delay = true
             })
+            .catch(error => {
+				console.log(error)
+				this.set_delay = true
+			})
+            
         },
         async redirectFollowedCalendar(followed) {
 			await this.$router.push({ path: `/me/` })

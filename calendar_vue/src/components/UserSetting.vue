@@ -260,9 +260,10 @@ export default({
 					for (let j=0; j<this.user_data.custom_tag.length; j++){
 						this.tag_name.push((Object.entries(this.set_color)[j][0]))
 					}
-					setTimeout(this.set_delay = true, 500)
+					this.set_delay = true
 					console.log(this.tag_name.length)
 				})
+				
 		},
         onFileSelected(event) {
 			this.selectedFile = event.target.files[0]
