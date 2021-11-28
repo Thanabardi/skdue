@@ -40,47 +40,40 @@
 									v-model="detail[5]"></td>
 							</tr>
 							<tr>
-								<td>Tag    </td>
-
-								<td>
-									<input style="width: 250px;" class="event-create-input"
-										 maxlength="10" required v-model="detail[6]">
+								<td>Tag</td>
+								<td style="width: 270px; float: right;">
+									<div style="padding: 18px 10px 18px; text-align: left; width: 250px" 
+										class="event-create-input">{{detail[6]}}</div>
 								</td>
 							</tr>
 							<tr>
-								<td v-if="this.available_tag.length > 5"
-									style="vertical-align: top; padding-top: 10px;">Tag</td>
-								<td v-else></td>
-
+								<td ></td>
 								<td style="width: 400px;">
                   <!-- <button type="button" v-for="tag in available_tag" :key="tag"
 										class="event-create-tag-bt"  @click="() => this.tag = tag">
 										{{ tag }}</button> -->
-										<button type="button" v-for="tag in available_tag" :key="tag"
+										<button type="button" v-for="tag in available_tag.filter(tag => tag !== 'google')" :key="tag"
 											class="event-create-tag-bt" v-on:click.left="this.detail[6] = tag"
-											v-on:click.right="TagEdit($event)">{{ tag }}</button>
+											v-on:click.right="TagEdit($event)" :style="'background-color:'
+											+ this.tag_colors[color_tag[tag]]">{{ tag }}</button>
 
                   <!-- <div class="tag-button"  v-for="tag in available_tag" :key="tag">
                     <button type="button" class="event-create-tag-bt" autofocus  @click="() => this.tag = tag">
   										{{ tag }}</button> -->
                   <!-- </div> -->
 
-                  </td>
+                  				</td>
 							</tr>
 						</table>
-
-
-
+						<div class="app-button-tp"
+							style="color:red; line-height: 24px; margin:auto; font-weight: 500;width: 110px"
+							@click="() => deleteEvent()">Delete Event</div>
 						<div class="event-create-footer">
 							<button class="app-button-main" type="submit"
-							:style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']">Done</button>
+								:style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']">Done</button>
 							<button class="app-button-gray"
-							:style="'background-color:'+app_colors[this.color_theme['type']]['main-1']"
-							 @click="() => close()">Cancel</button>
-							 <div class="app-button-main"
-							 style="background-color:red; line-height: 24px; "
-							 @click="() => deleteEvent()">Delete</div>
-
+								:style="'background-color:'+app_colors[this.color_theme['type']]['main-1']"
+							 	@click="() => close()">Cancel</button>
 						</div>
 
 					</form>
@@ -103,7 +96,8 @@ export default {
   props: {
     popup: Boolean,
     detail: Object,
-		color_theme: {},
+	color_theme: {},
+	color_tag: {},
   },
 	setup (props) {
     // console.log('popup',props.popup)
@@ -131,7 +125,6 @@ export default {
 			start_time: '',
 			end_date: '',
 			end_time: '',
-			tag: '',
 			token: "asdad",
 			fs: "follow",
 			tag_colors: TAG_COLORS,
@@ -165,31 +158,31 @@ export default {
 				})
 		},
         getUserNameAndTag() {
-					const calendar_slug = this.$route.params.calendar_slug
-      const calendar_type = this.$route.params.calendar_type
+			const calendar_slug = this.$route.params.calendar_slug
+      		const calendar_type = this.$route.params.calendar_type
 			this.token = localStorage.token
-    //   console.log("slug =", calendar_slug)
-      axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
+			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 
 
 
-      axios
-        .get(`/api/v2/${calendar_type}/${calendar_slug}`)
-        .then(response => {
-        this.user_name = response.data.user.username
-				this.checkOwner(response.data.user.id)
-			})
+      		axios.get(`/api/v2/${calendar_type}/${calendar_slug}`)
+    			.then(response => {
+        			this.user_name = response.data.user.username
+					this.checkOwner(response.data.user.id)
+				})
 				axios.get(`/api/v2/me`)
 					.then( response => {
 					this.user_name = response.data["user"]["username"]
 					response.data["available_tag"].forEach(elements => {
 						if (elements["user"] == response.data["user"]["id"]) {
 							this.available_tag.push(elements["tag"])
+						} else if (elements["user"] == 1) {
+							this.available_tag.push(elements["tag"])
+							this.color_tag[elements['tag']] = "default"
 						}
-						})
-					// console.log('avaliable',this.available_tag)
-			})
-
+					})
+				})
+			
         },
 		deleteEvent() {
 			const start_date_time = this.detail[2] + " " + this.detail[3] + ":00"
@@ -316,8 +309,8 @@ export default {
 	border-radius: 8px;
 }
 .event-create-tag-bt {
-	background-color: rgb(230, 230, 230);
-	color: black;
+	background-color: #3788d8;
+	color: white;
 	margin-left: 10px;
     border: 0;
     padding: 5px 10px;

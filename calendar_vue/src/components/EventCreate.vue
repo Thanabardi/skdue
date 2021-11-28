@@ -1,5 +1,5 @@
 <template>
-	<div class="event-create">
+	<div class="event-create" v-if="this.set_delay">
 		<button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp"
 			style="font-size: 40px; line-height: 30px;"
 			@click="() => TogglePopup('buttonTrigger')">+</button>
@@ -40,7 +40,7 @@
 									required v-model="end_time"></td>
 							</tr>
 
-							<tr v-if="this.available_tag.length < 5">
+							<tr v-if="this.available_tag.length < 9">
 								<td>Tag</td>
 								<td>
 									<input style="width: 250px;" class="event-create-input"
@@ -48,11 +48,11 @@
 								</td>
 							</tr>
 							<tr>
-								<td v-if="this.available_tag.length > 5"
+								<td v-if="this.available_tag.length > 9"
 									style="vertical-align: top; padding-top: 10px;">Tag</td>
 								<td v-else></td>
 								<td style="width: 400px;">
-									<button type="button" v-for="tag in available_tag" :key="tag"
+									<button type="button" v-for="tag in available_tag.filter(tag => tag !== 'google')" :key="tag"
 										class="event-create-tag-bt" v-on:click.left="this.tag = tag"
 										v-on:click.right="TagEdit($event, tag)" :style="'background-color:'
 										+ this.tag_colors[color_tag[tag]]">{{ tag }}</button>
@@ -108,7 +108,7 @@ export default {
 			fs: "follow",
 			tag_colors: TAG_COLORS,
             app_colors: APP_COLORS,
-
+			set_delay: false,
 		}
 	},
 	props: {
@@ -146,6 +146,7 @@ export default {
 				.then(response => {
 					this.user_name = response.data.user.username
 					this.checkOwner(response.data.user.id)
+					this.set_delay = true
 				})
         },
 		getTag() {

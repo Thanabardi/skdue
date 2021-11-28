@@ -15,10 +15,6 @@
           <div class="overlay-right">
             <h1>Welcome Back!</h1>
             <p>Please login to see what's going to happen next on your calendar.</p>
-            <button title="Google" class="google-button"  @click.prevent="googleLogin">
-              <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
-                Login with google
-            </button>
             <div style="display: flex;">New to Skdue?
               <button style="color: #c0ca35; font-size: 18px;" class="app-button-tp"
                 id="signUp" @click="signUp = !signUp">SIGN UP</button>
@@ -27,20 +23,33 @@
         </div>
       </div>
       <form @submit.prevent="getData" class="sign-up" action="#">
-        <h2>Sign up</h2>
-        <div>Use your email for registration</div>
-        <input class="register-input" type="text" v-model="dataRegisterForm.username" placeholder="Name" required />
-        <input class="register-input" type="email" v-model="dataRegisterForm.email" placeholder="Email" required />
-        <input class="register-input" type="password" v-model="dataRegisterForm.password" placeholder="Password" required />
+        <div class="sign-up-space">
+          <h2>Sign up</h2>
+          <div >Use your email for registration</div>
+          <input class="register-input" type="text" v-model="dataRegisterForm.username" placeholder="Name" required />
+          <input class="register-input" type="email" v-model="dataRegisterForm.email" placeholder="Email" required />
+          <input class="register-input" type="password" v-model="dataRegisterForm.password" placeholder="Password" required />
+          <a class="app-button-tp" style="color: black">OR</a>
+        </div><br>
+        <div title="Google" class="google-button"  @click.prevent="googleLogin">
+          <span style="vertical-align:middle; display: inline-block; padding-top: 5px;"><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/></span>
+            <span style="vertical-align:middle;"> Sign Up with Google</span>
+        </div><br>
         <button class="register-button">Sign Up</button>
       </form>
       <form @submit.prevent="checkData" class="sign-in" action="#">
-        <h2>Login</h2>
-        <input class="register-input" type="username" v-model="dataLogIn.username" placeholder="Username" required />
-        <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
-
-        <a class="app-button-tp" style="text-decoration: none; color: black;" 
-          href="#">Forgot your password?</a>
+        <div class="sign-up-space">
+          <h2>Login</h2>
+          <input class="register-input" type="username" v-model="dataLogIn.username" placeholder="Username" required />
+          <input class="register-input" type="password" v-model="dataLogIn.password" placeholder="Password" required />
+        </div>  
+          <a class="app-button-tp" style="color: black;">OR</a><br>
+        <div title="Google" class="google-button"  @click.prevent="googleLogin">
+          <span style="vertical-align:middle; display: inline-block; padding-top: 5px"><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/></span>
+            <span style="vertical-align:middle;"> Continue with Google</span>
+        </div><br>
+        <!-- <a class="app-button-tp" style="text-decoration: none; color: black;" 
+          href="#">Forgot your password?</a> -->
         <button class="register-button">Continue</button>
       </form>
     </div>
@@ -161,14 +170,16 @@ import axios from 'axios'
 
         // get API token
         axios.post(`/api/v2/get-auth-token`, this.dataLogIn)
-                .then(response => {
-                this.loginData(response.data);
-                // console.log(response.data);
-                // console.log(response.data.slug);
-                })
-                .catch(error => {
-                console.log(error)
-            })
+          .then(response => {
+          this.loginData(response.data);
+          // console.log(response.data);
+          // console.log(response.data.slug);
+          })
+          .catch(error => {
+            if (error.response.status == 400)
+              alert("Wrong username or password.")
+            console.log(error)
+          })
       }
     }
   }
@@ -178,25 +189,27 @@ import axios from 'axios'
 
 @import './../assets/style.css';
 
+.sign-up-space *{
+ margin-bottom: 20px;
+}
 .google-button{
-  width: 70%;
-  border-radius: 20px;
-  border: none;
-  background-color: #c0ca35;
+  width: 100%;
+  border-radius: 8px;
+  border: 2px solid white;
+  background: none;
   color: white;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px 40px;
+  font-size: 15px;
+  // font-weight: bold;
+  padding: 2px;
   letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
   transition: transform .1s ease-in;
   &:active {
-    transform: scale(.98);
-    background-color: var(--green-dark)
+    // transform: scale(.98);
+    background-color: #cacaca
   }
 }
-
 .register-header {
   color: #006664;
   font-size: 80px;

@@ -1,5 +1,5 @@
 <template>
-    <div class="follow-list" @click="() => TogglePopup('buttonTrigger')">
+    <div class="follow-list" @click="() => TogglePopup('buttonTrigger')" v-if="this.set_delay">
 		<div v-if="this.calendar_slug == this.user_name">Home</div>
         <div v-else>{{ this.calendar_slug }}</div>
 		<div v-if="popupTriggers.buttonTrigger && this.user_name != ''">
@@ -43,6 +43,7 @@ export default ({
             app_colors: APP_COLORS,
             fs_slug: '',
             fs_name_display: '',
+            set_delay: false,
 		}
 	},
     props: {
@@ -65,7 +66,13 @@ export default ({
                     }
 				    this.followed_name.push([elements["followed_name"], elements["followed_calendar_slug"]])
 				})
+                this.set_delay = true
             })
+            .catch(error => {
+				console.log(error)
+				this.set_delay = true
+			})
+            
         },
         async redirectFollowedCalendar(followed) {
 			await this.$router.push({ path: `/me/` })

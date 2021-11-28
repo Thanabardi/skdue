@@ -20,6 +20,7 @@ export const APP_COLORS = {
         "sub": "#ffffff", // white
         "sub-0": "#f8f8f8", // lighther white
         "sub-1": "#b3b3b3", // more lighther white
+        "bg": "#ffffff", // white background
     },
     "dark" : {
         "main": "#ffffff", // white
@@ -28,6 +29,7 @@ export const APP_COLORS = {
         "sub": "#000000", // black
         "sub-0": "#292929", // lighther black
         "sub-1": "#acacac", // more lighter black
+        "bg": "#0d0d0d", // black background
     },
     "theme-1" : {
         "main" : "#006664", // main green
@@ -47,7 +49,7 @@ export const APP_COLORS = {
 }
 export const TAG_COLORS = {
     "default": "#3788d8",
-    "follow": "rgba(200, 200, 200, 0.6)",
+    "follow": "rgba(220, 220, 220, 0.5)",
     "white": "#f2f2f2",
     "red": "#C51104",
     "yellow": "#FBBC05",
