@@ -161,7 +161,7 @@ export default {
           this.event_details.push(event)
         }
       });
-      setTimeout(this.set_delay = true, 500)
+      this.set_delay = true
     },
     setCalendarEvents(data){
       let tag = data.tag

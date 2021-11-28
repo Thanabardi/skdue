@@ -170,14 +170,16 @@ import axios from 'axios'
 
         // get API token
         axios.post(`/api/v2/get-auth-token`, this.dataLogIn)
-                .then(response => {
-                this.loginData(response.data);
-                // console.log(response.data);
-                // console.log(response.data.slug);
-                })
-                .catch(error => {
-                console.log(error)
-            })
+          .then(response => {
+          this.loginData(response.data);
+          // console.log(response.data);
+          // console.log(response.data.slug);
+          })
+          .catch(error => {
+            if (error.response.status == 400)
+              alert("Wrong username or password.")
+            console.log(error)
+          })
       }
     }
   }
