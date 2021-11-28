@@ -72,15 +72,11 @@ export default {
         getUserName() {
             // const calendar_slug = this.$route.params.calendar_slug
 			this.token = localStorage.token
-			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
             axios.get(`/api/v2/me`)
 			.then( response => {
-				// console.log(response.data)
-				console.log(response.data)
                 this.user_name = response.data["user"]["username"]
 				this.slug = response.data.calendar[0].slug
-				console.log('slug',this.slug)
 				this.set_delay = true
             })
 			.catch(error => {
@@ -104,8 +100,6 @@ export default {
 			axios.delete(`/api/v2/logout`, this.dataLogout)
 				.then(response => {
 				this.clearlogout(response.data);
-				// console.log(response.data);
-				// console.log(response.data.slug);
 			})
 				.catch(error => {
 				console.log(error)
@@ -120,11 +114,9 @@ export default {
 				.get(`/api/v2/me/user_setting`)
 				.then(response => {
 					this.user_data = response.data
-					// console.log(this.user_data)
 					this.display_name = this.user_data.setting.display_name
 					this.description = this.user_data.setting.about
 					this.img = "http://127.0.0.1:8000"+this.user_data.setting.image
-					// console.log(this.img)
 				})
 		},		
 	}

@@ -4,7 +4,6 @@ export const colorData = async () => {
     axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
     axios.get(`/api/v2/me/user_setting`)
         .then(response => {
-            // console.log('color',response.data.color)
             return response.data.color
         })
         .catch(error => {

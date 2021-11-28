@@ -117,7 +117,6 @@ export default {
     }
     else {
     e.preventDefault()
-    // console.log('is_this_mine',item)
     popupTriggers.value[trigger] = !popupTriggers.value[trigger]
     popupTriggers.value["select_event"]= [
         item.name,
@@ -191,7 +190,6 @@ export default {
 
       this.token = localStorage.token
 
-      // console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
       axios.get(`/api/v2/me/${calendar_slug}`)
         .then( response => {this.calendar_id = response.data.calendar.id})
@@ -201,7 +199,6 @@ export default {
           this.setCalendarEvents(response.data)
         })
         .catch(error => {
-          // console.log(error.response.status)
           if (error.response.status == 401){
             this.$router.push('/error/401')
           }
@@ -309,10 +306,8 @@ export default {
         return 0;
       }
       this.event_details.sort( compare );
-      // console.log('sort',this.event_details)
     },
     changeIntForDateTime(dateTimeList){
-      // console.log(dateTimeList)
       let list = [];
       dateTimeList.forEach(e => {
         if (e.length == 1) {
@@ -328,9 +323,7 @@ export default {
       
     },
     swap(value){
-      // console.log('PIDDDDD')
       this.popupTriggers.editTrigger = false
-      // console.log(this.popupTriggers.select_event)
     },
     handleEvents(events) {
       this.currentEvents = events;
@@ -396,8 +389,6 @@ export default {
       axios.get(`/api/v2/logout`, this.dataLogout)
         .then(response => {
         this.clearData(response.data);
-          // console.log(response.data);
-          // console.log(response.data.slug);
       })
         .catch(error => {
         console.log(error)

@@ -217,7 +217,6 @@ export default({
         },
 		getUserDetail(){
 			this.token = localStorage.token
-			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			const main_url = "http://127.0.0.1:8000"
 			axios
@@ -231,10 +230,7 @@ export default({
 					this.color_theme["type"] = response.data["setting"]["theme_type"]
        	 			this.color_theme["name"] = response.data["setting"]["theme_name"]
         			this.color_tag = this.user_data.color
-					// console.log("color tag=", this.color_theme)
 					this.color_item = this.color_tag
-					// console.log(this.color_item)
-					// console.log("color", this.tag_colors)
 					this.name_theme = this.color_theme["name"]
 					this.type_theme = this.color_theme["type"]
 					// img url to base64
@@ -250,9 +246,7 @@ export default({
 					// base64 to file object for axios put
 					toDataURL(this.img)
 					.then(dataUrl => {
-						// console.log('Here is Base64 Url', dataUrl)
 						var fileData = this.dataURLtoFile(dataUrl, "userimage.jpg");
-						// console.log("Here is JavaScript File Object",fileData)
 						this.selectedFile = fileData
 					})
 					for (let i=0; i<this.user_data.custom_tag.length; i++){
@@ -264,10 +258,8 @@ export default({
 						this.tag_name.push((Object.entries(this.set_color)[j][0]))
 					}
 					this.set_delay = true
-					console.log(this.tag_name.length)
 				})
 				.catch(error => {
-                // console.log(error.response.status)
 					if (error.response.status == 401){
 						this.$router.push('/error/401')
 					}

@@ -124,7 +124,6 @@ export default {
 			axios
 				.get(`/api/v2/me`)
 				.then(response => {
-					// console.log(response.data.user.id == owner)
 					if (response.data.user.id == owner) {
 						this.fs = 'follow';
 					}
@@ -140,7 +139,6 @@ export default {
 			const calendar_slug = this.$route.params.calendar_slug
       		const calendar_type = this.$route.params.calendar_type
 			this.token = localStorage.token
-			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			axios.get(`/api/v2/${calendar_type}/${calendar_slug}`)
 				.then(response => {
@@ -173,12 +171,6 @@ export default {
 				"end_date" : end_date_time,
 				"tag" : this.tag
 			}
-
-			// console.log(this.name)
-			// console.log(this.description)
-			// console.log(start_date_time)
-			// console.log(end_date_time)
-			// console.log(this.tag)
 			if (this.tag == '') {
 				alert("Tag can't be blank")
 			}
