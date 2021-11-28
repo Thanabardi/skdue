@@ -95,7 +95,7 @@ export default {
       dataLogout:{
         "status":"logout"
       },
-      slug_list: []
+      slug_list: [],
       user_name: '',
       calendar_slug: this.$route.params.calendar_slug.replace(/-/g,' '),
     };
