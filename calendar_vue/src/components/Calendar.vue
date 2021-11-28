@@ -242,6 +242,17 @@ export default {
         console.log(error)
       })
     },
+    getFollow() {
+      axios.get(`/api/v2/me/follow`)
+      .then(response => {
+        response.data.forEach(element => {
+          this.follow_list[element["followed_calendar"]] = element["followed_calendar_slug"].replace(/-/g,' ')
+        });
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
     },

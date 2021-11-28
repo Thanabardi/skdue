@@ -39,20 +39,16 @@ class CalendarEvent(models.Model):
         Returns:
             bool: False, if calendar_slug does not exist or start_date < end_date, True otherwise.
         """
+        # we need same calendar name
         slug = generate_slug(event_data["name"])
-        is_same = False
         try:
             calendar = Calendar.objects.get(slug=calendar_slug)
-            for event in calendar.calendarevent_set.all():
-                if event.slug == slug:
-                    is_same = True
-                    break
         except:
             return False # calendar not found
 
         start_date = datetime.strptime(event_data["start_date"], "%Y-%m-%d %H:%M:%S")
         end_date = datetime.strptime(event_data["end_date"], "%Y-%m-%d %H:%M:%S")
-        return start_date < end_date and not is_same
+        return start_date < end_date
 
     @classmethod
     def is_usable_tag(self, tag_name, user_id):
