@@ -45,11 +45,9 @@ export default {
     methods: {
         getFollowList() {
             this.token = localStorage.token
-			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
             // const calendar_slug = this.$route.params.calendar_slug
             axios.get(`/api/v2/me/follow`).then( response => {
-                console.log(response.data)
                 this.set_delay = true
             })
             .catch(error => {

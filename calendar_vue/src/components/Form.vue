@@ -34,14 +34,10 @@ export default {
         },
         getData(e){
             e.preventDefault();
-            // console.log(this.dataForm);
-
 
             axios.post(`/api/calendar/`, this.dataForm)
                 .then(response => {
                 this.setData(response.data);
-                // console.log(response.data);
-                // console.log(response.data.slug);
                 })
                 .catch(error => {
                 console.log(error)
