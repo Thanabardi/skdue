@@ -282,14 +282,20 @@ export default({
             })
 		},
         onFileSelected(event) {
-			this.selectedFile = event.target.files[0]
-			// render image preview
-			var fr = new FileReader()
-			fr.readAsDataURL(this.selectedFile)
-			fr.onload = function(e) {
 			var img = document.getElementById('image_preview')
-			img.src = this.result
-			} 
+			var idxDot = img.lastIndexOf(".") + 1;
+			var extFile = img.substr(idxDot, img.length).toLowerCase();
+			if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
+				this.selectedFile = event.target.files[0]
+				// render image preview
+				var fr = new FileReader()
+				fr.readAsDataURL(this.selectedFile)
+				fr.onload = function(e) {
+					img.src = this.result
+				}
+			} else{
+				alert("Only jpg/jpeg and png files are allowed!");
+			}   
         },
         onUpload() {
 			var apiDataForm = new FormData()
