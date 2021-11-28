@@ -96,7 +96,7 @@ class GoogleLoginSuccess(APIView):
             user = User.objects.create(
                 username=google_account.linked_username,
                 first_name=user_info["given_name"],
-                last_name=user_info["family_name"],
+                # last_name=user_info["family_name"],
                 email=user_info["email"]
             )
             calendar = Calendar.objects.create(
