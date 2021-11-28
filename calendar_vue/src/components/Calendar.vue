@@ -89,12 +89,15 @@ export default {
         ],
       color_theme: {"type" : "light", "name" : "theme-1"},
       color_tag: {},
+      follow_list: {},
       app_colors: APP_COLORS,
       tag_colors: TAG_COLORS,
       dataLogout:{
         "status":"logout"
       },
       slug_list: []
+      user_name: '',
+      calendar_slug: this.$route.params.calendar_slug.replace(/-/g,' '),
     };
   },
   setup() {  //EventDetails
@@ -136,6 +139,7 @@ export default {
     this.getCalendarEvents()
     this.getTag()
     this.getColor()
+    this.getFollow()
   },
   methods: {
     setTodayEvents() {
@@ -222,6 +226,7 @@ export default {
     getTag() {
 			axios.get(`/api/v2/me`)
 				.then( response => {
+          this.user_name = response.data["user"]["username"]
 					response.data["available_tag"].forEach(elements => {
 						if (elements["user"] == response.data["user"]["id"]) {
 							this.my_tag_list.push(elements["tag"])
@@ -241,6 +246,17 @@ export default {
         this.color_theme["type"] = response.data["setting"]["theme_type"]
         this.color_theme["name"] = response.data["setting"]["theme_name"]
         this.color_tag = response.data["color"]
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
+    getFollow() {
+      axios.get(`/api/v2/me/follow`)
+      .then(response => {
+        response.data.forEach(element => {
+          this.follow_list[element["followed_calendar"]] = element["followed_calendar_slug"].replace(/-/g,' ')
+        });
       })
       .catch(error => {
         console.log(error)
@@ -326,6 +342,7 @@ export default {
       let start_time = events.start.substring(11, 16)
       let end_time = events.end.substring(11, 16)
       let allday = false
+      let event_owner = ""
 
       let start_date_check = start_date.replace(/-/g,'')
       let end_date_check = end_date.replace(/-/g,'')
@@ -340,6 +357,10 @@ export default {
 
       let is_mine = events.from_calendar_id == this.calendar_id
 
+      if ((events.from_calendar_id != this.calendar_id) && (events.from_calendar_id != 3)) {
+        event_owner = this.follow_list[events.from_calendar_id]
+      }
+
       return {
 				"name" : events.title,
 				"description" : events.description,
@@ -350,7 +371,9 @@ export default {
         "tag" : events.tag,
         "allday" : allday,
         "slug" : events.slug,
-        "is_mine" : is_mine
+        "is_mine" : is_mine,
+        "detail_display" : false,
+        "event_owner" : event_owner
 			}
     },
     clearData(data){
@@ -406,6 +429,9 @@ export default {
       }
       FullCalendar.calendar.currentData.calendarApi.refetchEvents()
     },
+    handlefilterEvent(event){
+      event["detail_display"] = !event["detail_display"]
+    },
   },
 };
 </script>
@@ -435,16 +461,52 @@ export default {
             <!-- list of all day event -->
 
             <div v-for="item in this.event_details" :key="item">
-                <button v-if="item['allday'] && this.tag_status[item['tag']]" class="calendar-detail-bg"
+                <button v-if="item['allday'] && this.tag_status[item['tag']] && item['start_date'] == item['end_date']"
+                  class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
-
-                  <!-- v-on:click.right="TogglePopup('editTrigger', $event, item)"> -->
-
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
-                  <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
-                      {{ item["description"] }}</td></tr>
+                    <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
+                    <!-- event detail -->
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
+                  </table>
+                </button>
+                <button v-if="item['allday'] && this.tag_status[item['tag']] && item['start_date'] != item['end_date']" 
+                  class="calendar-detail-bg"
+                  :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
+                  <table class="calendar-table">
+                    <tr><td style="width: 1000px; text-align: center;">{{ item["name"] }}</td></tr>
+                    <!-- event detail -->
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
                   </table>
                 </button>
             </div>
@@ -456,32 +518,74 @@ export default {
               <div v-if="!item['allday'] && this.tag_status[item['tag']]">
                 <button v-if="(item['start_date'] < this.day_select)" class="calendar-detail-bg" 
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
-                  <tr><td style="width: 110px;">00:00-{{ item["end_time"] }}</td>
-                    <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
-                      {{ item["description"] }}</td></tr>
+                    <tr><td style="width: 110px; vertical-align: text-top">00:00-{{ item["end_time"] }}</td>
+                      <td>{{ item["name"] }}</td></tr>
+                    <!-- event detail -->
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
                   </table>
                 </button>
                 <button v-if="this.day_select < item['end_date']" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
-                  <tr><td style="width: 110px;">{{ item["start_time"] }}-00:00</td>
-                    <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
-                      {{ item["description"] }}</td></tr>
+                    <tr><td style="width: 110px; vertical-align: text-top">{{ item["start_time"] }}-00:00</td>
+                      <td>{{ item["name"] }}</td></tr>
+                    <!-- event detail -->
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
                   </table>
                 </button>
-                <button v-if="item['start_date'] == item['end_date']" class="calendar-detail-bg"
+                <button colspan="2" v-if="item['start_date'] == item['end_date']" class="calendar-detail-bg"
                   :style="'background-color:'+tag_colors[this.color_tag[item['tag']]]"
-                  v-on:click.right="TogglePopup('editTrigger', $event, item)">
+                  v-on:click.right="TogglePopup('editTrigger', $event, item)"
+                  v-on:click.left="handlefilterEvent(item)">
                   <table class="calendar-table">
-                  <tr><td style="width: 110px;">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
-                    <td>{{ item["name"] }}</td></tr>
-                  <tr><td colspan="2" style="font-weight: 500; opacity: 0.8;">
-                      {{ item["description"] }}</td></tr>
+                    <tr><td style="width: 110px; ;vertical-align: text-top">{{ item["start_time"] }}-{{ item["end_time"] }}</td>
+                      <td>{{ item["name"] }}</td></tr>
+                    <!-- event detail -->
+                    <tr v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">
+                      <td colspan="2">
+                        <table style="line-height: 18px">
+                          <tr v-if="item['event_owner'] != ''"><td>From:</td><td>{{ item["event_owner"] }}</td></tr>
+                          <tr><td style="width: 110px;">Tag:</td><td>{{ item['tag'] }}</td></tr>
+                          <tr><td>Start:</td><td>{{ new Date(item["start_date"]).toLocaleDateString("en-GB") }} {{ item["start_time"] }}</td></tr>
+                          <tr><td>End:</td><td>{{ new Date(item["end_date"]).toLocaleDateString("en-GB") }} {{ item["end_time"] }}</td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr v-if="item['detail_display']">
+                      <td colspan="2" v-if="item['detail_display']" style="font-weight: 500; opacity: 0.8;">{{ item["description"] }}</td>
+                    </tr>
+                    <!-- event detail -->
                   </table>
                 </button>
               </div>
@@ -499,9 +603,10 @@ export default {
       <!-- side bar footer -->
       <div class="calendar-sidebar-footer">
         <hr class="calendar-hr">
-        <button v-if="(this.token!='') && (this.fs!='')" class="app-button-tp"
+        <button v-if="(this.token!='') && (this.user_name == this.calendar_slug)" class="app-button-tp"
           style="color: rgba(255, 255, 255, 0.8); font-size: 20px;"
           v-on:click.left="TogglePopup('sidebarTrigger', $event)">Manage View</button>
+        <div v-else style="padding: 14px;"></div>
       </div>
       <!-- side bar footer -->
 
@@ -548,7 +653,8 @@ export default {
     <!-- edit event -->
     <div v-if="popupTriggers.editTrigger">
       <div class="editremove">
-            <EditRemove :popup="popupTriggers.editTrigger" :detail="popupTriggers.select_event" :color_theme="this.color_theme" @closed="swap"/>
+            <EditRemove :popup="popupTriggers.editTrigger" :detail="popupTriggers.select_event" 
+              :color_theme="this.color_theme" :color_tag="this.color_tag" @closed="swap"/>
       </div>
 
 

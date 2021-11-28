@@ -122,17 +122,23 @@ import axios from 'axios'
         this.slug = data.calendar.slug
         this.$router.push({ path: `/me/${this.slug}`});
       },
-      googleLogin(e){
+      async googleLogin(e){
         e.preventDefault();
-        axios.get(`/oauth/login/`)
+        let auth_url = ""
+
+        await axios.get(`/oauth/login/`)
                 .then(response => {
-                this.googleLoginData(response.data);
+                // this.googleLoginData(response.data);
                 // console.log(response.data);
                 // console.log(response.data.slug);
+                auth_url = response.data.auth_url
+                console.log(auth_url)
                 })
                 .catch(error => {
                 console.log(error)
             })
+
+        window.location.replace(auth_url)
       },
       getData(e){
         e.preventDefault();

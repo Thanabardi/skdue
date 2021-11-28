@@ -11,6 +11,8 @@ import Error403 from '../views/Error403'
 import Error404 from '../views/Error404'
 import Error5xx from '../views/Error5xx'
 import ErrorXXX from '../views/ErrorXXX'
+import GoogleCallback from '../views/GoogleCallback'
+
 
 const routes = [
     // {
@@ -81,6 +83,11 @@ const routes = [
         path: '/error/XXX',
         name: 'ErrorXXX',
         component: ErrorXXX
+    },
+    {
+        path: '/google/callback',
+        name: 'GoogleCallback',
+        component: GoogleCallback,
     },
 ]
 
