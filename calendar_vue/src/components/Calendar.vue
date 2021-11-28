@@ -96,6 +96,7 @@ export default {
       dataLogout:{
         "status":"logout"
       },
+      slug_list: [],
       user_name: '',
       calendar_slug: this.$route.params.calendar_slug.replace(/-/g,' '),
       set_delay: false,
@@ -116,7 +117,7 @@ export default {
     }
     else {
     e.preventDefault()
-    console.log('is_this_mine',item)
+    // console.log('is_this_mine',item)
     popupTriggers.value[trigger] = !popupTriggers.value[trigger]
     popupTriggers.value["select_event"]= [
         item.name,
@@ -190,7 +191,7 @@ export default {
 
       this.token = localStorage.token
 
-      console.log("slug =", calendar_slug)
+      // console.log("slug =", calendar_slug)
       axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
       axios.get(`/api/v2/me/${calendar_slug}`)
         .then( response => {this.calendar_id = response.data.calendar.id})
@@ -200,7 +201,21 @@ export default {
           this.setCalendarEvents(response.data)
         })
         .catch(error => {
-          console.log(error)
+          // console.log(error.response.status)
+          if (error.response.status == 401){
+            this.$router.push('/error/401')
+          }
+          else if (error.response.status == 403){
+            this.$router.push('/error/403')
+          }
+          else if (error.response.status == 404){
+            this.$router.push('/error/404')
+          }
+          else if (error.response.status >= 500 && error.response.status < 600){
+            this.$router.push('/error/5xx')
+          } else {
+            this.$router.push('/error/XXX')
+          }
         })
 
     },
@@ -294,10 +309,10 @@ export default {
         return 0;
       }
       this.event_details.sort( compare );
-      console.log('sort',this.event_details)
+      // console.log('sort',this.event_details)
     },
     changeIntForDateTime(dateTimeList){
-      console.log(dateTimeList)
+      // console.log(dateTimeList)
       let list = [];
       dateTimeList.forEach(e => {
         if (e.length == 1) {
@@ -313,9 +328,9 @@ export default {
       
     },
     swap(value){
-      console.log('PIDDDDD')
+      // console.log('PIDDDDD')
       this.popupTriggers.editTrigger = false
-      console.log(this.popupTriggers.select_event)
+      // console.log(this.popupTriggers.select_event)
     },
     handleEvents(events) {
       this.currentEvents = events;

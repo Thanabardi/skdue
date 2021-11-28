@@ -124,7 +124,7 @@ export default {
 			axios
 				.get(`/api/v2/me`)
 				.then(response => {
-					console.log(response.data.user.id == owner)
+					// console.log(response.data.user.id == owner)
 					if (response.data.user.id == owner) {
 						this.fs = 'follow';
 					}
@@ -140,7 +140,7 @@ export default {
 			const calendar_slug = this.$route.params.calendar_slug
       		const calendar_type = this.$route.params.calendar_type
 			this.token = localStorage.token
-			console.log("slug =", calendar_slug)
+			// console.log("slug =", calendar_slug)
 			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
 			axios.get(`/api/v2/${calendar_type}/${calendar_slug}`)
 				.then(response => {
@@ -189,7 +189,7 @@ export default {
 				}
 					axios.post(`/api/v2/me/${this.user_name}`, event)
 						.then(function(response) {
-							console.log("create new Event", response),
+							response,
 							window.location.reload()
 						})
 						.catch(function(error) {
@@ -207,7 +207,7 @@ export default {
 				this.getTag()
 				axios.post(`/api/v2/me/add_new_tag`, {"tag":this.tag})
 					.then(function(response) {
-						console.log("create new Tag", response)
+						response
 					})
 			} else {
 				alert("This tag already exists")

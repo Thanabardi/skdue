@@ -93,7 +93,7 @@ import axios from 'axios'
     methods:{
       googleLoginData(data){
         // for login
-        console.log(data);
+        // console.log(data);
 
         // auth setting
         let token = data.token
@@ -107,7 +107,7 @@ import axios from 'axios'
       },
       setData(data){
         // for register
-        console.log(data);
+        // console.log(data);
 
         // auth setting
         let token = data.token
@@ -120,7 +120,7 @@ import axios from 'axios'
       },
       loginData(data){
         // for login
-        console.log(data);
+        // console.log(data);
 
         // auth setting
         let token = data.token
@@ -151,7 +151,7 @@ import axios from 'axios'
       },
       getData(e){
         e.preventDefault();
-        console.log(this.dataRegisterForm);
+        // console.log(this.dataRegisterForm);
 
         axios.post(`/api/v2/register`, this.dataRegisterForm)
                 .then(response => {
@@ -166,7 +166,7 @@ import axios from 'axios'
       checkData(e){
         // for loging
         e.preventDefault();
-        console.log(this.dataLogIn);
+        // console.log(this.dataLogIn);
 
         // get API token
         axios.post(`/api/v2/get-auth-token`, this.dataLogIn)

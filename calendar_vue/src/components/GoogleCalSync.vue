@@ -33,7 +33,7 @@ export default {
 			axios
 				.get(`/api/v2/me`)
 				.then(response => {
-					console.log(response.data.user.id == owner)
+					// console.log(response.data.user.id == owner)
 					if (response.data.user.id == owner) {
 						this.fs = 'follow';
 					}
