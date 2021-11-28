@@ -1,5 +1,5 @@
 <template>
-<div class="follow-main" v-if="(fs != '')" :style="'color:'+app_colors[this.color_theme['name']]['sub-2']">
+<div class="follow-main" v-if="(fs != '') && this.set_delay" :style="'color:'+app_colors[this.color_theme['name']]['sub-2']">
   <img :src="img" class="avatar" style="cursor: pointer;" v-on:click.left="this.visibility = 'visible'">
   <div style="margin-left: 10px; padding-top: 4px; cursor: pointer;" v-on:click.left="this.visibility = 'visible'">{{ this.follow_name }}</div>
   <div v-if="this.token != ''">
@@ -60,6 +60,7 @@ export default {
       img: '',
       about: '',
       visibility: 'visible',
+      set_delay: false
 		}
 	},
     props: {
@@ -123,6 +124,7 @@ export default {
           console.log('user',user.user)
           console.log('owner',this.owner_id)
         })
+        setTimeout(this.set_delay = true, 500)
       })
       .catch(error => {
         console.log(error)

@@ -98,6 +98,7 @@ export default {
       },
       user_name: '',
       calendar_slug: this.$route.params.calendar_slug.replace(/-/g,' '),
+      set_delay: false,
     };
   },
   setup() {  //EventDetails
@@ -159,6 +160,7 @@ export default {
           this.event_details.push(event)
         }
       });
+      setTimeout(this.set_delay = true, 500)
     },
     setCalendarEvents(data){
       let tag = data.tag
@@ -446,7 +448,7 @@ export default {
 
 <template>
   <div :style="'height: 100%; width: 100%; position: fixed; background-color:'
-    +app_colors[this.color_theme['type']]['bg']">
+    +app_colors[this.color_theme['type']]['bg']" v-if="this.set_delay">
     <CalendarNavbar :color_theme="this.color_theme"/>
 
 

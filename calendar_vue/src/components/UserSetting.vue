@@ -1,124 +1,125 @@
 <template>
-    <div :style="'left:0px; height: 100%; width: 100%; position: fixed; overflow-x: hidden; background-color:' + app_colors[this.color_theme['type']]['bg']">
-        <div>
-            <CalendarNavbar />
-        </div>
-		<body>
-        <div class="calendar-hr" :style="'width: 100%; color:'+app_colors[this.color_theme['type']]['main']">
-                <center><a style="font-size: 40px">User Setting</a></center>
-				<p></p>
-				<center><img id="current_img" :src="img" class="avatar"></center>
-                <p></p>
-                <center>
-                    <form @submit.prevent="onUpload" class="event-create-form">
-						<center><textarea class="event-create-textarea" type="name"
-							required v-model="display"	placeholder="Display name"
-							maxlength="20" rows="1" cols="50"></textarea></center>
-						<p></p>
-						<center><textarea class="event-create-textarea" type="description"
-							v-model="description" placeholder="Description (optional)"
-							maxlength="600" rows="5" cols="50"></textarea></center>
-                        <p></p>
-                        <!-- Upload Img -->
-                        <center>
-                            <div>
-                                <a :style="'font-size: 28px;  color:'+app_colors[this.color_theme['type']]['main']">Upload profile image</a><br>
-                                <p style="display: none" onload="this.style.display=''"></p>
-								<img class="avatar" id="image_preview" style="display: none" onload="this.style.display=''"/><br>
-								<p></p>
-                                <input :style="'color:'+app_colors[this.color_theme['type']]['main']" type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png" class="inputfile">
-								<label for="file">Choose an image</label>
-                            </div>
-                        </center>
-						<!-- End -->
-						<center><table>
-							<tr>
-								<p></p>
-								<div><center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">Tag</center></div><br>
+	<div>
+		<CalendarNavbar />
+		<div :style="'left:0px; height: 100%; width: 100%; position: fixed; overflow-x: hidden; background-color:'
+			+ app_colors[this.color_theme['type']]['bg']" v-if="this.set_delay">
+			<body>
+			<div class="calendar-hr" :style="'width: 100%; color:'+app_colors[this.color_theme['type']]['main']">
+					<center><a style="font-size: 40px">User Setting</a></center>
+					<p></p>
+					<center><img id="current_img" :src="img" class="avatar"></center>
+					<p></p>
+					<center>
+						<form @submit.prevent="onUpload" class="event-create-form">
+							<center><textarea class="event-create-textarea" type="name"
+								required v-model="display"	placeholder="Display name"
+								maxlength="20" rows="1" cols="50"></textarea></center>
+							<p></p>
+							<center><textarea class="event-create-textarea" type="description"
+								v-model="description" placeholder="Description (optional)"
+								maxlength="600" rows="5" cols="50"></textarea></center>
+							<p></p>
+							<!-- Upload Img -->
+							<center>
 								<div>
-									<div v-if="this.available_tag.length < 9">
-										<input style="width: 270px;" class="event-create-textarea"
-											placeholder="MyNewTag" maxlength="10" v-model="tag">
-									</div>
-									<!-- <p v-for="[key, color] of Object.entries(set_color)" :style="'font-size:22px; color:'+app_colors[this.color_theme['type']]['main']"> -->
-									<a v-if="0<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[0]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[0])'>edit</div> {{ this.tag_name[0] }} <div @click='tagDelete(this.tag_name[0])'>delete</div></div></center>
-									<div class="flex-container">
-										<div @click="userColorTag1('red')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
-										<div @click="userColorTag1('yellow')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
-										<div @click="userColorTag1('blue')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
-										<div @click="userColorTag1('green')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
-										<div @click="userColorTag1('pink')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
-										<div @click="userColorTag1('purple')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag1('orange')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
-									</div>
-									</a>
-									<a v-if="1<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[1]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[1])'>edit</div>{{ this.tag_name[1] }}<div @click='tagDelete(this.tag_name[1])'>delete</div></div></center>
-									<div class="flex-container">
-										<div @click="userColorTag2('red')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
-										<div @click="userColorTag2('yellow')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
-										<div @click="userColorTag2('blue')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
-										<div @click="userColorTag2('green') " id="color2" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
-										<div @click="userColorTag2('pink')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
-										<div @click="userColorTag2('purple')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag2('orange')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
-									</div>
-									</a>
-									<a  v-if="2<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[2]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[2])'>edit</div>{{ this.tag_name[2] }}<div @click='tagDelete(this.tag_name[2])'>delete</div></div></center>
-									<div class="flex-container">
-										<div @click="userColorTag3('red')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
-										<div @click="userColorTag3('yellow')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
-										<div @click="userColorTag3('blue')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
-										<div @click="userColorTag3('green')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
-										<div @click="userColorTag3('pink')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
-										<div @click="userColorTag3('purple')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag3('orange')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
-									</div>
-									</a>
-									<a v-if="3<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[3]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[3])'>edit</div>{{ this.tag_name[3] }}<div @click='tagDelete(this.tag_name[3])'>delete</div></div></center>
-									<div class="flex-container">
-										<div @click="userColorTag4('red')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
-										<div @click="userColorTag4('yellow')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
-										<div @click="userColorTag4('blue')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
-										<div @click="userColorTag4('green')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
-										<div @click="userColorTag4('pink')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
-										<div @click="userColorTag4('purple')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag4('orange')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
-									</div>
-									</a>
-									<a v-if="4<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[4]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[4])'>edit</div>{{ this.tag_name[4] }}<div @click='tagDelete(this.tag_name[4])'>delete</div></div></center>
-									<div class="flex-container" >
-										<div @click="userColorTag5('red')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
-										<div @click="userColorTag5('yellow')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
-										<div @click="userColorTag5('blue')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
-										<div @click="userColorTag5('green')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
-										<div @click="userColorTag5('pink')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
-										<div @click="userColorTag5('purple')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
-										<div @click="userColorTag5('orange')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
-									</div>
-									</a>
-									<!-- </p> -->
+									<a :style="'font-size: 28px;  color:'+app_colors[this.color_theme['type']]['main']">Upload profile image</a><br>
+									<p style="display: none" onload="this.style.display=''"></p>
+									<img class="avatar" id="image_preview" style="display: none" onload="this.style.display=''"/><br>
+									<p></p>
+									<input :style="'color:'+app_colors[this.color_theme['type']]['main']" type="file" @change="onFileSelected" accept=".jpg, .jpeg, .png" class="inputfile">
+									<label for="file">Choose an image</label>
 								</div>
-							</tr>
-							<tr>
-								<center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']"><div :style="'color:'+color_font_theme">Theme</div></center>
-								<center><div class="theme-container">
-									<div style="cursor: pointer;" @click="defalutTheme">defalut</div>
-									<div style="cursor: pointer; background-color: black;" @click="darkTheme">dark</div>
-									<div :style="'cursor: pointer; background-color:'+tag_colors['purple']" @click="purpleTheme">purple</div>
-								</div></center>
-							</tr>
-						</table></center>
-						<div class="sync" style="font-size:30px; text-align: center">
-							<GoogleCalSync :color_theme="this.color_theme"/><br>
-						</div>
-						<div class="event-create-footer">
-							<button class="app-button-main" :style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']" type="submit">Done</button>
-						</div>
-					</form>
-                </center>
-        	</div>
-		</body>
-    </div>
+							</center>
+							<!-- End -->
+							<center><table>
+								<tr>
+									<p></p>
+									<div><center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']">Tag</center></div><br>
+									<div>
+										<div v-if="this.available_tag.length < 9">
+											<input style="width: 270px;" class="event-create-textarea"
+												placeholder="MyNewTag" maxlength="10" v-model="tag">
+										</div>
+										<!-- <p v-for="[key, color] of Object.entries(set_color)" :style="'font-size:22px; color:'+app_colors[this.color_theme['type']]['main']"> -->
+										<a v-if="0<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[0]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[0])'>edit</div> {{ this.tag_name[0] }} <div @click='tagDelete(this.tag_name[0])'>delete</div></div></center>
+										<div class="flex-container">
+											<div @click="userColorTag1('red')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+											<div @click="userColorTag1('yellow')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+											<div @click="userColorTag1('blue')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+											<div @click="userColorTag1('green')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+											<div @click="userColorTag1('pink')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+											<div @click="userColorTag1('purple')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+											<div @click="userColorTag1('orange')" id="color1" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
+										</div>
+										</a>
+										<a v-if="1<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[1]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[1])'>edit</div>{{ this.tag_name[1] }}<div @click='tagDelete(this.tag_name[1])'>delete</div></div></center>
+										<div class="flex-container">
+											<div @click="userColorTag2('red')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+											<div @click="userColorTag2('yellow')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+											<div @click="userColorTag2('blue')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+											<div @click="userColorTag2('green') " id="color2" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+											<div @click="userColorTag2('pink')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+											<div @click="userColorTag2('purple')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+											<div @click="userColorTag2('orange')" id="color2" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
+										</div>
+										</a>
+										<a  v-if="2<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[2]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[2])'>edit</div>{{ this.tag_name[2] }}<div @click='tagDelete(this.tag_name[2])'>delete</div></div></center>
+										<div class="flex-container">
+											<div @click="userColorTag3('red')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+											<div @click="userColorTag3('yellow')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+											<div @click="userColorTag3('blue')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+											<div @click="userColorTag3('green')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+											<div @click="userColorTag3('pink')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+											<div @click="userColorTag3('purple')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+											<div @click="userColorTag3('orange')" id="color3" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
+										</div>
+										</a>
+										<a v-if="3<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[3]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[3])'>edit</div>{{ this.tag_name[3] }}<div @click='tagDelete(this.tag_name[3])'>delete</div></div></center>
+										<div class="flex-container">
+											<div @click="userColorTag4('red')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+											<div @click="userColorTag4('yellow')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+											<div @click="userColorTag4('blue')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+											<div @click="userColorTag4('green')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+											<div @click="userColorTag4('pink')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+											<div @click="userColorTag4('purple')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+											<div @click="userColorTag4('orange')" id="color4" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
+										</div>
+										</a>
+										<a v-if="4<this.tag_name.length"><center :style="'color:'+this.color_item[this.tag_name[4]]"><div class='tag-options'><div @click='tagEdit(this.tag_name[4])'>edit</div>{{ this.tag_name[4] }}<div @click='tagDelete(this.tag_name[4])'>delete</div></div></center>
+										<div class="flex-container" >
+											<div @click="userColorTag5('red')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['red']">.</div>
+											<div @click="userColorTag5('yellow')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['yellow']">.</div>
+											<div @click="userColorTag5('blue')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['blue']">.</div>
+											<div @click="userColorTag5('green')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['green']">.</div>
+											<div @click="userColorTag5('pink')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['pink']">.</div>
+											<div @click="userColorTag5('purple')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['purple']">.</div>
+											<div @click="userColorTag5('orange')" id="color5" :style="'cursor:pointer; background-color:'+tag_colors['orange']">.</div>
+										</div>
+										</a>
+										<!-- </p> -->
+									</div>
+								</tr>
+								<tr>
+									<center :style="'font-size:30px; color:'+app_colors[this.color_theme['type']]['main']"><div :style="'color:'+color_font_theme">Theme</div></center>
+									<center><div class="theme-container">
+										<div style="cursor: pointer;" @click="defalutTheme">defalut</div>
+										<div style="cursor: pointer; background-color: black;" @click="darkTheme">dark</div>
+										<div :style="'cursor: pointer; background-color:'+tag_colors['purple']" @click="purpleTheme">purple</div>
+									</div></center>
+								</tr>
+							</table></center>
+							<div class="sync" style="font-size:30px; text-align: center">
+								<GoogleCalSync :color_theme="this.color_theme"/><br>
+							</div>
+							<div class="event-create-footer">
+								<button class="app-button-main" :style="'background-color:'+app_colors[this.color_theme['name']]['sub-2']" type="submit">Done</button>
+							</div>
+						</form>
+					</center>
+				</div>
+			</body>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -168,6 +169,7 @@ export default({
 			type_theme: "",
 			color_font_theme: "",
 			tag: '',
+			set_delay: false,
 		}
 	},
 	mounted () {
@@ -258,6 +260,7 @@ export default({
 					for (let j=0; j<this.user_data.custom_tag.length; j++){
 						this.tag_name.push((Object.entries(this.set_color)[j][0]))
 					}
+					setTimeout(this.set_delay = true, 500)
 					console.log(this.tag_name.length)
 				})
 		},

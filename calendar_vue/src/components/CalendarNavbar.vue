@@ -1,5 +1,5 @@
 <template>
-	<div class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color_theme['name']]['main']">
+	<div class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color_theme['name']]['main']" v-if="this.set_delay">
         <Search :color_theme="this.color_theme"/>
         <EventCreate :color_theme="this.color_theme" :color_tag="this.color_tag"/>
         <UserConfig :color_theme="this.color_theme"/>
@@ -35,6 +35,7 @@ export default {
             app_colors: APP_COLORS,
             color_theme: {"type" : "light", "name" : "theme-1"},
             color_tag: {},
+            set_delay: false,
 		}
 	},
     mounted () {
@@ -49,6 +50,7 @@ export default {
             // const calendar_slug = this.$route.params.calendar_slug
             axios.get(`/api/v2/me/follow`).then( response => {
                 console.log(response.data)
+                setTimeout(this.set_delay = true, 500)
             })
         },
         getColor() {

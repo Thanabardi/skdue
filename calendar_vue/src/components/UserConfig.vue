@@ -1,5 +1,5 @@
 <template>
-	<div class="user-detail">
+	<div class="user-detail" v-if="this.set_delay">
 
 		<div v-if="(this.token == '')" class="user-detail-not-login">
 
@@ -58,6 +58,7 @@ export default {
 			tag_colors: TAG_COLORS,
             app_colors: APP_COLORS,
 			token: '',
+			set_delay: false,
 		}
 	},
 	props: {
@@ -76,10 +77,11 @@ export default {
             axios.get(`/api/v2/me`)
 			.then( response => {
 				// console.log(response.data)
-								console.log(response.data)
+				console.log(response.data)
                 this.user_name = response.data["user"]["username"]
-								this.slug = response.data.calendar[0].slug
-								console.log('slug',this.slug)
+				this.slug = response.data.calendar[0].slug
+				console.log('slug',this.slug)
+				this.set_delay = true
             })
         },
 		async redirectUserHome() {
