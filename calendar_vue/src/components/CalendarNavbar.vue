@@ -1,11 +1,9 @@
 <template>
-	<div class="calendar-navbar-bg">
-        <Search />
-        <EventCreate />
-        <UserConfig />
-        <div class="calendar-navbar-link">
-            <p>user follow list</p>
-        </div>
+	<div class="calendar-navbar-bg" :style="'background-color:'+app_colors[this.color_theme['name']]['main']" v-if="this.set_delay">
+        <Search :color_theme="this.color_theme"/>
+        <EventCreate :color_theme="this.color_theme" :color_tag="this.color_tag"/>
+        <UserConfig :color_theme="this.color_theme"/>
+        <FollowedList :color_theme="this.color_theme"/>
 	</div>
 </template>
 
@@ -15,26 +13,57 @@ import axios from 'axios';
 import Search from './search'
 import EventCreate from './EventCreate'
 import UserConfig from './UserConfig'
+import FollowedList from './FollowedList'
+
+import GoogleCalSync from './GoogleCalSync'
+
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
+
 
 export default {
     components: {
         Search,
         EventCreate,
-        UserConfig
+        UserConfig,
+        FollowedList,
+				GoogleCalSync
 	},
     data() {
 		return {
-			follow: ''
+            follow: '',
+            tag_colors: TAG_COLORS,
+            app_colors: APP_COLORS,
+            color_theme: {"type" : "light", "name" : "theme-1"},
+            color_tag: {},
+            set_delay: false,
 		}
 	},
     mounted () {
         this.getFollowList()
+        this.getColor()
     },
-    	methods: {
+    methods: {
         getFollowList() {
+            this.token = localStorage.token
+			axios.defaults.headers.common["Authorization"] = "Token " + localStorage.token
             // const calendar_slug = this.$route.params.calendar_slug
             axios.get(`/api/v2/me/follow`).then( response => {
-                console.log(response.data)
+                this.set_delay = true
+            })
+            .catch(error => {
+                console.log(error)
+                this.set_delay = true
+            })
+        },
+        getColor() {
+            axios.get(`/api/v2/me/user_setting`)
+            .then(response => {
+                this.color_theme["type"] = response.data["setting"]["theme_type"]
+                this.color_theme["name"] = response.data["setting"]["theme_name"]
+                this.color_tag = response.data["color"]
+            })
+            .catch(error => {
+                console.log(error)
             })
         },
 	}
@@ -46,7 +75,6 @@ export default {
 @import './../assets/style.css';
 
 .calendar-navbar-bg {
-    background: var(--main-green);
     height: 65px;
     z-index: 5;
     position: fixed !important;
@@ -54,25 +82,9 @@ export default {
     left: 0px;
     right: 0px;
 }
-.calendar-navbar-link {
-    color: var(--white);
-    left: 10%;
-    position: absolute;
-    right: 2%;
-    border-radius: 2px;
-    width: 250px;
-    border: 1px solid transparent;
-    padding: 0px 10px 0px 10px;
-	top: 10px;
-    border: 1px solid var(--white-op-1);
-    height: 40px;
-    line-height: 0px;
-    font-size: 20px;
-    cursor: pointer;
+.sync {
+	margin-left: 10px;
 }
-// .calendar-navbar-link:hover {
-
-// }
 // .user-detail {
 //     position: absolute;
 //     right: 1%;

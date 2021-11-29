@@ -7,46 +7,43 @@
 }
 
 .app-details {
-    color: var(--white-op-1);
     font-size: 20px;
 }
 
 .app-button-main {
-    background-color: var(--main-green);
     border: 0;
     padding: 10px 20px;
     margin-top: 20px;
-    color: var(--white);
+    color: white;
     font-size: 20px;
     cursor: pointer;
     border-radius: 8px;
 }
 .app-button-main:active {
-    background-color: var(--main-green-dark);
+    opacity: 0.8;
 }
 
 .app-button-gray {
-    background-color: var(--gray);
+    color: black;
     border: 0;
     padding: 10px 20px;
     margin-top: 20px;
-    color: var(--white);
     font-size: 20px;
     cursor: pointer;
     border-radius: 8px;
 }
 .app-button-gray:active {
-    background-color: var(--gray-dark);
+    opacity: 0.8;
 }
 
 .app-button-tp {
     background: none;
     border: none;
-    color: var(--white);
+    color: white;
     cursor: pointer;
 }
-.app-button-tp:active {
-    color: var(--white-dark);
+.app-button-tp:active{
+    opacity: 0.8;
 }
 
 @keyframes fade {

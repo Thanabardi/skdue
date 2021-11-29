@@ -30,6 +30,7 @@ import axios from 'axios'
 import Calendar from '../components/Calendar.vue'
 import EventDetails from '../components/EventDetails.vue'
 import { globalLocales } from '@fullcalendar/common'
+import { TAG_COLORS, APP_COLORS } from './ColorHandle'
 
 export default {
   data () {
@@ -38,7 +39,12 @@ export default {
       inputValue: '',
       itemList: [],
       apiLoaded: false,
+      tag_colors: TAG_COLORS,
+      app_colors: APP_COLORS,
     }
+  },
+  props: {
+    color_theme: {},
   },
   mounted () {
     this.getList()
@@ -109,7 +115,7 @@ export default {
   /* margin: 0 auto; */
 }
 .dropdown-input {
-	background: var(--white);
+	background: rgb(240, 240, 240);
 	font-size: 20px;
 	padding: 8px 20px;
 	width: 100%;
@@ -128,16 +134,16 @@ export default {
   cursor: pointer;
 } */
 .dropdown-list{
-  background: var(--white);
+  background: rgb(240, 240, 240);
   position: absolute;
   width: 105%;
   max-height: 500px;
   margin-top: 4px;
   overflow-x: hidden;
-  box-shadow: 0px 0px 1px 0px var(--black-op-1), 0px 0px 40px 0px var(--black-op-2);
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.5), 0px 0px 40px 0px rgba(0, 0, 0, 0.2);
   border-radius: 2px;
   font-size: 20px;
-  color: var(--black);
+  color: black;
 }
 .dropdown-item{
   padding: 5px 16px;
@@ -145,11 +151,14 @@ export default {
   cursor: pointer;
 }
 .dropdown-item:hover{
-  background: var(--white-dark);
+  background: rgb(220, 220, 220);
 }
 .dropdown-item-flag{
   max-width: 24px;
   max-height: 18px;
   margin: auto 12px auto 0px;
+}
+::-webkit-scrollbar {
+    display: none;
 }
 </style>

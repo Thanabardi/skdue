@@ -4,6 +4,14 @@ import CalendarDetail from '../views/CalendarDetail.vue'
 import SearchCalendar from '../views/SearchCalendar.vue'
 import Form from '../views/create_calendar'
 import Register from '../views/Register'
+import Setting from '../views/Setting'
+import ErrorType from '../views/ErrorType'
+import Error401 from '../views/Error401'
+import Error403 from '../views/Error403'
+import Error404 from '../views/Error404'
+import Error5xx from '../views/Error5xx'
+import ErrorXXX from '../views/ErrorXXX'
+import GoogleCallback from '../views/GoogleCallback'
 
 
 const routes = [
@@ -40,7 +48,47 @@ const routes = [
         path: '/',
         name: 'Register',
         component: Register
-    }
+    },
+    {
+        path: '/setting',
+        name: 'Setting',
+        component: Setting,
+    },
+    {
+        path: '/:NotFound(.*)*',
+        name: 'ErrorType',
+        component: ErrorType,
+    },
+    {
+        path: '/error/401',
+        name: 'Error401',
+        component: Error401
+    },
+    {
+        path: '/error/403',
+        name: 'Error403',
+        component: Error403
+    },
+    {
+        path: '/error/404',
+        name: 'Error404',
+        component: Error404
+    },
+    {
+        path: '/error/5xx',
+        name: 'Error5xx',
+        component: Error5xx
+    },
+    {
+        path: '/error/XXX',
+        name: 'ErrorXXX',
+        component: ErrorXXX
+    },
+    {
+        path: '/google/callback',
+        name: 'GoogleCallback',
+        component: GoogleCallback,
+    },
 ]
 
 const router = createRouter({
@@ -48,4 +96,14 @@ const router = createRouter({
     routes
 })
 
+window.addEventListener( "pageshow", function ( event ) {
+    var historyTraversal = event.persisted || 
+                           ( typeof window.performance != "undefined" && 
+                                window.performance.navigation.type === 2 );
+    if ( historyTraversal ) {
+      // Handle page restore.
+      window.location.reload();
+    }
+  });
+  
 export default router

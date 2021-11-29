@@ -48,12 +48,9 @@ class CalendarEventModelTests(TestCase):
             with self.subTest():
                 self.assertFalse(CalendarEvent.is_valid(new_event, "calendar-0"), interval)
     
-    def test_invalid_event_with_same_name_in_same_calendar(self):
-        """Test that is_valid will return False when name is invalid.
-        New name is avaliable when the event name already exist in the same calendar.
+    def test_event_with_same_name_in_same_calendar(self):
+        """It fine that calendar event has the same name in the same calendar.
         """
-        # TODO: add tag (tag name from post request) from is_valid
-        # old event
         calendar_1 = Calendar.objects.get(slug="calendar-1")
         old_event = CalendarEvent(
             calendar = calendar_1,
@@ -71,7 +68,7 @@ class CalendarEventModelTests(TestCase):
             "tag_text": str(self.tag)
         }
         # validate with same name but different calendar
-        self.assertFalse(CalendarEvent.is_valid(new_event_data, "calendar-1"))
+        self.assertTrue(CalendarEvent.is_valid(new_event_data, "calendar-1"))
 
     def test_valid_event_with_valid_date(self):
         """Test that is_valid will return True when start date < end date"""

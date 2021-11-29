@@ -1,4 +1,5 @@
 from django.http.response import Http404
+from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from itertools import chain
@@ -23,7 +24,10 @@ class CalendarDetailView(APIView):
         return chain(default_tag, custom_tag)
 
     def get(self, request, calendar_slug, format=None):
-        calendar = Calendar.objects.get(slug=calendar_slug)
+        try:
+            calendar = Calendar.objects.get(slug=calendar_slug)
+        except:
+            return Response({"msg": "calendar does not exist"}, HTTP_404_NOT_FOUND)
         user = User.objects.get(id=calendar.user.id)
         tag = self.get_public_tag(user)
         data = {

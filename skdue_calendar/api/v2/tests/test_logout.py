@@ -4,9 +4,8 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 from skdue_calendar import serializers
-from .utils import convert_response
-
-
+from .utils import convert_response, authenticated_client_factory
+from rest_framework.authtoken.models import Token
 class LogoutTest(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user(   "Peem", 
@@ -15,9 +14,9 @@ class LogoutTest(TestCase):
         self.user1.save()
     
     def test_get(self):
-        data = {"status": "logged out"}
-        expect_data = json.dumps(data)
-        response = self.client.get(reverse('api_v2:logout'))
+        self.client = authenticated_client_factory(self.user1)
+        response = self.client.delete(reverse('api_v2:logout'))
         response_data = convert_response(response.content)
-        self.assertJSONEqual(expect_data, response_data)
-        
+        with self.assertRaises(Token.DoesNotExist):
+            _ = Token.objects.get(user=self.user1)
+    

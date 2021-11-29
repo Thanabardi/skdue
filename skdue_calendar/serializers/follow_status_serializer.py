@@ -9,5 +9,7 @@ class FollowStatusSerializer(serializers.ModelSerializer):
             "user",
             "user_name",
             "followed",
-            "followed_name"
+            "followed_name",
+            "followed_calendar",
+            "followed_calendar_slug"
         )
