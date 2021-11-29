@@ -278,19 +278,21 @@ export default({
 		},
         onFileSelected(event) {
 			var img = document.getElementById('image_preview')
-			var idxDot = img.lastIndexOf(".") + 1;
-			var extFile = img.substr(idxDot, img.length).toLowerCase();
-			if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
-				this.selectedFile = event.target.files[0]
+			this.selectedFile = event.target.files[0]
+			const  fileType = this.selectedFile['type'];
+			const validImageTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+			if (validImageTypes.includes(fileType)) {
 				// render image preview
 				var fr = new FileReader()
 				fr.readAsDataURL(this.selectedFile)
 				fr.onload = function(e) {
 					img.src = this.result
 				}
-			} else{
-				alert("Only jpg/jpeg and png files are allowed!");
-			}   
+			}
+			else if (!validImageTypes.includes(fileType)) {
+				// invalid file type code goes here.
+				alert("Type of the file is not image")
+			}
         },
         onUpload() {
 			var apiDataForm = new FormData()
