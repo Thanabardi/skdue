@@ -1,6 +1,5 @@
 # skdue
-![example workflow](https://github.com/patkamon/skdue/actions/workflows/django.yml/badge.svg)[![codecov](https://codecov.io/gh/patkamon/skdue/branch/apply-ci/graph/badge.svg?token=5EZP9GP4CX)](https://codecov.io/gh/patkamon/skdue)
-
+![example workflow](https://github.com/patkamon/skdue/actions/workflows/django.yml/badge.svg)[![codecov](https://codecov.io/gh/patkamon/skdue/branch/dev/graph/badge.svg?token=5EZP9GP4CX)](https://codecov.io/gh/patkamon/skdue)
 
 ## Description
 
